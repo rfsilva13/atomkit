@@ -1,16 +1,33 @@
-[project]
+[tool.poetry]
 name = "atomkit"
 version = "0.1.0"
-description = ""
-authors = [
-    {name = "Ricardo Ferreira da Silva",email = "ricardo.apf.silva@gmail.com"}
-]
+description = "A Python toolkit for atomic structure and spectra calculations." # Add a description!
+authors = ["Ricardo Ferreira da Silva <ricardo.apf.silva@gmail.com>"]
+license = "MIT"  # Choose a license (e.g., MIT, Apache-2.0) and add a LICENSE file
 readme = "README.md"
-requires-python = ">=3.13"
-dependencies = [
-]
+# This line tells Poetry where to find the package source
+packages = [{ include = "atomkit", from = "src" }]
 
+[tool.poetry.dependencies]
+python = ">=3.13, <3.14"
+# List your runtime dependencies here
+pandas = ">=2.2.3,<3.0.0"
+numpy = ">=2.2.5,<3.0.0"
+mendeleev = ">=1.0.0,<2.0.0"
+roman = ">=5.0,<6.0"
+seaborn = ">=0.13.2,<0.14.0"
+matplotlib = ">=3.10.1,<4.0.0"
+colorama = ">=0.4.6,<0.5.0"
+tabulate = ">=0.9.0,<0.10.0"
+colorlog = "^6.9.0"
+scipy = "^1.15.2"
+
+[tool.poetry.group.dev.dependencies]
+# List your development dependencies here
+pytest = "^8.3.5" # Or use a looser constraint like "^8.0"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+# Standard build system definition for Poetry projects
+requires = ["poetry-core>=1.0.0"] # Loosened constraint slightly, >=1.0.0 is usually fine
 build-backend = "poetry.core.masonry.api"
+
