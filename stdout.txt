@@ -1,0 +1,89 @@
+
+--- Reading FAC Transitions (.tr.asc) ---
+
+--- 1. Basic Usage (Defaults) ---
+(Minimal logging expected)
+DataFrame shape: (36204, 9)
+Columns (Concise): ['2j_lower', '2j_upper', 'E', 'lambda', 'gf', 'A', 'S', 'multipole', 'type']
+Index Names: ['atomic_number', 'ion_charge', 'level_index_upper', 'level_index_lower']
+Sample Data (Energy in eV, Wavelength in A):
+                                                              2j_lower  2j_upper          E        lambda            gf             A  \
+atomic_number ion_charge level_index_upper level_index_lower                                                                            
+46            0          2                 1                         5         3   0.269374  46026.719107  2.106498e-07  1.658147e-01   
+                                           1                         5         3   0.269374  46026.719107  1.837405e-11  1.446329e-05   
+                         3                 1                         5         3  50.717740    244.459233  2.815402e+00  7.856153e+10   
+                                           1                         5         3  50.717740    244.459233  8.024405e-09  2.239145e+02   
+                                           1                         5         3  50.717740    244.459233  1.900504e-10  5.303203e+00   
+                                           1                         5         3  50.717740    244.459233  1.118361e-18  3.120696e-08   
+                                           2                         3         3  50.448370    245.764528  3.112274e-01  8.592541e+09   
+                                           2                         3         3  50.448370    245.764528  2.706373e-10  7.471907e+00   
+                         4                 1                         5         1  54.789380    226.292392  1.710082e-09  1.113754e+02   
+                                           1                         5         1  54.789380    226.292392  3.025902e-10  1.970730e+01   
+
+                                                                         S      multipole type  
+atomic_number ion_charge level_index_upper level_index_lower                                    
+46            0          2                 1                  3.191877e-05    0.007989845   M1  
+                                           1                  2.784133e-09       1.333564   E2  
+                         3                 1                  2.265802e+00       2.128758   E1  
+                                           1                  6.457946e-09     0.01078729   M2  
+                                           1                  1.529503e-10     -0.1444208   E3  
+                                           1                  9.000437e-19  -0.0009235999   M4  
+                                           2                  2.518095e-01     -0.7096615   E1  
+                                           2                  2.189687e-10       0.174651   E3  
+                         4                 1                  1.273978e-09   -0.004435163   M2  
+                                           1                  2.254239e-10     -0.1502386   E3  
+
+--- 2. Verbose Level 1 (Info) ---
+(Expecting INFO level logging output below...)
+DataFrame shape: (36204, 9)
+
+--- 3. Verbose Level 2 (Debug) ---
+(Expecting DEBUG level logging output below...)
+DataFrame shape: (36204, 9)
+
+--- 4. Request Energy in cm-1 and Wavelength in nm ---
+DataFrame shape: (36204, 9)
+Columns (Concise): ['2j_lower', '2j_upper', 'E', 'lambda', 'gf', 'A', 'S', 'multipole', 'type']
+Sample Data (Energy in cm-1, Wavelength in nm):
+An error occurred during unit conversion reading: "['delta_energy', 'wavelength'] not in index"
+
+--- 5. Include Method Column ---
+DataFrame shape: (36204, 10)
+Columns (Includes Method): ['2j_lower', '2j_upper', 'E', 'lambda', 'gf', 'A', 'S', 'multipole', 'type', 'method']
+Sample Data:
+An error occurred during include_method reading: "['wavelength'] not in index"
+
+--- 6. Select Specific Columns (Using Concise Names) ---
+DataFrame shape: (36204, 1)
+Columns (Selected): ['gf']
+Index Names: ['atomic_number', 'ion_charge', 'level_index_upper', 'level_index_lower']
+Sample Selected Data:
+                                                                        gf
+atomic_number ion_charge level_index_upper level_index_lower              
+46            0          2                 1                  2.106498e-07
+                                           1                  1.837405e-11
+                         3                 1                  2.815402e+00
+                                           1                  8.024405e-09
+                                           1                  1.900504e-10
+
+--- 7. Rename Columns (Using Concise Names) ---
+DataFrame shape: (36204, 9)
+Columns (Renamed): ['2j_lower', '2j_upper', 'E', 'lambda', 'gf', 'A', 'S', 'multipole', 'type']
+Index Names (note: index names also renamed if specified): ['atomic_number', 'ion_charge', 'level_index_upper', 'level_index_lower']
+Sample Renamed Data:
+An error occurred during column renaming reading: "None of [Index(['Wavelength', 'A_Value', 'S_au'], dtype='object')] are in the [columns]"
+
+--- 8. Combined Options (cm-1, nm, Rename, Include Method) ---
+DataFrame shape: (36204, 2)
+Columns (Combined): ['gf', 'method']
+Index Names: ['atomic_number', 'ion_charge', 'level_index_upper', 'level_index_lower']
+Sample Combined Data:
+                                                                        gf method
+atomic_number ion_charge level_index_upper level_index_lower                     
+46            0          2                 1                  2.106498e-07    FAC
+                                           1                  1.837405e-11    FAC
+                         3                 1                  2.815402e+00    FAC
+                                           1                  8.024405e-09    FAC
+                                           1                  1.900504e-10    FAC
+
+--- Example script for transitions finished. ---
