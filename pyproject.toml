@@ -2,7 +2,7 @@
 name = "atomkit"
 version = "0.1.0"
 description = "A Python toolkit for atomic structure and spectra calculations with FAC data parsing capabilities"
-authors = ["Ricardo Ferreira da Silva <ricardo.apf.silva@gmail.com>"]
+authors = ["Ricardo Ferreira da Silva <rfsilva@lip.pt>"]
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/rfsilva13/atomkit"

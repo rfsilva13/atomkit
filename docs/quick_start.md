@@ -125,6 +125,7 @@ Now that you have AtomKit running, explore:
 - Run examples: `python examples/basic_usage.py`
 - Check API docs: See `docs/api/` directory
 - Report issues: [GitHub Issues](https://github.com/rfsilva13/atomkit/issues)
+- Email support: rfsilva@lip.pt
 
 ## Common Issues
 

@@ -53,7 +53,7 @@ All documentation is written in Markdown and can be viewed directly on GitHub or
 
 - **Issues**: [GitHub Issues](https://github.com/rfsilva13/atomkit/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/rfsilva13/atomkit/discussions)
-- **Email**: ricardo.apf.silva@gmail.com
+- **Email**: rfsilva@lip.pt
 
 ## Contributing to Documentation
 

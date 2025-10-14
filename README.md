@@ -271,6 +271,6 @@ If you use AtomKit in your research, please cite:
 
 ## Contact
 
-Ricardo Ferreira da Silva - ricardo.apf.silva@gmail.com
+Ricardo Ferreira da Silva - rfsilva@lip.pt
 
 Project Link: [https://github.com/rfsilva13/atomkit](https://github.com/rfsilva13/atomkit)

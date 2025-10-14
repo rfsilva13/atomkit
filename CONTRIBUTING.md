@@ -282,7 +282,7 @@ config = Configuration.from_string("2p-1.2p+3")
 
 - **Issues**: For bugs and feature requests, open an issue on GitHub
 - **Discussions**: For questions and general discussion, use GitHub Discussions
-- **Email**: For private inquiries, contact ricardo.apf.silva@gmail.com
+- **Email**: For private inquiries, contact rfsilva@lip.pt
 
 ## Code of Conduct
 
