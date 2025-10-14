@@ -291,7 +291,7 @@ def effective_collision_strength_maxwellian(
     temperature: float,
     energy_range: tuple = (0.1, 1000),
     num_points: int = 1000,
-) -> float:
+) -> Union[float, np.ndarray]:
     """
     Calculate Maxwell-averaged effective collision strength.
 
