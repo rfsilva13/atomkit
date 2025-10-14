@@ -7,7 +7,7 @@ Base class and utility functions for reading FAC output files.
 import logging
 import os
 import re
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -21,7 +21,7 @@ from ..definitions import *  # Import constants and allowed units
 # --- Setup Logging ---
 # Use colorlog if available for nicer terminal output
 try:
-    import colorlog
+    import colorlog  # type: ignore[import-not-found]
 
     # Check if a handler already exists to prevent duplicates
     root_logger = logging.getLogger()
@@ -159,7 +159,7 @@ def J_PI_indexing(df: pd.DataFrame) -> pd.DataFrame:
 
 def _extract_header_info(
     file_path: str, reader_type: str = "level"
-) -> Tuple[Optional[int], Optional[int], Optional[int]]:
+) -> tuple[Optional[int], Optional[int], Optional[int]]:
     """
     Extracts Z, Nele (for levels), and optionally Multipole (for transitions)
     from the header lines of a FAC output file.
@@ -241,7 +241,7 @@ def _extract_header_info(
     return None, None, None
 
 
-def _split_fac_file(input_filename: str, output_prefix: str) -> Tuple[int, List[int]]:
+def _split_fac_file(input_filename: str, output_prefix: str) -> tuple[int, list[int]]:
     """
     Splits a multi-block FAC file (where blocks start with 'NELE') into
     separate temporary files, preserving the original header in each.
@@ -364,6 +364,7 @@ def _split_fac_file(input_filename: str, output_prefix: str) -> Tuple[int, List[
     # --- Write Multiple Blocks to Temporary Files ---
     num_blocks_written, written_block_indices = 0, []
     written_files = []  # Keep track of files actually written
+    output_filename = ""  # Initialize to prevent "possibly unbound" error
     try:
         for i, block_lines_data in enumerate(blocks_content):
             output_filename = f"{output_prefix}_{i+1}.txt"
@@ -409,7 +410,7 @@ class _BaseFacReader:
         """
         self.verbose = verbose
         self.output_prefix = output_prefix
-        self._temp_files_created: List[str] = []  # Track temp files
+        self._temp_files_created: list[str] = []  # Track temp files
 
         # Set logger level based on verbosity
         current_logger = logging.getLogger(__name__)
@@ -448,11 +449,11 @@ class _BaseFacReader:
     def _apply_final_manipulations(
         self,
         df: pd.DataFrame,
-        default_cols: List[str],
-        user_cols_to_keep: Optional[List[str]],
-        user_rename_map: Optional[Dict[str, str]],
+        default_cols: list[str],
+        user_cols_to_keep: Optional[list[str]],
+        user_rename_map: Optional[dict[str, str]],
         include_method_flag: bool,
-        optional_col_map: Optional[Dict[str, bool]] = None,
+        optional_col_map: Optional[dict[str, bool]] = None,
     ) -> pd.DataFrame:
         """
         Applies final column renaming and selection based on user preferences
@@ -524,7 +525,12 @@ class _BaseFacReader:
 
         # Perform renaming
         if actual_index_rename_map:
-            df_renamed.rename_axis(index=actual_index_rename_map, inplace=True)
+            # Cast to satisfy pandas type signature which expects dict[str | int, str]
+            # Create a new dict with the union type to satisfy pandas strict type checking
+            index_map: dict[str | int, str] = {
+                k: v for k, v in actual_index_rename_map.items()
+            }
+            df_renamed.rename_axis(index=index_map, inplace=True)
         if actual_col_rename_map:
             df_renamed.rename(columns=actual_col_rename_map, inplace=True)
 

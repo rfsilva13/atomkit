@@ -6,7 +6,7 @@ to transition data.
 """
 
 import logging
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 def add_level_info_to_transitions(
     transitions_df: pd.DataFrame,
     levels_df: pd.DataFrame,
-    cols_to_add: List[str] = ["label", "configuration", "ion_charge"],
+    cols_to_add: list[str] = ["label", "configuration", "ion_charge"],
     missing_value: Any = "<N/A>",
 ) -> pd.DataFrame:
     """

@@ -7,7 +7,7 @@ ionization cross sections, including resonant contributions via autoionization.
 
 import numpy as np
 import pandas as pd
-from typing import Union, Optional, Tuple
+from typing import Union, Optional
 from scipy.constants import hbar, m_e, e, c
 
 
@@ -170,7 +170,7 @@ class ResonantExcitationCalculator:
 
     def calculate_total_decay_rate(
         self, resonant_level_index: int
-    ) -> Tuple[float, float]:
+    ) -> tuple[float, float]:
         """
         Calculate total decay rate of a resonant level.
 
@@ -204,7 +204,7 @@ class ResonantExcitationCalculator:
         resonant_level_index: int,
         energy_grid: np.ndarray,
         ion_charge: Optional[int] = None,
-    ) -> Tuple[np.ndarray, float, float]:
+    ) -> tuple[np.ndarray, float, float]:
         """
         Calculate electron capture cross section to a resonant state.
 
@@ -336,7 +336,7 @@ class ResonantExcitationCalculator:
         energy_grid: np.ndarray,
         ion_charge: Optional[int] = None,
         resonant_levels: Optional[list] = None,
-    ) -> Tuple[np.ndarray, dict]:
+    ) -> tuple[np.ndarray, dict]:
         """
         Calculate total resonant excitation cross section.
 
@@ -475,7 +475,7 @@ def calculate_resonant_excitation_cross_section(
     energy_grid: np.ndarray,
     ion_charge: Optional[int] = None,
     resonant_levels: Optional[list] = None,
-) -> Tuple[np.ndarray, dict]:
+) -> tuple[np.ndarray, dict]:
     """
     Convenience function to calculate resonant excitation cross section.
 

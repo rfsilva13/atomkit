@@ -6,3 +6,6 @@ dist/
 *.egg-info/
 test_files/
 tests/
+#ignore .md files outside of any directory but include README.md
+*.md
+!README.md

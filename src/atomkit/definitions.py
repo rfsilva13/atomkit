@@ -5,7 +5,7 @@ Defines fundamental constants, mappings, and validation functions
 related to atomic structure used throughout the atomkit library.
 """
 
-from typing import Dict, List, Optional, Union
+from typing import Optional, Union
 
 import scipy.constants as const  # Import scipy constants
 
@@ -41,7 +41,7 @@ ALLOWED_WAVELENGTH_UNITS = ["a", "nm", "m", "cm"]  # 'a' for Angstrom
 # --- Atomic Structure Definitions ---
 
 # Spectroscopic symbols for orbital angular momentum (l)
-L_SYMBOLS: List[str] = [
+L_SYMBOLS: list[str] = [
     "s",
     "p",
     "d",
@@ -67,21 +67,21 @@ L_SYMBOLS: List[str] = [
 """List of standard spectroscopic symbols for orbital angular momentum (l)."""
 
 # Mapping from l symbol (e.g., 'p') to l quantum number (e.g., 1)
-ANGULAR_MOMENTUM_MAP: Dict[str, int] = {
+ANGULAR_MOMENTUM_MAP: dict[str, int] = {
     symbol: l_val for l_val, symbol in enumerate(L_SYMBOLS)
 }
 """Mapping from l symbol (e.g., 'p') to l quantum number (e.g., 1)."""
 
 # Mapping from l quantum number (e.g., 1) to l symbol (e.g., 'p')
 # Note: This map is limited by L_SYMBOLS. Higher l values will need direct handling.
-L_QUANTUM_MAP: Dict[int, str] = {
+L_QUANTUM_MAP: dict[int, str] = {
     l_val: symbol for symbol, l_val in ANGULAR_MOMENTUM_MAP.items()
 }
 """Mapping from l quantum number (e.g., 1) to l symbol (e.g., 'p'). Limited by L_SYMBOLS."""
 
 
 # --- Function to generate SHELL_LABEL_MAP ---
-def _build_shell_label_map(max_n: int = 7) -> Dict[str, str]:
+def _build_shell_label_map(max_n: int = 7) -> dict[str, str]:
     """
     Generates the mapping from shell structure strings to X-ray labels.
 
@@ -91,8 +91,8 @@ def _build_shell_label_map(max_n: int = 7) -> Dict[str, str]:
     Returns:
         A dictionary mapping shell strings (e.g., "1s", "2p-") to labels ("K", "L2").
     """
-    shell_map: Dict[str, str] = {}
-    n_to_letter: Dict[int, str] = {
+    shell_map: dict[str, str] = {}
+    n_to_letter: dict[int, str] = {
         1: "K",
         2: "L",
         3: "M",
@@ -145,7 +145,7 @@ def _build_shell_label_map(max_n: int = 7) -> Dict[str, str]:
 
 
 # Generate the map up to n=7 by default
-SHELL_LABEL_MAP: Dict[str, str] = _build_shell_label_map(max_n=7)
+SHELL_LABEL_MAP: dict[str, str] = _build_shell_label_map(max_n=7)
 """
 Mapping from simple shell structure string (e.g., '1s', '2p-') to X-ray notation label.
 Generated automatically. Includes relativistic ('nl+', 'nl-') and combined ('nl') labels.

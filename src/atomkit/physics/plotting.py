@@ -4,13 +4,17 @@ Plotting utilities for resonant excitation cross sections.
 This module provides convenient plotting functions for visualizing
 resonant cross sections, individual resonance contributions, and
 energy level diagrams.
+
+.. warning::
+    This module is currently experimental and has no automated test coverage.
+    Use with caution and verify outputs manually. API may change in future versions.
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.figure import Figure
+from matplotlib.figure import Figure, SubFigure
 from matplotlib.axes import Axes
-from typing import Optional, List, Tuple, Dict, Union
+from typing import Optional, Union
 import pandas as pd
 
 
@@ -44,13 +48,13 @@ class ResonancePlotter:
         energy: np.ndarray,
         cross_section: np.ndarray,
         ax: Optional[Axes] = None,
-        figsize: Tuple[float, float] = (10, 6),
+        figsize: tuple[float, float] = (10, 6),
         title: Optional[str] = None,
         xlabel: str = "Electron Energy (eV)",
         ylabel: str = "Cross Section (cm²)",
         label: Optional[str] = None,
         **plot_kwargs,
-    ) -> Tuple[Figure, Axes]:
+    ) -> tuple[Union[Figure, SubFigure], Axes]:
         """
         Plot cross section vs energy.
 
@@ -106,14 +110,14 @@ class ResonancePlotter:
         self,
         energy: np.ndarray,
         total_cross_section: np.ndarray,
-        resonance_info: Dict,
+        resonance_info: dict,
         num_resonances: Optional[int] = None,
         ax: Optional[Axes] = None,
-        figsize: Tuple[float, float] = (12, 7),
+        figsize: tuple[float, float] = (12, 7),
         show_total: bool = True,
         title: Optional[str] = None,
         **kwargs,
-    ) -> Tuple[Figure, Axes]:
+    ) -> tuple[Union[Figure, SubFigure], Axes]:
         """
         Plot individual resonance contributions.
 
@@ -169,7 +173,8 @@ class ResonancePlotter:
         top_indices = np.argsort(peak_strengths)[::-1][:num_resonances]
 
         # Color map for resonances
-        colors = plt.cm.Set2(np.linspace(0, 1, min(num_resonances, 8)))
+        cmap = plt.colormaps.get_cmap("Set2")
+        colors = cmap(np.linspace(0, 1, min(num_resonances, 8)))
 
         # Plot individual contributions
         for i, idx in enumerate(top_indices):
@@ -206,8 +211,8 @@ class ResonancePlotter:
     def add_resonance_markers(
         self,
         ax: Axes,
-        resonance_energies: Union[List[float], np.ndarray],
-        resonance_widths: Optional[Union[List[float], np.ndarray]] = None,
+        resonance_energies: Union[list[float], np.ndarray],
+        resonance_widths: Optional[Union[list[float], np.ndarray]] = None,
         marker_style: str = "vlines",
         **kwargs,
     ) -> Axes:
@@ -276,10 +281,10 @@ class ResonancePlotter:
         energy: np.ndarray,
         collision_strength: np.ndarray,
         ax: Optional[Axes] = None,
-        figsize: Tuple[float, float] = (10, 6),
+        figsize: tuple[float, float] = (10, 6),
         title: Optional[str] = None,
         **kwargs,
-    ) -> Tuple[Figure, Axes]:
+    ) -> tuple[Union[Figure, SubFigure], Axes]:
         """
         Plot collision strength vs energy.
 
@@ -328,10 +333,10 @@ class ResonancePlotter:
         energy: np.ndarray,
         cross_section: np.ndarray,
         collision_strength: np.ndarray,
-        resonance_info: Optional[Dict] = None,
-        figsize: Tuple[float, float] = (14, 10),
+        resonance_info: Optional[dict] = None,
+        figsize: tuple[float, float] = (14, 10),
         suptitle: Optional[str] = None,
-    ) -> Tuple[Figure, np.ndarray]:
+    ) -> tuple[Figure, np.ndarray]:
         """
         Create a multi-panel comparison plot.
 
@@ -398,11 +403,11 @@ class ResonancePlotter:
         levels: pd.DataFrame,
         initial_level_index: int,
         final_level_index: int,
-        resonant_level_indices: Optional[List[int]] = None,
+        resonant_level_indices: Optional[list[int]] = None,
         ax: Optional[Axes] = None,
-        figsize: Tuple[float, float] = (8, 10),
+        figsize: tuple[float, float] = (8, 10),
         max_resonances: int = 10,
-    ) -> Tuple[Figure, Axes]:
+    ) -> tuple[Union[Figure, SubFigure], Axes]:
         """
         Plot energy level diagram showing initial, final, and resonant states.
 
@@ -537,12 +542,12 @@ class ResonancePlotter:
 def quick_plot_cross_section(
     energy: np.ndarray,
     cross_section: np.ndarray,
-    resonance_info: Optional[Dict] = None,
+    resonance_info: Optional[dict] = None,
     show_resonances: bool = True,
     num_resonances: int = 5,
-    figsize: Tuple[float, float] = (12, 8),
+    figsize: tuple[float, float] = (12, 8),
     save_path: Optional[str] = None,
-) -> Tuple[Figure, Axes]:
+) -> tuple[Union[Figure, SubFigure], Axes]:
     """
     Quick plotting function for cross sections with resonance markers.
 
@@ -600,7 +605,9 @@ def quick_plot_cross_section(
             )
 
     if save_path:
-        fig.savefig(save_path, dpi=300, bbox_inches="tight")
+        # Get the root figure for saving (handles both Figure and SubFigure)
+        root_fig = fig.figure if isinstance(fig, SubFigure) else fig
+        root_fig.savefig(save_path, dpi=300, bbox_inches="tight")
         print(f"Figure saved to: {save_path}")
 
     return fig, ax

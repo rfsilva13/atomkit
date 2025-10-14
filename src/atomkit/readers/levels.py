@@ -7,7 +7,7 @@ Reader class and function specifically for FAC energy level files (.lev.asc).
 import logging
 import os
 import re
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -57,8 +57,8 @@ class FacReader(_BaseFacReader):
         self,
         conf1: bool = False,  # Kept for potential future use, currently unused
         energy_unit: str = "ev",
-        columns_to_keep: Optional[List[str]] = None,
-        rename_columns: Optional[Dict[str, str]] = None,
+        columns_to_keep: Optional[list[str]] = None,
+        rename_columns: Optional[dict[str, str]] = None,
         output_prefix: str = "temp_fac_lev_block",  # Default prefix for temp files
         verbose: int = 1,
         include_method: bool = False,
@@ -71,9 +71,9 @@ class FacReader(_BaseFacReader):
             conf1 (bool): Placeholder, currently unused. Defaults to False.
             energy_unit (str): Target unit for the 'energy' column.
                                Allowed: 'ev', 'cm-1', 'ry', 'hz', 'j', 'ha'. Defaults to 'ev'.
-            columns_to_keep (Optional[List[str]]): List of concise column names to keep.
+            columns_to_keep (Optional[list[str]]): List of concise column names to keep.
                                                    If None, defaults are used.
-            rename_columns (Optional[Dict[str, str]]): Dictionary mapping concise column names
+            rename_columns (Optional[dict[str, str]]): Dictionary mapping concise column names
                                                        to desired final names.
             output_prefix (str): Prefix for temporary files if splitting is needed.
             verbose (int): Logging verbosity (0: Warnings/Errors, 1: Info, 2: Debug). Defaults to 1.
@@ -97,8 +97,8 @@ class FacReader(_BaseFacReader):
     def read(
         self,
         input_filename: str,
-        block_files: List[str] = [],
-        block_starts: List[int] = [],
+        block_files: list[str] = [],
+        block_starts: list[int] = [],
     ) -> pd.DataFrame:
         """
         Reads level data from the specified file or pre-split block files.
@@ -121,9 +121,12 @@ class FacReader(_BaseFacReader):
                 )
                 levels_list = []
                 for i, block_filename in enumerate(block_files):
-                    start_line = block_starts[i] if i < len(block_starts) else "Unknown"
+                    start_line = block_starts[i] if i < len(block_starts) else None
+                    start_line_display = (
+                        start_line if start_line is not None else "Unknown"
+                    )
                     logger.info(
-                        f"--- Reading Level Block {i+1} (Original Line: {start_line}) from {block_filename} ---"
+                        f"--- Reading Level Block {i+1} (Original Line: {start_line_display}) from {block_filename} ---"
                     )
                     levels_temp = self._read_fac_block_data(block_filename, start_line)
                     if not levels_temp.empty:
@@ -226,7 +229,7 @@ class FacReader(_BaseFacReader):
             )
         return levels_df
 
-    def _find_data_start_row(self, lines: List[str]) -> Tuple[int, str]:
+    def _find_data_start_row(self, lines: list[str]) -> tuple[int, str]:
         """Heuristically finds the starting row of the data table in level files."""
         # Specific header pattern for level files
         header_pattern = re.compile(r"\s*ILEV\s+IBASE\s+ENERGY\s+P\s+VNL\s+2J")
@@ -458,18 +461,22 @@ class FacReader(_BaseFacReader):
             levels["new_config"] = None  # Initialize column
             if self.include_new_config and "conf_detail" in levels.columns:
 
-                def safe_from_compact(x):
+                def safe_from_compact(x: Any) -> Any:
+                    """Convert compact string to Configuration object, returns None on failure."""
                     if isinstance(x, str) and x.strip() and x != "-":
                         try:
                             # Assuming from_compact_string returns a single config or raises error
-                            return Configuration.from_compact_string(
+                            result = Configuration.from_compact_string(
                                 x, generate_permutations=False
                             )
+                            return result
                         except (ValueError, RuntimeError) as e:
                             logger.debug(f"Could not parse compact string '{x}': {e}")
                             return None  # Return None if parsing fails
                     return None
 
+                # Apply function - using Any return type to avoid pandas type signature issues
+                # This is safe because pandas .apply() with object dtype works correctly at runtime
                 levels["new_config"] = levels["conf_detail"].apply(safe_from_compact)
 
             levels["term"] = "-"  # Placeholder for term symbol

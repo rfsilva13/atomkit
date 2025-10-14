@@ -7,7 +7,7 @@ Reader class and function specifically for FAC transition files (.tr.asc).
 import logging
 import os
 import re
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -61,8 +61,8 @@ class FacTransitionReader(_BaseFacReader):
         self,
         energy_unit: str = "ev",
         wavelength_unit: str = "a",
-        columns_to_keep: Optional[List[str]] = None,
-        rename_columns: Optional[Dict[str, str]] = None,
+        columns_to_keep: Optional[list[str]] = None,
+        rename_columns: Optional[dict[str, str]] = None,
         output_prefix: str = "temp_fac_tr_block",  # Default prefix for temp files
         verbose: int = 1,
         include_method: bool = False,
@@ -75,9 +75,9 @@ class FacTransitionReader(_BaseFacReader):
                                Allowed: 'ev', 'cm-1', 'ry', 'hz', 'j', 'ha'. Defaults to 'ev'.
             wavelength_unit (str): Target unit for the calculated 'lambda'.
                                    Allowed: 'a' (Angstrom), 'nm', 'm', 'cm'. Defaults to 'a'.
-            columns_to_keep (Optional[List[str]]): List of concise column names to keep.
+            columns_to_keep (Optional[list[str]]): List of concise column names to keep.
                                                    If None, defaults are used.
-            rename_columns (Optional[Dict[str, str]]): Dictionary mapping concise column names
+            rename_columns (Optional[dict[str, str]]): Dictionary mapping concise column names
                                                        to desired final names.
             output_prefix (str): Prefix for temporary files if splitting is needed.
             verbose (int): Logging verbosity (0: Warnings/Errors, 1: Info, 2: Debug). Defaults to 1.
@@ -101,8 +101,8 @@ class FacTransitionReader(_BaseFacReader):
     def read(
         self,
         input_filename: str,
-        block_files: List[str] = [],
-        block_starts: List[int] = [],
+        block_files: list[str] = [],
+        block_starts: list[int] = [],
     ) -> pd.DataFrame:
         """
         Reads transition data from the specified file or pre-split block files.
@@ -126,9 +126,12 @@ class FacTransitionReader(_BaseFacReader):
                 )
                 transitions_list = []
                 for i, block_filename in enumerate(block_files):
-                    start_line = block_starts[i] if i < len(block_starts) else "Unknown"
+                    start_line = block_starts[i] if i < len(block_starts) else None
+                    start_line_display = (
+                        start_line if start_line is not None else "Unknown"
+                    )
                     logger.info(
-                        f"--- Reading Transition Block {i+1} (Original Line: {start_line}) from {block_filename} ---"
+                        f"--- Reading Transition Block {i+1} (Original Line: {start_line_display}) from {block_filename} ---"
                     )
                     transitions_temp = self._read_fac_transition_block_data(
                         block_filename, start_line
@@ -228,7 +231,7 @@ class FacTransitionReader(_BaseFacReader):
             )
         return transitions_df
 
-    def _find_transition_data_start_row(self, lines: List[str]) -> Tuple[int, str]:
+    def _find_transition_data_start_row(self, lines: list[str]) -> tuple[int, str]:
         """Heuristically finds the starting row of the data table in transition files."""
         # Specific header pattern for transition files
         header_pattern = re.compile(r"\s*ILEV_UP\s+2J_UP\s+ILEV_LO\s+2J_LO\s+")

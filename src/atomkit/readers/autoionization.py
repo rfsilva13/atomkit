@@ -7,7 +7,7 @@ Reader class and function specifically for FAC autoionization files (.ai.asc).
 import logging
 import os
 import re
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
@@ -48,8 +48,8 @@ class FacAutoionizationReader(_BaseFacReader):
     def __init__(
         self,
         energy_unit: str = "ev",
-        columns_to_keep: Optional[List[str]] = None,
-        rename_columns: Optional[Dict[str, str]] = None,
+        columns_to_keep: Optional[list[str]] = None,
+        rename_columns: Optional[dict[str, str]] = None,
         output_prefix: str = "temp_fac_ai_block",
         verbose: int = 1,
         include_method: bool = False,
@@ -68,8 +68,8 @@ class FacAutoionizationReader(_BaseFacReader):
     def read(
         self,
         input_filename: str,
-        block_files: List[str] = [],
-        block_starts: List[int] = [],
+        block_files: list[str] = [],
+        block_starts: list[int] = [],
     ) -> pd.DataFrame:
         """
         Reads autoionization data from the specified file or pre-split block files.
@@ -80,7 +80,7 @@ class FacAutoionizationReader(_BaseFacReader):
             if block_files:
                 ai_list = []
                 for i, block_filename in enumerate(block_files):
-                    start_line = block_starts[i] if i < len(block_starts) else "Unknown"
+                    start_line = block_starts[i] if i < len(block_starts) else None
                     ai_temp = self._read_fac_autoionization_block_data(
                         block_filename, start_line
                     )
@@ -138,7 +138,7 @@ class FacAutoionizationReader(_BaseFacReader):
 
         return ai_df
 
-    def _find_data_start_row(self, lines: List[str]) -> Tuple[int, str]:
+    def _find_data_start_row(self, lines: list[str]) -> tuple[int, str]:
         negrid = 0
         negrid_line_index = -1
         for i, line in enumerate(lines):
@@ -154,7 +154,8 @@ class FacAutoionizationReader(_BaseFacReader):
                 negrid_line_index + negrid + 1,
                 f"Found NEGRID={negrid}. Data starts after energy grid.",
             )
-        return super()._find_data_start_row(lines)
+        # Default: assume data starts at line 0
+        return (0, "No NEGRID found, assuming data starts at beginning.")
 
     def _process_fac_autoionization(
         self,

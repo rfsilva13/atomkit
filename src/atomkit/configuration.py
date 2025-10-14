@@ -8,7 +8,7 @@ of an atom or ion using a collection of Shell objects.
 import copy  # For deep copying configurations during generation
 import itertools  # For generating permutations/combinations
 import re
-from typing import Dict, Iterable, Iterator, List, Optional, Set, Tuple, Union
+from typing import Iterable, Iterator, Optional, Union
 
 import mendeleev  # Import mendeleev package
 
@@ -30,7 +30,7 @@ class Configuration:
     configurations (holes, excitations).
 
     Attributes:
-        shells (List[Shell]): A sorted list of Shell objects in the configuration.
+        shells (list[Shell]): A sorted list of Shell objects in the configuration.
     """
 
     # No __slots__ here, as flexibility might be needed,
@@ -48,7 +48,7 @@ class Configuration:
         """
         # Internal storage: Key is the hashable tuple (n, l_quantum, j_quantum)
         # Value is the Shell object itself.
-        self._shells: Dict[Tuple[int, int, Optional[float]], Shell] = {}
+        self._shells: dict[tuple[int, int, Optional[float]], Shell] = {}
         if shells:
             for shell in shells:
                 # Combine occupations for shells with the same structure during init
@@ -125,7 +125,7 @@ class Configuration:
         return self._shells.get(key)
 
     @property
-    def shells(self) -> List[Shell]:
+    def shells(self) -> list[Shell]:
         """
         Returns a list of all Shell objects currently in the configuration,
         sorted by energy key (Madelung rule), then j, then occupation.
@@ -261,7 +261,7 @@ class Configuration:
         return hash(frozenset(self._shells.values()))
 
     def __contains__(
-        self, item: Union[Shell, Tuple[int, int, Optional[float]]]
+        self, item: Union[Shell, tuple[int, int, Optional[float]]]
     ) -> bool:
         """
         Checks if a specific shell structure (n, l, j) exists in the configuration,
@@ -438,7 +438,7 @@ class Configuration:
     @classmethod
     def from_compact_string(
         cls, compact_string: str, generate_permutations: bool = False
-    ) -> Union["Configuration", List["Configuration"]]:
+    ) -> Union["Configuration", list["Configuration"]]:
         """
         Parses a compact configuration string (e.g., '1*2.2*8.3*5')
         into one or more Configuration objects.
@@ -471,7 +471,7 @@ class Configuration:
             return [] if generate_permutations else cls()
 
         parts = compact_string.strip().split(".")
-        parsed_parts: List[Tuple[int, int]] = []  # Store (n, electrons_in_n)
+        parsed_parts: list[tuple[int, int]] = []  # Store (n, electrons_in_n)
 
         for part in parts:
             if not part:
@@ -532,7 +532,7 @@ class Configuration:
 
         # --- Permutation Logic (generate_permutations=True) ---
         else:
-            all_part_permutations: List[List[Configuration]] = []
+            all_part_permutations: list[list[Configuration]] = []
             for n, electrons_in_n in parsed_parts:
                 # Generate permutations for this single N*E part
                 single_part_configs = cls._generate_subshell_permutations(
@@ -547,7 +547,7 @@ class Configuration:
                 all_part_permutations.append(single_part_configs)
 
             # Combine permutations from different N*E parts using Cartesian product
-            final_configurations_set: Set[Configuration] = set()
+            final_configurations_set: set[Configuration] = set()
             if not all_part_permutations:
                 return []  # Should not happen if parsed_parts was not empty
 
@@ -572,7 +572,7 @@ class Configuration:
     @classmethod
     def _generate_subshell_permutations(
         cls, n: int, total_electrons: int
-    ) -> List["Configuration"]:
+    ) -> list["Configuration"]:
         """
         Internal helper to generate all valid distributions of electrons within
         subshells (l=0 to n-1) for a given principal shell n.
@@ -644,6 +644,129 @@ class Configuration:
         # Convert lists of shells into Configuration objects
         return [Configuration(shells) for shells in valid_distributions]
 
+    # --- FAC Shorthand Notation Methods ---
+
+    @staticmethod
+    def _expand_fac_shorthand(config_str: str) -> list[str]:
+        """
+        Expands a single FAC configuration string containing '*' shorthand into a list
+        of fully specified configuration strings.
+
+        The FAC shorthand notation N*E means "E electrons distributed among subshells
+        with principal quantum number N". This method expands it by creating one
+        configuration for each possible subshell (s, p, d, etc.) for that N.
+
+        Args:
+            config_str: A configuration string that may contain FAC shorthand like "1s2 3*1".
+
+        Returns:
+            A list of expanded configuration strings. If no shorthand is found,
+            returns a list containing the original string.
+
+        Raises:
+            NotImplementedError: If the shorthand uses E > 1 (not yet supported).
+
+        Examples:
+            >>> Configuration._expand_fac_shorthand("1s2 3*1")
+            ["1s2 3s1", "1s2 3p1", "1s2 3d1"]
+            >>> Configuration._expand_fac_shorthand("1s2.2s2")
+            ["1s2.2s2"]
+        """
+        match = re.search(r"(\d+)\*(\d+)", config_str)
+
+        # Base case: no shorthand found, return the original string in a list
+        if not match:
+            return [config_str]
+
+        n_str, e_str = match.groups()
+        n, e = int(n_str), int(e_str)
+
+        # This simple expansion assumes e=1, which is the most common use case.
+        # A more complex version could handle e>1 with combinations.
+        if e != 1:
+            raise NotImplementedError(
+                f"Shorthand expansion for {e} electrons is not implemented. Only 'N*1' is supported."
+            )
+
+        base_config = re.sub(r"\s*\d+\*\d+", "", config_str).strip()
+
+        expanded_configs = []
+        # Iterate l from 0 (s) up to n-1
+        for l_quantum in range(n):
+            l_symbol = L_SYMBOLS[l_quantum]
+            new_shell_str = f"{n}{l_symbol}{e}"
+
+            # Combine base and new shell, ensuring no leading/trailing dots
+            if base_config:
+                new_config = f"{base_config}.{new_shell_str}"
+            else:
+                new_config = new_shell_str
+            expanded_configs.append(new_config)
+
+        return expanded_configs
+
+    @classmethod
+    def generate_recombined_configs_from_strings(
+        cls, target_configs: list[str], max_n: int, max_l: int
+    ) -> list[str]:
+        """
+        Generates a list of (N+1)-electron autoionizing configurations by adding
+        one electron to a list of N-electron target configuration strings.
+
+        This is a convenience method that understands and expands FAC shorthand
+        notation (e.g., "3*1") and returns string representations. It's a wrapper
+        around generate_recombined_configurations() that handles multiple input
+        configurations and FAC shorthand notation.
+
+        Args:
+            target_configs: A list of N-electron configuration strings, which can
+                            include FAC shorthand like "1s2 3*1".
+            max_n: The maximum principal quantum number of the shell to add the
+                   electron to.
+            max_l: The maximum orbital angular momentum of the shell to add the
+                   electron to.
+
+        Returns:
+            A sorted list of unique, (N+1)-electron configuration strings.
+
+        Examples:
+            >>> configs = ["1s2.2s2", "1s2.2s1.2p1"]
+            >>> recombined = Configuration.generate_recombined_configs_from_strings(
+            ...     configs, max_n=3, max_l=2
+            ... )
+            >>> # Returns all unique configurations with one electron added
+
+            >>> # With FAC shorthand
+            >>> configs = ["1s2 3*1"]  # Expands to 3s, 3p, 3d
+            >>> recombined = Configuration.generate_recombined_configs_from_strings(
+            ...     configs, max_n=4, max_l=2
+            ... )
+        """
+        # First, fully expand all shorthand notations from the input list
+        expanded_target_configs = []
+        for conf_str in target_configs:
+            expanded_target_configs.extend(cls._expand_fac_shorthand(conf_str))
+
+        # Use a set to store unique final configurations
+        final_configs_set: set[Configuration] = set()
+
+        # Process each fully specified target configuration
+        for conf_str in expanded_target_configs:
+            base_config = cls.from_string(conf_str)
+
+            # Use the Configuration class method to generate recombined configs
+            recombined_list = base_config.generate_recombined_configurations(
+                max_n=max_n, max_l=max_l
+            )
+
+            # Add all generated configurations to the set
+            final_configs_set.update(recombined_list)
+
+        # Convert the set of Configuration objects back to sorted strings for the output
+        final_config_strings = sorted([str(c) for c in final_configs_set])
+
+        return final_config_strings
+
     # --- Methods corresponding to original functions (Implementations required) ---
 
     def remove_filled_shells(self) -> "Configuration":
@@ -660,7 +783,7 @@ class Configuration:
         ]
         return Configuration(partial_shells)
 
-    def get_holes(self) -> Dict[str, int]:
+    def get_holes(self) -> dict[str, int]:
         """
         Calculates the number of holes for each shell structure in the configuration.
         (Refactoring of `parse_holes`)
@@ -682,7 +805,7 @@ class Configuration:
                 holes_dict[structure_key_str] = num_holes
         return holes_dict
 
-    def compare(self, other: "Configuration") -> Dict[str, int]:
+    def compare(self, other: "Configuration") -> dict[str, int]:
         """
         Compares the occupation numbers of structurally identical shells
         between this configuration and another.
@@ -707,7 +830,7 @@ class Configuration:
 
         differences = {}
         # Get all unique shell structure keys from both configurations
-        all_shell_keys: Set[Tuple[int, int, Optional[float]]] = set(
+        all_shell_keys: set[tuple[int, int, Optional[float]]] = set(
             self._shells.keys()
         ) | set(other._shells.keys())
 
@@ -732,8 +855,8 @@ class Configuration:
         return differences
 
     def split_core_valence(
-        self, core_definition: Iterable[Union[str, Tuple[int, int, Optional[float]]]]
-    ) -> Tuple["Configuration", "Configuration"]:
+        self, core_definition: Iterable[Union[str, tuple[int, int, Optional[float]]]]
+    ) -> tuple["Configuration", "Configuration"]:
         """
         Splits the current configuration into core and valence configurations.
 
@@ -753,7 +876,7 @@ class Configuration:
             ValueError: If a string in core_definition is invalid.
             TypeError: If core_definition contains invalid types.
         """
-        core_keys: Set[Tuple[int, int, Optional[float]]] = set()
+        core_keys: set[tuple[int, int, Optional[float]]] = set()
         for item in core_definition:
             if isinstance(item, str):
                 try:
@@ -814,7 +937,7 @@ class Configuration:
         num_holes_left: int,
         start_shell_index: int,
         current_config: "Configuration",
-    ) -> Set["Configuration"]:
+    ) -> set["Configuration"]:
         """Internal recursive helper for generating hole configurations."""
         # Base case: No more holes to create
         if num_holes_left == 0:
@@ -853,7 +976,7 @@ class Configuration:
 
         return valid_next_configs
 
-    def generate_hole_configurations(self, num_holes: int = 1) -> List["Configuration"]:
+    def generate_hole_configurations(self, num_holes: int = 1) -> list["Configuration"]:
         """
         Generates all possible unique configurations by creating the specified
         number of holes (removing electrons) in the current configuration.
@@ -887,9 +1010,9 @@ class Configuration:
 
     def _generate_single_excitation_filtered(
         self,
-        target_shell_structures: List[Tuple[int, int, Optional[float]]],
-        allowed_source_keys: Optional[Set[Tuple[int, int, Optional[float]]]] = None,
-    ) -> Set["Configuration"]:
+        target_shell_structures: list[tuple[int, int, Optional[float]]],
+        allowed_source_keys: Optional[set[tuple[int, int, Optional[float]]]] = None,
+    ) -> set["Configuration"]:
         """
         Helper to generate single excitations, optionally filtering source shells.
 
@@ -953,12 +1076,12 @@ class Configuration:
 
     def generate_excitations(
         self,
-        target_shells: List[Union[Shell, str]],
+        target_shells: list[Union[Shell, str]],
         excitation_level: int = 1,
         source_shells: Optional[
-            Iterable[Union[str, Shell, Tuple[int, int, Optional[float]]]]
+            Iterable[Union[str, Shell, tuple[int, int, Optional[float]]]]
         ] = None,
-    ) -> List["Configuration"]:
+    ) -> list["Configuration"]:
         """
         Generates excited configurations by moving electrons to target shells,
         optionally restricting which electrons can be moved.
@@ -985,7 +1108,7 @@ class Configuration:
             raise ValueError("Excitation level must be a positive integer.")
 
         # --- Validate target shells upfront ---
-        target_shell_structures_set: Set[Tuple[int, int, Optional[float]]] = set()
+        target_shell_structures_set: set[tuple[int, int, Optional[float]]] = set()
         for t_shell in target_shells:
             if isinstance(t_shell, Shell):
                 target_shell_structures_set.add(
@@ -1010,7 +1133,7 @@ class Configuration:
         target_shell_structures = list(target_shell_structures_set)
 
         # --- Validate and process source_shells if provided ---
-        allowed_source_keys: Optional[Set[Tuple[int, int, Optional[float]]]] = None
+        allowed_source_keys: Optional[set[tuple[int, int, Optional[float]]]] = None
         if source_shells is not None:
             allowed_source_keys = set()
             for s_shell in source_shells:
@@ -1110,7 +1233,7 @@ class Configuration:
         self,
         max_n: int,
         max_l: Optional[int] = None,
-    ) -> List["Configuration"]:
+    ) -> list["Configuration"]:
         """
         Generates (N+1)-electron autoionizing/recombined configurations by adding
         one electron to this N-electron configuration.
@@ -1156,7 +1279,7 @@ class Configuration:
                 shells_to_add.append(Shell(n, l_quantum, 1))
 
         # Use a set to store unique configurations
-        recombined_configs: Set[Configuration] = set()
+        recombined_configs: set[Configuration] = set()
 
         # Try adding an electron to each possible shell
         for shell_to_add in shells_to_add:
@@ -1177,10 +1300,10 @@ class Configuration:
     @classmethod
     def generate_recombined_configurations_batch(
         cls,
-        configurations: List["Configuration"],
+        configurations: list["Configuration"],
         max_n: int,
         max_l: Optional[int] = None,
-    ) -> List["Configuration"]:
+    ) -> list["Configuration"]:
         """
         Generates (N+1)-electron recombined configurations for a list of input
         configurations and merges them into a single unique list.
@@ -1229,7 +1352,7 @@ class Configuration:
                 )
 
         # Use a set to automatically handle uniqueness across all inputs
-        all_recombined: Set[Configuration] = set()
+        all_recombined: set[Configuration] = set()
 
         # Generate recombined configs for each input configuration
         for config in configurations:
@@ -1242,11 +1365,11 @@ class Configuration:
     @classmethod
     def generate_doubly_excited_autoionizing(
         cls,
-        configurations: List["Configuration"],
+        configurations: list["Configuration"],
         max_n: int,
         max_l: Optional[int] = None,
         num_holes: int = 1,
-    ) -> List["Configuration"]:
+    ) -> list["Configuration"]:
         """
         Generates doubly-excited autoionizing configurations from a list of base
         configurations by creating holes and then adding electrons.
@@ -1306,7 +1429,7 @@ class Configuration:
                 )
 
         # Step 1: Generate hole configurations from all base configs
-        hole_configs_set: Set[Configuration] = set()
+        hole_configs_set: set[Configuration] = set()
         for config in configurations:
             try:
                 holes = config.generate_hole_configurations(num_holes=num_holes)
@@ -1338,7 +1461,7 @@ class Configuration:
     @classmethod
     def configurations_to_string(
         cls,
-        configurations: List["Configuration"],
+        configurations: list["Configuration"],
         separator: str = ".",
         line_separator: str = "\n",
         numbered: bool = False,
@@ -1428,7 +1551,7 @@ class Configuration:
         # Join with the specified line separator
         return line_separator.join(lines)
 
-    def calculate_xray_label(self, reference_config: "Configuration") -> List[str]:
+    def calculate_xray_label(self, reference_config: "Configuration") -> list[str]:
         """
         Calculates the X-ray notation label(s) for this configuration relative
         to a reference configuration (typically the neutral ground state).

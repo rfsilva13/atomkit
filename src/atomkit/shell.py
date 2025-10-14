@@ -6,7 +6,7 @@ or relativistic sub-subshell.
 """
 
 import re
-from typing import Optional, Tuple, Union
+from typing import Optional, Union
 
 # Use absolute import based on package structure assuming definitions.py is in the same directory
 # If definitions.py is in the parent directory or elsewhere, adjust the import path.
@@ -177,7 +177,7 @@ class Shell:
         """Calculates the number of holes (vacancies) in the shell."""
         return self.max_occupation() - self.occupation
 
-    def energy_key(self) -> Tuple[int, int]:
+    def energy_key(self) -> tuple[int, int]:
         """
         Returns a tuple (n+l, n) for sorting shells based on the Madelung (n+l) rule.
         Lower n is preferred for ties in n+l.
