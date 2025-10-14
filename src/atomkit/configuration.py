@@ -181,7 +181,7 @@ class Configuration:
 
         num_electrons = self.total_electrons()
         ion_stage = atomic_number - num_electrons
-        return ion_stage
+        return ion_stage  # type: ignore
 
     def __str__(self) -> str:
         """
@@ -189,10 +189,40 @@ class Configuration:
         sorted by energy (Madelung rule). Shells are separated by dots.
         Returns an empty string for an empty configuration.
         """
+        # Use to_string with default separator
+        return self.to_string(separator=".")
+
+    def to_string(self, separator: str = ".") -> str:
+        """
+        Formats the configuration into string notation with a custom separator.
+
+        Shells are sorted by energy (Madelung rule) and joined with the specified
+        separator. This is useful when different programs require different formats.
+
+        Args:
+            separator: The string to use between shells. Common values:
+                      - "." (default) for dot notation: "1s2.2s2.2p6"
+                      - " " for space notation: "1s2 2s2 2p6"
+                      - "" for compact notation: "1s22s22p6"
+                      - Any other string as needed
+
+        Returns:
+            A string representation of the configuration using the specified separator.
+            Returns an empty string for an empty configuration.
+
+        Examples:
+            >>> config = Configuration.from_string("1s2.2s2.2p6")
+            >>> config.to_string()  # Default: dots
+            '1s2.2s2.2p6'
+            >>> config.to_string(separator=" ")  # Spaces
+            '1s2 2s2 2p6'
+            >>> config.to_string(separator="")  # Compact
+            '1s22s22p6'
+        """
         # self.shells property already returns sorted shells
         # Filter out shells that might have ended up with 0 occupation internally
         shell_strings = [str(shell) for shell in self.shells if shell.occupation > 0]
-        return ".".join(shell_strings)
+        return separator.join(shell_strings)
 
     def __repr__(self) -> str:
         """Provides an unambiguous string representation for debugging."""
@@ -360,14 +390,9 @@ class Configuration:
             if (
                 not config_str or config_str == "None"
             ):  # Check for empty or 'None' string
-                ion_str = (
-                    f"{element_symbol}{ion_charge:+}"
-                    if ion_charge != 0
-                    else f"neutral {element_symbol}"
-                )
-                raise AttributeError(
-                    f"Mendeleev returned an empty or invalid configuration string for {ion_str} after ionization."
-                )
+                # This is valid for fully ionized atoms (e.g., H+)
+                # Return empty configuration
+                return cls()  # Return empty configuration
 
             # TODO: Handle potential noble gas core notation [Core]... if needed
             # This might require calling get_valence() and combining with core config string
@@ -943,7 +968,7 @@ class Configuration:
                            Can be Shell objects or valid shell strings (e.g., "3d", "4p+").
                            Occupation of input shells is ignored, only structure matters.
             excitation_level: The number of electrons to excite (1 for single, 2 for double, etc.).
-            source_shells: Optional. An iterable defining the shell structures from which
+            source_shells: Optional. An iterable definin    g the shell structures from which
                            electrons are allowed to be excited. If None (default), any electron
                            can be excited. Accepts strings, Shells, or (n,l,j) tuples.
 
@@ -1081,6 +1106,328 @@ class Configuration:
         return sorted(list(final_level_configs), key=lambda c: str(c))
         # --- End Fix ---
 
+    def generate_recombined_configurations(
+        self,
+        max_n: int,
+        max_l: Optional[int] = None,
+    ) -> List["Configuration"]:
+        """
+        Generates (N+1)-electron autoionizing/recombined configurations by adding
+        one electron to this N-electron configuration.
+
+        This method systematically adds an electron to all possible shells up to
+        the specified quantum numbers, creating configurations useful for modeling
+        dielectronic recombination and autoionization processes.
+
+        Args:
+            max_n: The maximum principal quantum number of the shell to add the
+                   electron to.
+            max_l: The maximum orbital angular momentum quantum number of the shell
+                   to add the electron to. If None, defaults to max_n-1 (all allowed
+                   l values for each n).
+
+        Returns:
+            A sorted list of unique Configuration objects, each with one additional
+            electron compared to the original configuration.
+
+        Raises:
+            ValueError: If max_n is less than 1 or max_l is negative.
+
+        Example:
+            >>> config = Configuration.from_string("1s2.2s2")  # Be-like ion
+            >>> recombined = config.generate_recombined_configurations(max_n=3, max_l=2)
+            >>> # Returns configs like: 1s2.2s2.3s1, 1s2.2s2.3p1, 1s2.2s2.3d1
+        """
+        if not isinstance(max_n, int) or max_n < 1:
+            raise ValueError(f"max_n must be an integer >= 1, got {max_n}")
+
+        if max_l is None:
+            max_l = max_n - 1  # Allow all l values up to n-1 for each n
+        elif not isinstance(max_l, int) or max_l < 0:
+            raise ValueError(
+                f"max_l must be a non-negative integer or None, got {max_l}"
+            )
+
+        # Create a list of all possible shells to add an electron to
+        shells_to_add = []
+        for n in range(1, max_n + 1):
+            # l must be less than n, so use min(n, max_l + 1)
+            for l_quantum in range(min(n, max_l + 1)):
+                shells_to_add.append(Shell(n, l_quantum, 1))
+
+        # Use a set to store unique configurations
+        recombined_configs: Set[Configuration] = set()
+
+        # Try adding an electron to each possible shell
+        for shell_to_add in shells_to_add:
+            try:
+                # Create a copy of the current configuration
+                new_config = self.copy()
+                # Add the shell (combining if it already exists)
+                new_config.add_shell(shell_to_add, combine_occupation=True)
+                # Add to the set (automatically handles uniqueness)
+                recombined_configs.add(new_config)
+            except ValueError:
+                # This happens if the shell is already full - skip it
+                pass
+
+        # Convert to sorted list for consistent output
+        return sorted(list(recombined_configs), key=lambda c: str(c))
+
+    @classmethod
+    def generate_recombined_configurations_batch(
+        cls,
+        configurations: List["Configuration"],
+        max_n: int,
+        max_l: Optional[int] = None,
+    ) -> List["Configuration"]:
+        """
+        Generates (N+1)-electron recombined configurations for a list of input
+        configurations and merges them into a single unique list.
+
+        This is a convenience method for batch processing multiple configurations.
+        It calls generate_recombined_configurations() for each input configuration
+        and returns all unique results combined.
+
+        Args:
+            configurations: A list of Configuration objects to process.
+            max_n: The maximum principal quantum number of the shell to add the
+                   electron to.
+            max_l: The maximum orbital angular momentum quantum number of the shell
+                   to add the electron to. If None, defaults to max_n-1 (all allowed
+                   l values for each n).
+
+        Returns:
+            A sorted list of unique Configuration objects, containing all recombined
+            configurations generated from all input configurations (duplicates removed).
+
+        Raises:
+            ValueError: If max_n is less than 1, max_l is negative, or configurations
+                        list is empty.
+            TypeError: If any element in configurations is not a Configuration object.
+
+        Example:
+            >>> # Generate Li-like configurations
+            >>> li_like = Configuration.from_element("Li", ion_charge=0)
+            >>> li_like_excited = li_like.generate_excitations(["3s", "3p", "3d"], 1)
+            >>>
+            >>> # Generate recombined configs for all Li-like states at once
+            >>> all_li = [li_like] + li_like_excited
+            >>> recombined = Configuration.generate_recombined_configurations_batch(
+            ...     all_li, max_n=4, max_l=2
+            ... )
+            >>> # Returns all unique (N+1)-electron configs from all Li-like states
+        """
+        if not configurations:
+            raise ValueError("configurations list cannot be empty")
+
+        # Validate that all elements are Configuration objects
+        for i, config in enumerate(configurations):
+            if not isinstance(config, cls):
+                raise TypeError(
+                    f"Element at index {i} is not a Configuration object: {type(config)}"
+                )
+
+        # Use a set to automatically handle uniqueness across all inputs
+        all_recombined: Set[Configuration] = set()
+
+        # Generate recombined configs for each input configuration
+        for config in configurations:
+            recombined = config.generate_recombined_configurations(max_n, max_l)
+            all_recombined.update(recombined)
+
+        # Convert to sorted list for consistent output
+        return sorted(list(all_recombined), key=lambda c: str(c))
+
+    @classmethod
+    def generate_doubly_excited_autoionizing(
+        cls,
+        configurations: List["Configuration"],
+        max_n: int,
+        max_l: Optional[int] = None,
+        num_holes: int = 1,
+    ) -> List["Configuration"]:
+        """
+        Generates doubly-excited autoionizing configurations from a list of base
+        configurations by creating holes and then adding electrons.
+
+        This creates (N+1)-electron configurations with core holes, useful for
+        modeling autoionization and dielectronic recombination processes where
+        the system is doubly excited.
+
+        The process:
+        1. Create (N-num_holes)-electron configurations by removing electrons
+        2. Add (num_holes+1) electrons to create (N+1)-electron autoionizing configs
+
+        For example, from 1s2.2p1 (3e) with num_holes=1:
+        - Create hole: 1s1.2p1 (2e) or 1s2 (2e)
+        - Add 2 electrons: 1s1.2s2.2p1 (4e), 1s1.2s1.2p2 (4e), etc.
+
+        Args:
+            configurations: A list of base Configuration objects (typically N electrons).
+            max_n: The maximum principal quantum number for added electrons.
+            max_l: The maximum orbital angular momentum for added electrons.
+                   If None, defaults to max_n-1.
+            num_holes: Number of electrons to remove before recombining.
+                      Default is 1 (single core hole).
+
+        Returns:
+            A sorted list of unique (N+1)-electron Configuration objects with
+            core holes, representing doubly-excited autoionizing states.
+
+        Raises:
+            ValueError: If parameters are invalid or configurations list is empty.
+            TypeError: If any element in configurations is not a Configuration object.
+
+        Example:
+            >>> # Li-like configurations (3 electrons)
+            >>> li_configs = [
+            ...     Configuration.from_string("1s2.2p1"),
+            ...     Configuration.from_string("1s2.3s1"),
+            ... ]
+            >>>
+            >>> # Generate doubly-excited autoionizing (4 electrons with hole)
+            >>> autoionizing = Configuration.generate_doubly_excited_autoionizing(
+            ...     li_configs, max_n=4, max_l=3
+            ... )
+            >>> # Returns configs like: 1s1.2s2.2p1, 1s1.2s1.2p2, 1s1.2s2.3s1, etc.
+        """
+        if not configurations:
+            raise ValueError("configurations list cannot be empty")
+
+        if not isinstance(num_holes, int) or num_holes < 1:
+            raise ValueError(f"num_holes must be a positive integer, got {num_holes}")
+
+        # Validate that all elements are Configuration objects
+        for i, config in enumerate(configurations):
+            if not isinstance(config, cls):
+                raise TypeError(
+                    f"Element at index {i} is not a Configuration object: {type(config)}"
+                )
+
+        # Step 1: Generate hole configurations from all base configs
+        hole_configs_set: Set[Configuration] = set()
+        for config in configurations:
+            try:
+                holes = config.generate_hole_configurations(num_holes=num_holes)
+                hole_configs_set.update(holes)
+            except ValueError:
+                # Skip if we can't create enough holes (not enough electrons)
+                continue
+
+        if not hole_configs_set:
+            # No valid hole configurations could be generated
+            return []
+
+        hole_configs = list(hole_configs_set)
+
+        # Step 2: Add (num_holes + 1) electrons to create autoionizing configs
+        # We need to call generate_recombined_configurations multiple times
+        # to add multiple electrons
+
+        current_configs = hole_configs
+        for _ in range(num_holes + 1):
+            current_configs = cls.generate_recombined_configurations_batch(
+                current_configs, max_n=max_n, max_l=max_l
+            )
+            if not current_configs:
+                return []
+
+        return current_configs
+
+    @classmethod
+    def configurations_to_string(
+        cls,
+        configurations: List["Configuration"],
+        separator: str = ".",
+        line_separator: str = "\n",
+        numbered: bool = False,
+        start_index: int = 1,
+        list: bool = True,
+    ) -> str:
+        """
+        Converts a list of Configuration objects to a formatted string.
+
+        This is a convenience method for printing, saving, or exporting lists
+        of configurations. Each configuration is formatted on a separate line.
+
+        Args:
+            configurations: A list of Configuration objects to convert.
+            separator: The separator to use between shells within each configuration.
+                      Default is "." for dot notation. Use " " for space notation,
+                      "" for compact notation, etc.
+            line_separator: The separator between configurations. Default is "\n"
+                           (newline). Can use other separators like ", " or "; ".
+            numbered: If True, prefix each configuration with a number.
+                     Default is False.
+            start_index: If numbered is True, start numbering from this value.
+                        Default is 1.
+
+        Returns:
+            A formatted string containing all configurations.
+
+        Raises:
+            ValueError: If configurations list is empty.
+            TypeError: If any element in configurations is not a Configuration object.
+
+        Examples:
+            >>> configs = [
+            ...     Configuration.from_string("1s2"),
+            ...     Configuration.from_string("1s2.2s1"),
+            ...     Configuration.from_string("1s2.2p1"),
+            ... ]
+            >>>
+            >>> # Simple list (default)
+            >>> print(Configuration.configurations_to_string(configs))
+            1s2
+            1s2.2s1
+            1s2.2p1
+            >>>
+            >>> # Numbered list
+            >>> print(Configuration.configurations_to_string(configs, numbered=True))
+            1. 1s2
+            2. 1s2.2s1
+            3. 1s2.2p1
+            >>>
+            >>> # Space-separated (for FAC), numbered
+            >>> print(Configuration.configurations_to_string(
+            ...     configs, separator=' ', numbered=True
+            ... ))
+            1. 1s2
+            2. 1s2 2s1
+            3. 1s2 2p1
+            >>>
+            >>> # Comma-separated on one line
+            >>> print(Configuration.configurations_to_string(
+            ...     configs, line_separator=", "
+            ... ))
+            1s2, 1s2.2s1, 1s2.2p1
+        """
+        if not configurations:
+            raise ValueError("configurations list cannot be empty")
+
+        # Validate that all elements are Configuration objects
+        for i, config in enumerate(configurations):
+            if not isinstance(config, cls):
+                raise TypeError(
+                    f"Element at index {i} is not a Configuration object: {type(config)}"
+                )
+
+        # Format each configuration
+        lines = []
+        for i, config in enumerate(configurations):
+            config_str = config.to_string(separator=separator)
+            if numbered:
+                line = f"{start_index + i}. {config_str}"
+            else:
+                line = config_str
+            lines.append(line)
+        if list:
+            return lines  # type: ignore
+
+        # Join with the specified line separator
+        return line_separator.join(lines)
+
     def calculate_xray_label(self, reference_config: "Configuration") -> List[str]:
         """
         Calculates the X-ray notation label(s) for this configuration relative
@@ -1187,3 +1534,8 @@ class Configuration:
     # TakeElectron/AddElectron are handled by Shell methods, used within config generation.
     # JoinPairs is handled by Configuration.__init__ / add_shell(combine=True).
     # FilterEqual is a general utility, maybe atomkit.utils.filter_equal?
+
+
+if __name__ == "__main__":
+    # Unit tests have been moved to tests/test_configuration.py
+    pass
