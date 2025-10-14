@@ -1,33 +1,140 @@
 [tool.poetry]
 name = "atomkit"
 version = "0.1.0"
-description = "A Python toolkit for atomic structure and spectra calculations." # Add a description!
+description = "A Python toolkit for atomic structure and spectra calculations with FAC data parsing capabilities"
 authors = ["Ricardo Ferreira da Silva <ricardo.apf.silva@gmail.com>"]
-license = "MIT"  # Choose a license (e.g., MIT, Apache-2.0) and add a LICENSE file
+license = "MIT"
 readme = "README.md"
-# This line tells Poetry where to find the package source
+homepage = "https://github.com/rfsilva13/atomkit"
+repository = "https://github.com/rfsilva13/atomkit"
+documentation = "https://github.com/rfsilva13/atomkit/blob/main/README.md"
+keywords = [
+    "atomic-physics",
+    "spectroscopy",
+    "FAC",
+    "plasma-physics",
+    "electron-configuration",
+    "atomic-structure",
+    "cross-sections",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Physics",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+]
 packages = [{ include = "atomkit", from = "src" }]
 
 [tool.poetry.dependencies]
-python = ">=3.13, <3.14"
-# List your runtime dependencies here
-pandas = ">=2.2.3,<3.0.0"
-numpy = ">=2.2.5,<3.0.0"
-mendeleev = ">=1.0.0,<2.0.0"
-roman = ">=5.0,<6.0"
-seaborn = ">=0.13.2,<0.14.0"
-matplotlib = ">=3.10.1,<4.0.0"
+python = ">=3.10, <3.14"
+# Core dependencies
+pandas = ">=2.2.0,<3.0.0"
+numpy = ">=1.24.0,<3.0.0"
+scipy = ">=1.10.0,<2.0.0"
+# Atomic physics data
+mendeleev = ">=0.9.0,<2.0.0"
+# Plotting (optional but recommended)
+matplotlib = {version = ">=3.7.0,<4.0.0", optional = true}
+seaborn = {version = ">=0.12.0,<0.14.0", optional = true}
+# Logging and formatting
+colorlog = {version = ">=6.7.0,<7.0.0", optional = true}
 colorama = ">=0.4.6,<0.5.0"
 tabulate = ">=0.9.0,<0.10.0"
-colorlog = "^6.9.0"
-scipy = "^1.15.2"
+
+[tool.poetry.extras]
+plotting = ["matplotlib", "seaborn"]
+logging = ["colorlog"]
+all = ["matplotlib", "seaborn", "colorlog"]
 
 [tool.poetry.group.dev.dependencies]
-# List your development dependencies here
-pytest = "^8.3.5" # Or use a looser constraint like "^8.0"
+# Testing
+pytest = ">=7.4.0,<9.0.0"
+pytest-cov = ">=4.0.0,<6.0.0"
+# Code quality
+black = ">=23.0.0,<25.0.0"
+ruff = ">=0.1.0,<1.0.0"
+mypy = ">=1.0.0,<2.0.0"
+# Documentation
+sphinx = {version = ">=7.0.0,<9.0.0", optional = true}
+sphinx-rtd-theme = {version = ">=1.3.0,<3.0.0", optional = true}
 
 [build-system]
-# Standard build system definition for Poetry projects
-requires = ["poetry-core>=1.0.0"] # Loosened constraint slightly, >=1.0.0 is usually fine
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --strict-markers"
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py310', 'py311', 'py312', 'py313']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501", # line too long (handled by black)
+    "B008", # do not perform function calls in argument defaults
+    "C901", # too complex
+]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "mendeleev.*",
+    "scipy.*",
+    "matplotlib.*",
+    "seaborn.*",
+    "colorlog.*",
+]
+ignore_missing_imports = true
 
