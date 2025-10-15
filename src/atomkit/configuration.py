@@ -1551,6 +1551,92 @@ class Configuration:
         # Join with the specified line separator
         return line_separator.join(lines)
 
+    def generate_autostructure_configurations(
+        self,
+        valence_shells: list[Union[str, Shell]],
+        max_n: int,
+        max_l: int,
+    ) -> list["Configuration"]:
+        """
+        Generates single excitation configurations suitable for AUTOSTRUCTURE calculations.
+
+        This method generates all single electron excitations from the specified valence
+        shells to target shells up to max_n and max_l, following AUTOSTRUCTURE conventions.
+        The ground state configuration (self) is automatically included as the first configuration.
+
+        This is designed for atomic structure codes like AUTOSTRUCTURE that need
+        systematically generated configuration sets with single excitations from
+        valence electrons.
+
+        Args:
+            valence_shells: List of valence shell identifiers from which electrons
+                           can be excited. Can be Shell objects or strings like "3d", "4s".
+            max_n: Maximum principal quantum number for excitation targets.
+            max_l: Maximum orbital angular momentum quantum number for excitation targets.
+
+        Returns:
+            A list of Configuration objects starting with the ground state (self),
+            followed by all unique single excitation configurations, sorted.
+
+        Raises:
+            ValueError: If valence_shells is empty or contains invalid shell specifications.
+            TypeError: If valence_shells contains objects that are not Shell or str.
+
+        Example:
+            >>> # Fe I ground state
+            >>> config = Configuration.from_string("1s2.2s2.2p6.3s2.3p6.3d6.4s2")
+            >>>
+            >>> # Generate configurations for AUTOSTRUCTURE
+            >>> # Excite from 3d and 4s, up to n=5, l=2 (d orbitals)
+            >>> configs = config.generate_autostructure_configurations(
+            ...     valence_shells=["3d", "4s"],
+            ...     max_n=5,
+            ...     max_l=2
+            ... )
+            >>>
+            >>> print(f"Generated {len(configs)} configurations")
+            >>> # First is ground state, rest are single excitations
+            >>> for i, c in enumerate(configs[:3]):
+            ...     print(f"{i+1}. {c.to_string(separator=' ')}")
+
+        Note:
+            This method uses the underlying `generate_excitations()` method with
+            systematically generated target shells. It's specifically designed for
+            AUTOSTRUCTURE input generation but uses the general-purpose excitation
+            generation infrastructure.
+
+        See Also:
+            generate_excitations: For more general excitation generation with custom targets.
+            generate_recombined_configurations: For autoionization/recombination configs.
+        """
+        if not valence_shells:
+            raise ValueError("valence_shells cannot be empty")
+
+        # Import here to avoid circular import
+        from .definitions import L_SYMBOLS
+
+        # Generate all target shells up to max_n and max_l
+        target_shells = []
+        for n in range(1, max_n + 1):
+            # l must be less than n
+            effective_max_l = min(max_l, n - 1)
+            for l in range(0, effective_max_l + 1):
+                l_symbol = L_SYMBOLS[l]
+                # Don't include j quantum number - let generate_excitations handle it
+                target_shells.append(f"{n}{l_symbol}")
+
+        # Use the existing generate_excitations method with source restriction
+        excited_configs = self.generate_excitations(
+            target_shells=target_shells,
+            excitation_level=1,  # Single excitations only
+            source_shells=valence_shells,
+        )
+
+        # Return ground state + excited configurations
+        result = [self.copy()] + excited_configs
+
+        return result
+
     def calculate_xray_label(self, reference_config: "Configuration") -> list[str]:
         """
         Calculates the X-ray notation label(s) for this configuration relative

@@ -142,3 +142,11 @@ CODE_ANALYSIS.md
 DEV_GUIDE.md
 FINAL_CLEANUP_PLAN.md
 FINAL_REPORT.md
+# Development and temporary files
+scripts_to_rfsilva_dulycommented/
+scripts_to_rfsilva_dulycommented.zip
+docs/archive/
+docs/PRODUCTION_READY.md
+INTEGRATION_PROGRESS.md
+FINAL_REPORT.md
+*_configurations.txt

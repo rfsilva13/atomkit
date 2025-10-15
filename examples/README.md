@@ -6,23 +6,31 @@ This directory contains working examples demonstrating the key features of AtomK
 
 ### Basic Usage
 - `basic_usage.py` - Introduction to Configuration and Shell classes
-- `configuration_manipulation.py` - Creating and manipulating electron configurations
-- `element_configurations.py` - Working with element-based configurations
 
-### FAC Data Reading
-- `read_fac_levels.py` - Reading and analyzing FAC energy level files
-- `read_fac_transitions.py` - Reading FAC transition data
-- `fac_unit_conversion.py` - Unit conversion examples
+### Configuration Generation
+- `advanced_configuration_generation.py` - Comprehensive examples of advanced generation techniques
+  - Single and double excitations
+  - Autoionization states (doubly excited configurations)
+  - Hole configurations (X-ray, Auger processes)
+  - Recombined configurations (dielectronic recombination)
+  - Complex filtering and combining strategies
+  - Systematic generation for complete configuration spaces
+  - Practical use case examples
 
-### Physics Calculations
-- `energy_conversion.py` - Converting between energy units
-- `cross_sections.py` - Cross section and collision strength calculations
-- `plotting_cross_sections.py` - Creating publication-quality plots
+### AUTOSTRUCTURE Integration
+- `autostructure_workflow.py` - Code-agnostic workflow: generate (physics) → format (I/O)
 
-### Advanced Features
-- `excited_states.py` - Generating excited configurations
-- `hole_states.py` - Creating hole configurations
-- `autoionizing_states.py` - Working with autoionizing configurations
+### Format Converters
+- `fac_to_as_converter.py` - Convert FAC data to AUTOSTRUCTURE format
+- `ls_to_icr_converter.py` - Convert LS-coupling data to ICR format
+
+## Note on Workflow Philosophy
+
+AtomKit follows a clear separation of concerns:
+- **Physics logic** (configuration generation, excitations, etc.) lives in `Configuration` class
+- **I/O operations** (format conversion, file writing) lives in converters
+
+This separation gives you maximum flexibility to manipulate configurations before formatting them for specific codes (AUTOSTRUCTURE, FAC, etc.).
 
 ## Running Examples
 
