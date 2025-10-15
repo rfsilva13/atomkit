@@ -2,7 +2,7 @@
 
 ![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Tests](https://img.shields.io/badge/tests-162%20passed-brightgreen)
+![Tests](https://img.shields.io/badge/tests-226%20passed-brightgreen)
 
 AtomKit is a comprehensive Python toolkit for atomic structure and spectral data analysis. It provides powerful tools for parsing, manipulating, and analyzing data from atomic physics codes, with a focus on electron configurations and FAC (Flexible Atomic Code) output.
 
@@ -83,23 +83,55 @@ conda activate atomkit
 ### Basic Configuration Usage
 
 ```python
-from atomkit import Configuration
+from atomkit import Configuration, Shell
 
 # Create configuration from string
 config = Configuration.from_string("1s2.2s2.2p6")
-print(config)  # Output: 1s2 2s2 2p6
+print(config)  # Output: 1s2.2s2.2p6
 
 # Create from element
 ne_config = Configuration.from_element("Ne")
-print(f"Neon has {ne_config.total_electrons} electrons")
+print(f"Neon has {ne_config.total_electrons()} electrons")
 
 # Generate excited states
 excited = config.generate_excitations(
-    source_shells=["2p"],
     target_shells=["3s", "3p", "3d"],
-    num_electrons=1
+    excitation_level=1,
+    source_shells=["2p"]
 )
 print(f"Generated {len(excited)} excited configurations")
+
+# Parse orbital shells
+shell = Shell.from_string("3d10")
+print(f"n={shell.n}, l={shell.l_quantum}, occupation={shell.occupation}")
+```
+
+### AUTOSTRUCTURE Integration (Code-Agnostic Workflow)
+
+```python
+from atomkit import Configuration
+from atomkit.converters import configurations_to_autostructure
+
+# Step 1: Generate configurations (PHYSICS - code-agnostic)
+ground = Configuration.from_string('1s2 2s2 2p6 3s2 3p6 3d6 4s2')
+excited = ground.generate_excitations(
+    target_shells=['4p', '5s', '4d'],  # Where to excite TO
+    excitation_level=1,                 # Single excitations
+    source_shells=['3d', '4s']          # Excite FROM valence
+)
+
+# Step 1.5: Filter/modify (physics is done, now manipulate!)
+filtered = [c for c in excited if '5s' in c.to_string()]
+
+# Step 2: Format for AUTOSTRUCTURE (I/O - only now code-specific)
+result = configurations_to_autostructure(
+    [ground] + filtered,
+    last_core_orbital='3p',
+    output_file='fe_configs.txt'
+)
+
+print(f"Generated {result['mxconf']} configurations")
+# Same configs could be formatted for FAC, GRASP, or any other code!
 ```
 
 ### Reading FAC Data
@@ -114,6 +146,24 @@ print(levels_df.head())
 # Read transitions
 transitions_df = read_fac_transitions("my_data.tr.asc", wavelength_unit="nm")
 print(transitions_df[["wavelength_nm", "gf", "config_initial", "config_final"]])
+```
+
+### Utilities and Element Information
+
+```python
+from atomkit import get_element_info, parse_ion_notation
+
+# Get element information
+info = get_element_info('Fe')
+print(f"Iron: Z={info['Z']}, name={info['name']}")
+
+info = get_element_info(26)  # Also accepts atomic number
+print(f"Element {info['symbol']}")
+
+# Parse spectroscopic ion notation
+element, charge, electrons = parse_ion_notation('Fe I')   # Neutral
+element, charge, electrons = parse_ion_notation('Fe II')  # Singly ionized
+print(f"Fe II: charge=+{charge}, {electrons} electrons")
 ```
 
 ### Energy Conversion
@@ -221,18 +271,25 @@ mypy src/
 ```
 atomkit/
 ├── src/atomkit/          # Main package
-│   ├── configuration.py  # Configuration and Shell classes
-│   ├── definitions.py    # Constants and mappings
+│   ├── configuration.py  # Configuration class
 │   ├── shell.py          # Shell representation
+│   ├── utils.py          # Element info & ion notation parsing
+│   ├── definitions.py    # Constants and mappings
+│   ├── converters/       # Format converters
+│   │   ├── as_generator.py     # AUTOSTRUCTURE
+│   │   ├── fac_to_as.py        # FAC to AS
+│   │   └── ls_to_icr.py        # LS to ICR
 │   ├── readers/          # Data file parsers
-│   │   ├── levels.py     # FAC level reader
-│   │   ├── transitions.py # FAC transition reader
-│   │   └── autoionization.py
+│   │   ├── levels.py           # FAC levels
+│   │   ├── transitions.py      # FAC transitions
+│   │   ├── autostructure.py    # AS parser
+│   │   └── autoionization.py   # Autoionization
 │   └── physics/          # Physics utilities
-│       ├── units.py      # Energy conversion
-│       ├── cross_sections.py
-│       └── plotting.py   # Visualization
-├── tests/                # Test suite (162 tests)
+│       ├── units.py            # Energy conversion
+│       ├── cross_sections.py   # Collision strengths
+│       ├── potentials.py       # Atomic potentials
+│       └── plotting.py         # Visualization
+├── tests/                # Test suite (226 tests)
 ├── examples/             # Usage examples
 └── docs/                 # Additional documentation
 ```

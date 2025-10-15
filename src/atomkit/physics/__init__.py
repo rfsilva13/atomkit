@@ -28,6 +28,10 @@ from .plotting import (
     quick_plot_cross_section,
 )
 
+from .potentials import (
+    EffectivePotentialCalculator,
+)
+
 __all__ = [
     # Cross section calculations
     "ResonantExcitationCalculator",
@@ -46,4 +50,6 @@ __all__ = [
     # Plotting
     "ResonancePlotter",
     "quick_plot_cross_section",
+    # Effective potentials
+    "EffectivePotentialCalculator",
 ]
