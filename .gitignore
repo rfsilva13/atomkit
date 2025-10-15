@@ -150,3 +150,36 @@ docs/PRODUCTION_READY.md
 INTEGRATION_PROGRESS.md
 FINAL_REPORT.md
 *_configurations.txt
+
+# Jupyter notebooks (temporary/testing)
+*.ipynb
+.ipynb_checkpoints/
+
+# FAC generated files (examples/testing)
+*.sf
+*.lev.b
+*.tr.b
+*.ai.b
+*.ci.b
+*.rr.b
+*.ce.b
+*.lev
+*.tr
+*.ai
+*.ci
+*.rr
+*.ce
+*.ham
+*.en
+*.wav
+*.aim.b
+*.cim.b
+
+# FAC/TEX documentation (from external sources)
+manual.tex
+manual.pdf
+
+# Summary documents (development tracking)
+FAC_INTEGRATION_SUMMARY.md
+*_SUMMARY.md
+*_PROGRESS.md
