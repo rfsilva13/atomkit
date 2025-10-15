@@ -6,6 +6,20 @@ input files (.sf extension) that can be executed by FAC command-line tools.
 
 The SFACWriter class acts as a context manager and provides methods corresponding
 to all major FAC functions documented in the FAC manual.
+
+⚠️  DOCUMENTATION NOTICE:
+==========================
+Many of the detailed docstrings in this module were AI-generated and have NOT
+been fully verified against the official FAC manual. While they provide useful
+context and examples, some technical details may be incomplete or inaccurate.
+
+**MANUAL REVIEW REQUIRED** before relying on docstring information for:
+- Exact parameter meanings and value ranges
+- Physical scaling laws and magnitudes  
+- Default behaviors and grid specifications
+- Advanced calculation modes and options
+
+Always cross-reference with the official FAC documentation when in doubt.
 """
 
 from pathlib import Path
@@ -26,6 +40,9 @@ class SFACWriter:
     - Generate FAC inputs programmatically from atomkit configurations
     - Avoid dependency on pfac compilation
     - Have full control over the input generation
+
+    ⚠️  NOTE: Many method docstrings were AI-generated and require manual review
+    against the official FAC documentation. Use with caution for production work.
 
     The class can be used as a context manager to ensure proper file handling:
 
@@ -285,15 +302,15 @@ class SFACWriter:
         Example:
             >>> # Ne-like Fe (Fe XVII)
             >>> fac.Config('2*8', group='ground')
-            
+
             >>> # Excited states
             >>> fac.Config('2*7 3*1', group='n3')      # 2p -> 3s,3p,3d
             >>> fac.Config('2*7 4*1', group='n4')      # 2p -> 4s,4p,4d,4f
-            
+
             >>> # Explicit shells for complex systems
             >>> fac.Config('3d9 4s2', group='d9s2')    # Cu-like ground
             >>> fac.Config('3d10 4s1', group='d10s1')  # Cu-like excited
-            
+
             >>> # Multiple configs in same group (CI basis)
             >>> fac.Config('3d10', group='ground')
             >>> fac.Config('3d9 4s1', group='ground')  # Mix with above
@@ -341,7 +358,7 @@ class SFACWriter:
             >>> fac.ConfigEnergy(0)           # Pre-optimization energies
             >>> fac.OptimizeRadial(['ground'])  # Optimize on ground state
             >>> fac.ConfigEnergy(1)           # Post-optimization energies
-            
+
             >>> # The difference is used internally to assess optimization
 
         Note:
@@ -371,10 +388,10 @@ class SFACWriter:
         ---------------
         1. **Include only low-lying states**: Optimization should use ground and
            low-lying excited states that are well-described by a single potential.
-           
+
         2. **Don't over-include**: Including too many highly-excited states can
            prevent convergence or produce poor average potentials.
-           
+
         3. **Typical choice**: Ground state + lowest excitation manifold
            - Ne-like: Optimize on '2*8' (ground) only
            - Li-like: Optimize on ground '2s' and first excited '2p'
@@ -392,10 +409,10 @@ class SFACWriter:
         Example:
             >>> # Simplest: optimize on ground state only
             >>> fac.OptimizeRadial(['ground'])
-            
+
             >>> # Include first excited manifold
             >>> fac.OptimizeRadial(['ground', 'n3'])
-            
+
             >>> # Fine-tune convergence
             >>> fac.OptimizeRadial(['ground'], maxiter=100, tolerance=1e-7)
 
@@ -438,10 +455,10 @@ class SFACWriter:
         Example:
             >>> # Simple two-group calculation
             >>> fac.Structure('ne.lev.b', ['ground', 'n3'])
-            
+
             >>> # Include multiple excitation manifolds
             >>> fac.Structure('fe17_full.lev.b', ['n2', 'n3', 'n4', 'n5'])
-            
+
             >>> # Specify mixing threshold
             >>> fac.Structure('levels.lev.b', ['all'], mixing=1e-6)
 
@@ -450,7 +467,7 @@ class SFACWriter:
             - NELE: Number of electrons
             - ILEV: Number of levels
             - For each level: E, 2J, parity, VNL (configuration), P (term symbol)
-            
+
             Convert to ASCII with PrintTable():
             >>> fac.PrintTable('ne.lev.b', 'ne.lev', 1)
 
@@ -548,13 +565,13 @@ class SFACWriter:
         Example:
             >>> # All allowed transitions (E1, M1, E2, ...)
             >>> fac.TransitionTable('ne.tr.b', ['ground'], ['n3'])
-            
+
             >>> # E1 transitions only (strongest, most important)
             >>> fac.TransitionTable('fe_e1.tr.b', ['n2'], ['n3'], multipole=-1)
-            
+
             >>> # M1 forbidden lines (diagnostic lines)
             >>> fac.TransitionTable('forbidden.tr.b', ['ground'], ['ground'], multipole=+1)
-            
+
             >>> # Multiple upper levels
             >>> fac.TransitionTable('all_tr.tr.b', ['n2'], ['n3', 'n4', 'n5'])
 
@@ -619,7 +636,7 @@ class SFACWriter:
         Process:
         --------
         e(E_kinetic) + Ion[lower level] → e(E' = E - ΔE) + Ion[upper level]
-        
+
         where ΔE = E_upper - E_lower > 0
 
         Physical Quantities:
@@ -645,10 +662,10 @@ class SFACWriter:
         Example:
             >>> # Ground to first excited manifold
             >>> fac.CETable('ne_ce.ce.b', ['ground'], ['n3'])
-            
+
             >>> # Multiple upper levels
             >>> fac.CETable('fe_ce.ce.b', ['n2'], ['n3', 'n4', 'n5'])
-            
+
             >>> # With custom energy grid (set first)
             >>> fac.SetUsrCEGrid([1.0, 2.0, 5.0, 10.0, 20.0])  # Rydbergs
             >>> fac.CETable('custom_ce.ce.b', ['ground'], ['excited'])
@@ -688,7 +705,7 @@ class SFACWriter:
 
         Computes cross sections and rates for direct ionization by electron impact:
         e + Ion[N electrons] → 2e + Ion⁺[N-1 electrons]
-        
+
         Uses distorted-wave Born approximation for continuum wavefunctions.
 
         Physical Process:
@@ -729,10 +746,10 @@ class SFACWriter:
             >>> fac.Config('2*8', group='bound')
             >>> fac.Config('2*7', group='free')
             >>> fac.CITable('fe17_ci.ci.b', ['bound'], ['free'])
-            
+
             >>> # Multiple bound states
             >>> fac.CITable('multi_ci.ci.b', ['ground', 'n3', 'n4'], ['target'])
-            
+
             >>> # With custom energy grid
             >>> fac.SetUsrCIGrid([0.1, 0.5, 1.0, 2.0, 5.0, 10.0])  # Threshold units
             >>> fac.CITable('custom_ci.ci.b', ['bound'], ['free'])
@@ -772,14 +789,14 @@ class SFACWriter:
         Computes cross sections for the time-reverse processes:
         1. **Radiative Recombination**: e + Ion⁺ → Ion + photon (hν)
         2. **Photoionization**: Ion + photon (hν) → Ion⁺ + e
-        
+
         These are related by detailed balance (Milne relation).
 
         Physical Processes:
         -------------------
         **RR**: Free electron captured directly into bound state, emitting photon:
                 e(E_kinetic) + Ion⁺ → Ion[bound] + γ(E_kinetic + IP)
-                
+
         **PI**: Photon ionizes bound electron:
                 Ion[bound] + γ(hν) → Ion⁺ + e(E_kinetic)
                 where E_kinetic = hν - IP
@@ -815,10 +832,10 @@ class SFACWriter:
             >>> fac.Config('2*8', group='bound')
             >>> fac.Config('2*7', group='free')
             >>> fac.RRTable('fe17_rr.rr.b', ['bound'], ['free'])
-            
+
             >>> # Multiple final states
             >>> fac.RRTable('multi_rr.rr.b', ['ground', 'n3', 'n4'], ['target'])
-            
+
             >>> # With custom photon energy grid
             >>> fac.SetUsrPEGrid([0.5, 1.0, 2.0, 5.0, 10.0, 20.0])  # Rydbergs
             >>> fac.RRTable('custom_rr.rr.b', ['bound'], ['free'])
@@ -826,11 +843,11 @@ class SFACWriter:
         Output File:
             Binary format containing for each channel:
             - Bound level index
-            - Free level index  
+            - Free level index
             - Ionization threshold (Rydberg)
             - Photoionization cross sections σ_PI(hν) vs. photon energy
             - RR rate coefficients α_RR(T) vs. temperature
-            
+
         Detailed Balance (Milne Relation):
             σ_PI(hν) × (g_ion/g_bound) = σ_capture(E_e) × (E_e²)
             Allows computing RR from PI and vice versa.
@@ -870,7 +887,7 @@ class SFACWriter:
         Process:
         --------
         Ion[doubly-excited, N electrons] → Ion[singly-excited, N-1 electrons] + e(E)
-        
+
         Example: 1s 2s² 2p⁶ 3l (hollow ion) → 1s² 2s² 2p⁵ + e(Auger)
 
         Physical Mechanism:
@@ -883,10 +900,10 @@ class SFACWriter:
         ---------------------
         1. **Dielectronic Recombination (DR)**: Capture into autoionizing state
            e + Ion⁺ → Ion** (autoionizing) → Ion⁺ + e  or  Ion + photon
-           
+
         2. **Resonant Photoionization**: Photoexcitation to autoionizing resonance
            Ion + hν → Ion** → Ion⁺ + e
-           
+
         3. **Inner-shell processes**: K, L-shell vacancy decay
 
         Args:
@@ -911,7 +928,7 @@ class SFACWriter:
             >>> fac.Config('1s2 2s1 2p1', group='recombined')
             >>> fac.Config('1s2 2p2', group='recombined')
             >>> fac.AITable('fe_dr.ai.b', ['recombined'], ['target'])
-            
+
             >>> # Hollow ion Auger decay
             >>> fac.Config('1s1 2s2 2p6 3s1', group='hollow')
             >>> fac.Config('1s2 2s2 2p5', group='target')
@@ -981,7 +998,7 @@ class SFACWriter:
         - Gauge-dependent terms
 
         Formula: H_Breit ≈ -(α/2r₁₂)[(α₁·α₂) + (α₁·r₁₂)(α₂·r₁₂)/r₁₂²]
-        
+
         Correction typically:
         - ~0.01% for light atoms (C, O)
         - ~0.1% for medium atoms (Fe, Cu)
@@ -998,10 +1015,10 @@ class SFACWriter:
         Example:
             >>> # Default: enable Breit
             >>> fac.SetBreit(-1)
-            
+
             >>> # Disable for light atoms (faster calculation)
             >>> fac.SetBreit(0)
-            
+
             >>> # Full Breit for heavy atoms
             >>> fac.SetBreit(1)
 
@@ -1050,10 +1067,10 @@ class SFACWriter:
         Example:
             >>> # Enable SE for accurate calculations
             >>> fac.SetSE(-1)
-            
+
             >>> # Disable for light atoms (Z < 20)
             >>> fac.SetSE(0)
-            
+
             >>> # Full SE for precision work
             >>> fac.SetSE(1)
 
@@ -1104,10 +1121,10 @@ class SFACWriter:
         Example:
             >>> # Enable VP for heavy atoms/ions
             >>> fac.SetVP(-1)
-            
+
             >>> # Disable for light atoms (Z < 30)
             >>> fac.SetVP(0)
-            
+
             >>> # Full VP for high-Z precision
             >>> fac.SetVP(1)
 
@@ -1170,7 +1187,7 @@ class SFACWriter:
                       - 1: Relative to threshold (E_scattered/ΔE), **default**
                            where E_scattered = E_incident - ΔE
                            ΔE = excitation energy
-                      
+
                       Type 1 is usually preferred: gives uniform coverage across
                       all transitions regardless of excitation energy.
 
@@ -1185,13 +1202,13 @@ class SFACWriter:
         Example:
             >>> # Relative energy grid (recommended, type=1 default)
             >>> fac.SetUsrCEGrid([0.0, 0.1, 0.2, 0.5, 1.0, 2.0, 5.0, 10.0])
-            
+
             >>> # Absolute energy grid in Rydbergs (type=0)
             >>> fac.SetUsrCEGrid([0.5, 1.0, 2.0, 5.0, 10.0, 20.0], grid_type=0)
-            
+
             >>> # Fine grid near threshold for resonances
             >>> fac.SetUsrCEGrid([0.0, 0.05, 0.1, 0.15, 0.2, 0.3, 0.5, 1.0, 2.0, 5.0])
-            
+
             >>> # Set grid before CETable calculation
             >>> fac.SetUsrCEGrid([0.0, 0.2, 0.5, 1.0, 2.0, 5.0])
             >>> fac.CETable('ne_ce.ce.b', ['ground'], ['n3'])
@@ -1222,7 +1239,7 @@ class SFACWriter:
                            where E is incident electron energy, IP is threshold
                            0.0 = at threshold, 1.0 = 2× threshold, etc.
                       - 1: Absolute ejected electron energy (Rydbergs)
-                      
+
                       Type 0 preferred: gives uniform coverage for all thresholds.
 
         Grid Selection Guidelines:
@@ -1237,13 +1254,13 @@ class SFACWriter:
         Example:
             >>> # Relative energy grid (recommended, type=0 default)
             >>> fac.SetUsrCIGrid([0.0, 0.2, 0.5, 1.0, 2.0, 5.0, 10.0])
-            
+
             >>> # Absolute ejected electron energy (type=1)
             >>> fac.SetUsrCIGrid([0.1, 0.5, 1.0, 2.0, 5.0], grid_type=1)
-            
+
             >>> # Dense grid near threshold
             >>> fac.SetUsrCIGrid([0.0, 0.1, 0.2, 0.3, 0.5, 0.7, 1.0, 1.5, 2.0, 3.0, 5.0])
-            
+
             >>> # Usage in calculation
             >>> fac.SetUsrCIGrid([0.0, 0.5, 1.0, 2.0, 5.0])
             >>> fac.CITable('fe_ci.ci.b', ['bound'], ['free'])
@@ -1275,7 +1292,7 @@ class SFACWriter:
                            1.0 = at threshold, 2.0 = twice IP, etc.
                       - 1: Absolute photoelectron kinetic energy (Rydbergs)
                            E_electron = hν - IP
-                      
+
                       Type 0 preferred for opacity tables (uniform coverage).
 
         Grid Selection for Different Applications:
@@ -1296,13 +1313,13 @@ class SFACWriter:
         Example:
             >>> # Wide range for opacity (relative, type=0 default)
             >>> fac.SetUsrPEGrid([1.0, 1.2, 1.5, 2.0, 3.0, 5.0, 10.0, 20.0])
-            
+
             >>> # Dense near threshold for resonances
             >>> fac.SetUsrPEGrid([1.0, 1.05, 1.1, 1.15, 1.2, 1.3, 1.5, 2.0, 3.0])
-            
+
             >>> # Photoelectron energy grid (type=1)
             >>> fac.SetUsrPEGrid([0.0, 0.5, 1.0, 2.0, 5.0, 10.0], grid_type=1)
-            
+
             >>> # Usage in calculation
             >>> fac.SetUsrPEGrid([1.0, 1.5, 2.0, 3.0, 5.0, 10.0])
             >>> fac.RRTable('fe_rr.rr.b', ['bound'], ['free'])
