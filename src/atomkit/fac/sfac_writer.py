@@ -195,27 +195,52 @@ class SFACWriter:
         """
         Set the atomic element for the calculation.
 
+        This must be the first function called in any FAC calculation. It sets the
+        atomic number Z and initializes atomic data structures. The symbol is used
+        to determine nuclear charge and default electron configuration.
+
         Args:
-            symbol: Chemical symbol (e.g., 'Fe', 'Cu', 'O')
+            symbol: Chemical symbol (e.g., 'Fe', 'Cu', 'O'). Case-insensitive,
+                   but conventionally capitalized. Can also be atomic number as string.
 
         Example:
-            >>> fac.SetAtom('Fe')
+            >>> fac.SetAtom('Fe')  # Iron, Z=26
+            >>> fac.SetAtom('Cu')  # Copper, Z=29
+            >>> fac.SetAtom('26')  # Also valid for Fe
+
+        Note:
+            Must be called before any configuration or calculation commands.
         """
         self._write_command("SetAtom", symbol)
 
     def Closed(self, shells: str):
         """
-        Specify closed (inactive) shells.
+        Specify closed (inactive) core shells.
 
-        The closed shells will not be included in the active space of the
-        calculation. Multiple shells can be specified separated by spaces.
+        Closed shells are treated as frozen core orbitals that do not participate
+        in electronic transitions or excitations. This simplifies calculations by
+        reducing the active space. Electrons in closed shells contribute to:
+        - Central potential (screening)
+        - Total electron count
+        But do NOT participate in:
+        - Configuration mixing
+        - Transitions
+        - Ionization/excitation processes
 
         Args:
-            shells: Space-separated shell notation (e.g., '1s', '1s 2s 2p')
+            shells: Space-separated shell notation without occupation numbers.
+                   Use spectroscopic notation (1s, 2s, 2p, 3d, etc.).
+                   Shells are assumed fully occupied according to 2j+1.
 
         Example:
-            >>> fac.Closed('1s')
-            >>> fac.Closed('1s 2s 2p')
+            >>> fac.Closed('1s')              # Close 1s (2 electrons)
+            >>> fac.Closed('1s 2s 2p')        # Close K and L shells
+            >>> fac.Closed('1s 2s 2p 3s 3p')  # Common for 3d transition metals
+
+        Note:
+            - Must be called after SetAtom() but before Config()
+            - Cannot partially close a shell (use Config instead)
+            - Typically used for inner shells that don't participate in chemistry
         """
         self._write_command("Closed", shells)
 
@@ -223,20 +248,60 @@ class SFACWriter:
         """
         Define an electronic configuration or configuration group.
 
-        Configurations can be specified in several formats:
-        - Shell notation: '1s2 2s2 2p6 3s1'
-        - Complex notation: '2*8' (n=2 complex with 8 electrons)
-        - Excitation notation: '2*7 3*1' (one electron from n=2 to n=3)
+        Configurations specify the distribution of electrons in open (active) shells.
+        Multiple Config() calls with the same group name define a configuration interaction
+        (CI) basis. FAC supports several powerful notation systems:
+
+        Configuration Notations:
+        ----------------------
+        1. **Shell notation**: Explicit shell occupations
+           - Format: 'nl^occupation' where n=1,2,3..., l=s,p,d,f,...
+           - Example: '3d10 4s1' for copper ground state
+
+        2. **Complex notation**: All orbitals with same n
+           - Format: 'n*electrons'
+           - '2*8' = all n=2 orbitals with 8 total electrons
+           - Useful for highly ionized atoms (e.g., Ne-like ions: '2*8')
+
+        3. **Excitation notation**: Electron promotion between complexes
+           - Format: 'n1*N1 n2*N2'
+           - '2*7 3*1' = 7 electrons in n=2, 1 in n=3 (2p->3s excitation)
+
+        4. **Detailed notation**: Specify individual subshells
+           - '2s2 2p5 3s1' = explicitly show each subshell
+           - Most flexible for complex configurations
 
         Args:
-            config: Configuration string
-            group: Optional group name/label for this configuration
-            **kwargs: Additional parameters passed to Config
+            config: Configuration string in one of the formats above.
+                   Spaces separate different shell/complex specifications.
+            group: Group name/label for organizing configurations. Configurations
+                  with the same group participate in Configuration Interaction (CI).
+                  Use descriptive names: 'ground', 'n3', 'doubly_excited', etc.
+            **kwargs: Additional parameters:
+                     - state: Specify term symbol or J value
+                     - n_electrons: Override electron count
+                     - shell_closed: Specify additional closed shells for this config
 
         Example:
-            >>> fac.Config('2*8', group='n2')
-            >>> fac.Config('2*7 3*1', group='n3')
-            >>> fac.Config('1s2 2s2 2p5 3s1', group='excited')
+            >>> # Ne-like Fe (Fe XVII)
+            >>> fac.Config('2*8', group='ground')
+            
+            >>> # Excited states
+            >>> fac.Config('2*7 3*1', group='n3')      # 2p -> 3s,3p,3d
+            >>> fac.Config('2*7 4*1', group='n4')      # 2p -> 4s,4p,4d,4f
+            
+            >>> # Explicit shells for complex systems
+            >>> fac.Config('3d9 4s2', group='d9s2')    # Cu-like ground
+            >>> fac.Config('3d10 4s1', group='d10s1')  # Cu-like excited
+            
+            >>> # Multiple configs in same group (CI basis)
+            >>> fac.Config('3d10', group='ground')
+            >>> fac.Config('3d9 4s1', group='ground')  # Mix with above
+
+        Note:
+            - Electrons in closed shells (Closed()) are not counted here
+            - Total electrons = closed + open shell electrons
+            - Group names are used in Structure(), TransitionTable(), etc.
         """
         if group is not None:
             kwargs["group"] = group
@@ -244,56 +309,156 @@ class SFACWriter:
 
     def ConfigEnergy(self, mode: int):
         """
-        Calculate configuration energies for optimization.
+        Calculate configuration-averaged energies for optimization.
 
-        This is typically called twice in a calculation:
-        - ConfigEnergy(0): Calculate with individually optimized potentials
-        - ConfigEnergy(1): Recalculate with global potential
+        This function calculates average energies of configurations before and after
+        radial optimization. The standard workflow involves calling it twice to
+        assess the quality of the optimized potential:
 
-        The difference provides a correction for the optimization procedure.
+        Workflow:
+        ---------
+        1. ConfigEnergy(0)  - Calculate with un-optimized (hydrogenic) potential
+        2. OptimizeRadial(['groups']) - Optimize potential self-consistently
+        3. ConfigEnergy(1)  - Recalculate with optimized potential
+
+        The energy difference (mode 1 - mode 0) indicates the optimization quality.
+        Large differences suggest:
+        - Strong correlation effects
+        - Need for larger CI basis
+        - Potential convergence issues
 
         Args:
-            mode: 0 for individual optimization, 1 for global potential
+            mode: Energy calculation mode
+                 - 0: Calculate before optimization (hydrogenic/WKB potential)
+                 - 1: Calculate after optimization (self-consistent potential)
+                 The energies themselves are not returned, but the difference
+                 is internally used for optimization diagnostics.
 
         Example:
-            >>> fac.ConfigEnergy(0)
-            >>> fac.OptimizeRadial(['n2'])
-            >>> fac.ConfigEnergy(1)
+            >>> # Standard optimization workflow
+            >>> fac.Config('2*8', group='ground')
+            >>> fac.Config('2*7 3*1', group='n3')
+            >>> fac.ConfigEnergy(0)           # Pre-optimization energies
+            >>> fac.OptimizeRadial(['ground'])  # Optimize on ground state
+            >>> fac.ConfigEnergy(1)           # Post-optimization energies
+            
+            >>> # The difference is used internally to assess optimization
+
+        Note:
+            - Always call before and after OptimizeRadial()
+            - Energies are configuration-averaged (not individual levels)
+            - For detailed level energies, use Structure()
         """
         self._write_command("ConfigEnergy", mode)
 
     def OptimizeRadial(self, groups: List[str], **kwargs):
         """
-        Optimize the radial potential for specified configuration groups.
+        Optimize the central potential via self-consistent field (SCF) calculation.
 
-        This performs a self-consistent Dirac-Fock-Slater calculation to
-        determine the optimal central potential. Only pass the lowest-lying
-        configurations (typically ground or low-lying excited states).
+        Performs iterative Dirac-Fock-Slater calculations to determine the optimal
+        radial potential that minimizes the total energy. This is the heart of the
+        atomic structure calculation, solving for both the radial wavefunctions and
+        the screening potential self-consistently.
+
+        Physics:
+        --------
+        The optimization solves coupled radial equations:
+        - Dirac equation for each orbital
+        - Poisson equation for electron screening
+        Iterates until convergence (typically 10-50 iterations)
+
+        Best Practices:
+        ---------------
+        1. **Include only low-lying states**: Optimization should use ground and
+           low-lying excited states that are well-described by a single potential.
+           
+        2. **Don't over-include**: Including too many highly-excited states can
+           prevent convergence or produce poor average potentials.
+           
+        3. **Typical choice**: Ground state + lowest excitation manifold
+           - Ne-like: Optimize on '2*8' (ground) only
+           - Li-like: Optimize on ground '2s' and first excited '2p'
 
         Args:
-            groups: List of configuration group names to optimize
-            **kwargs: Additional optimization parameters
+            groups: List of configuration group names to include in optimization.
+                   Order matters: first group has highest weight.
+                   Usually just ['ground'] or ['ground', 'first_excited'].
+            **kwargs: Additional optimization parameters:
+                     - maxiter: Maximum SCF iterations (default: 512)
+                     - tolerance: Convergence threshold (default: 1e-6)
+                     - screene: Screening mode (default: 1)
+                     - stabilizer: Stabilization parameter (default: 0.5)
 
         Example:
-            >>> fac.OptimizeRadial(['n2'])
-            >>> fac.OptimizeRadial(['ground', 'n2'], maxiter=100)
+            >>> # Simplest: optimize on ground state only
+            >>> fac.OptimizeRadial(['ground'])
+            
+            >>> # Include first excited manifold
+            >>> fac.OptimizeRadial(['ground', 'n3'])
+            
+            >>> # Fine-tune convergence
+            >>> fac.OptimizeRadial(['ground'], maxiter=100, tolerance=1e-7)
+
+        Note:
+            - Call between ConfigEnergy(0) and ConfigEnergy(1)
+            - Convergence can be slow for open-shell systems
+            - If no convergence after ~50 iterations, potential may be wrong
+            - All subsequent calculations use this optimized potential
         """
         self._write_command("OptimizeRadial", groups, **kwargs)
 
     def Structure(self, output_file: str, groups: List[str], **kwargs):
         """
-        Calculate energy levels and save to binary file.
+        Calculate fine-structure energy levels via Configuration Interaction.
 
-        This sets up the Hamiltonian matrix, diagonalizes it, and saves
-        the resulting energy levels to a binary file.
+        This is the main energy level calculation. It performs:
+        1. Constructs Hamiltonian matrix for all levels in specified groups
+        2. Includes relativistic effects (spin-orbit, Darwin, mass-velocity)
+        3. Optionally includes QED corrections (Breit, self-energy, vacuum polarization)
+        4. Diagonalizes Hamiltonian to obtain eigenvalues (energies) and eigenvectors
+        5. Saves results to binary file for later use
+
+        The output file contains:
+        - Energy levels (in Rydberg or specified units)
+        - Level quantum numbers (J, parity, configuration, term)
+        - Mixing coefficients (CI eigenvectors)
+        - Statistical weights
 
         Args:
-            output_file: Output filename (typically .lev.b extension)
-            groups: List of configuration groups to include
-            **kwargs: Additional parameters
+            output_file: Output binary filename. Convention: '.lev.b' extension
+                        Example: 'fe17.lev.b', 'cu_levels.lev.b'
+            groups: List of configuration group names to include in CI expansion.
+                   All configs in these groups will be mixed together.
+                   Order doesn't affect results, only file organization.
+            **kwargs: Additional parameters:
+                     - n_maximal: Maximum principal quantum number to include
+                     - mixing: CI mixing threshold (default: 1e-5)
+                     - hamilton: Hamiltonian type (default: relativistic)
 
         Example:
-            >>> fac.Structure('ne.lev.b', ['n2', 'n3'])
+            >>> # Simple two-group calculation
+            >>> fac.Structure('ne.lev.b', ['ground', 'n3'])
+            
+            >>> # Include multiple excitation manifolds
+            >>> fac.Structure('fe17_full.lev.b', ['n2', 'n3', 'n4', 'n5'])
+            
+            >>> # Specify mixing threshold
+            >>> fac.Structure('levels.lev.b', ['all'], mixing=1e-6)
+
+        Output File:
+            Binary format containing:
+            - NELE: Number of electrons
+            - ILEV: Number of levels
+            - For each level: E, 2J, parity, VNL (configuration), P (term symbol)
+            
+            Convert to ASCII with PrintTable():
+            >>> fac.PrintTable('ne.lev.b', 'ne.lev', 1)
+
+        Note:
+            - Must call OptimizeRadial() first to have good potential
+            - Large calculations can produce many levels (thousands)
+            - Levels are ordered by energy within each J-parity block
+            - This file is required for all subsequent rate calculations
         """
         self._write_command("Structure", output_file, groups, **kwargs)
 
@@ -341,21 +506,78 @@ class SFACWriter:
         **kwargs,
     ):
         """
-        Calculate radiative transition rates.
+        Calculate radiative transition probabilities and oscillator strengths.
 
-        Computes oscillator strengths and transition rates between configuration
-        groups.
+        Computes Einstein A-coefficients, oscillator strengths (f-values), and line
+        strengths for radiative transitions between energy levels. Uses relativistic
+        wavefunctions and includes fine-structure effects.
+
+        The calculation includes:
+        - Electric dipole (E1), quadrupole (E2), octupole (E3), ...
+        - Magnetic dipole (M1), quadrupole (M2), ...
+        - Relativistic matrix elements
+        - Level-to-level transition rates
+        - Sum rules and consistency checks
+
+        Physical Quantities Calculated:
+        --------------------------------
+        - **Einstein A** (s^-1): Spontaneous emission rate
+        - **Oscillator strength f**: Dimensionless absorption strength
+        - **Line strength S**: Squared matrix element
+        - **Wavelength λ** (Å): Transition wavelength
 
         Args:
-            output_file: Output filename (typically .tr.b extension)
-            lower_groups: List of lower level configuration groups
-            upper_groups: List of upper level configuration groups
-            multipole: Multipole type (0=all, -1=E1, +1=M1, -2=E2, etc.)
-            **kwargs: Additional parameters (gauge, mode, etc.)
+            output_file: Output binary filename. Convention: '.tr.b' extension
+                        Example: 'fe17.tr.b', 'transitions.tr.b'
+            lower_groups: List of lower-level configuration groups.
+                         Typically ground or low-lying states.
+            upper_groups: List of upper-level configuration groups.
+                         Typically excited states accessible by photon absorption.
+            multipole: Multipole selection:
+                      - 0: Calculate all allowed multipoles (default)
+                      - -1: Electric dipole (E1) only - most important for astrophysics
+                      - +1: Magnetic dipole (M1) only - forbidden line diagnostics
+                      - -2: Electric quadrupole (E2) only - weak transitions
+                      - +2: Magnetic quadrupole (M2) only - very weak
+                      Negative = electric, Positive = magnetic, |value| = 2^L
+            **kwargs: Additional parameters:
+                     - gauge: 'length' (default) or 'velocity' gauge
+                     - mode: Calculation detail level
+                     - multipole_max: Maximum multipole order
 
         Example:
-            >>> fac.TransitionTable('ne.tr.b', ['n2'], ['n3'])
-            >>> fac.TransitionTable('ne.tr.b', ['n2'], ['n3'], multipole=-1)
+            >>> # All allowed transitions (E1, M1, E2, ...)
+            >>> fac.TransitionTable('ne.tr.b', ['ground'], ['n3'])
+            
+            >>> # E1 transitions only (strongest, most important)
+            >>> fac.TransitionTable('fe_e1.tr.b', ['n2'], ['n3'], multipole=-1)
+            
+            >>> # M1 forbidden lines (diagnostic lines)
+            >>> fac.TransitionTable('forbidden.tr.b', ['ground'], ['ground'], multipole=+1)
+            
+            >>> # Multiple upper levels
+            >>> fac.TransitionTable('all_tr.tr.b', ['n2'], ['n3', 'n4', 'n5'])
+
+        Selection Rules:
+            E1: ΔJ = 0, ±1 (not 0→0), Δparity = yes
+            M1: ΔJ = 0, ±1 (not 0→0), Δparity = no
+            E2: ΔJ = 0, ±1, ±2 (not 0→0, 1/2→1/2), Δparity = no
+            M2: ΔJ = 0, ±1, ±2, Δparity = yes
+
+        Output File:
+            Binary format containing for each transition:
+            - Lower/upper level indices
+            - Transition energy (Rydberg)
+            - Einstein A coefficient (s^-1)
+            - Oscillator strength f
+            - Line strength S
+
+        Note:
+            - Requires Structure() output file to define levels
+            - Most transitions are E1 (use multipole=-1 to save time)
+            - For emission spectra: upper → lower
+            - For absorption: lower → upper (same file, different interpretation)
+            - Convert to ASCII: PrintTable('ne.tr.b', 'ne.tr', 1)
         """
         args = [output_file, lower_groups, upper_groups]
         if multipole != 0:
@@ -388,16 +610,67 @@ class SFACWriter:
         **kwargs,
     ):
         """
-        Calculate electron impact excitation cross sections.
+        Calculate electron-impact excitation cross sections and rate coefficients.
+
+        Computes collision strengths Ω(E) and thermally-averaged rate coefficients
+        ⟨σv⟩ for electron-impact excitation: e + Ion(i) → e + Ion(j), where i and j
+        are bound states. Uses distorted-wave or close-coupling approximation.
+
+        Process:
+        --------
+        e(E_kinetic) + Ion[lower level] → e(E' = E - ΔE) + Ion[upper level]
+        
+        where ΔE = E_upper - E_lower > 0
+
+        Physical Quantities:
+        --------------------
+        - **Collision strength Ω**: Dimensionless cross section (πa₀²)
+        - **Cross section σ(E)**: Physical cross section (cm²)
+        - **Rate coefficient ⟨σv⟩**: Thermally-averaged rate (cm³/s)
+        - Maxwellian-averaged rates for plasma modeling
 
         Args:
-            output_file: Output filename (typically .ce.b extension)
-            lower_groups: List of lower level configuration groups
-            upper_groups: List of upper level configuration groups
-            **kwargs: Additional parameters (energy grid, etc.)
+            output_file: Output binary filename. Convention: '.ce.b' extension
+                        Example: 'fe17_ce.ce.b', 'excitation.ce.b'
+            lower_groups: List of lower-level (initial state) configuration groups.
+                         Usually ground or low-lying metastable states.
+            upper_groups: List of upper-level (final state) configuration groups.
+                         Excited states accessible from lower levels.
+            **kwargs: Additional parameters:
+                     - energy_grid: Custom energy grid (use SetUsrCEGrid)
+                     - te: Electron temperatures for rate coefficients (eV)
+                     - pwgrid: Partial wave grid parameters
+                     - msub: Include magnetic sublevel detail
 
         Example:
-            >>> fac.CETable('ne.ce.b', ['n2'], ['n3'])
+            >>> # Ground to first excited manifold
+            >>> fac.CETable('ne_ce.ce.b', ['ground'], ['n3'])
+            
+            >>> # Multiple upper levels
+            >>> fac.CETable('fe_ce.ce.b', ['n2'], ['n3', 'n4', 'n5'])
+            
+            >>> # With custom energy grid (set first)
+            >>> fac.SetUsrCEGrid([1.0, 2.0, 5.0, 10.0, 20.0])  # Rydbergs
+            >>> fac.CETable('custom_ce.ce.b', ['ground'], ['excited'])
+
+        Selection Rules:
+            No strict selection rules (all transitions possible),
+            but dipole-allowed transitions (ΔJ = 0, ±1) are strongest.
+
+        Output File:
+            Binary format containing for each transition:
+            - Lower/upper level indices
+            - Transition energy (Rydberg)
+            - Collision strengths Ω(E) at grid energies
+            - Rate coefficients ⟨σv⟩ at specified temperatures
+
+        Note:
+            - Requires Structure() output to define levels
+            - Calculation can be slow for many levels (scales as N²)
+            - Energy grid important: should span threshold to ~5× threshold
+            - Default grid usually adequate for first calculations
+            - Critical for plasma diagnostics and ionization balance
+            - Convert to ASCII: PrintTable('ne_ce.ce.b', 'ne_ce.ce', 1)
         """
         self._write_command(
             "CETable", output_file, lower_groups, upper_groups, **kwargs
@@ -411,16 +684,74 @@ class SFACWriter:
         **kwargs,
     ):
         """
-        Calculate electron impact ionization cross sections.
+        Calculate electron-impact ionization cross sections and rate coefficients.
+
+        Computes cross sections and rates for direct ionization by electron impact:
+        e + Ion[N electrons] → 2e + Ion⁺[N-1 electrons]
+        
+        Uses distorted-wave Born approximation for continuum wavefunctions.
+
+        Physical Process:
+        -----------------
+        An incident electron ionizes the target ion by removing one bound electron.
+        Both electrons leave with shared kinetic energy:
+        - Incident: E_incident
+        - Bound: E_binding (negative, ionization potential)
+        - Final: Two electrons with E_1 + E_2 = E_incident - |E_binding|
+
+        Applications:
+        -------------
+        - Ionization balance in plasmas
+        - Coronal equilibrium modeling
+        - Plasma diagnostics
+        - Astrophysical nebulae
+        - Fusion plasma modeling
 
         Args:
-            output_file: Output filename (typically .ci.b extension)
-            bound_groups: List of bound state configuration groups
-            free_groups: List of continuum configuration groups
-            **kwargs: Additional parameters
+            output_file: Output binary filename. Convention: '.ci.b' extension
+                        Example: 'fe_ci.ci.b', 'ionization.ci.b'
+            bound_groups: List of bound (initial) state configuration groups.
+                         The N-electron ion before ionization.
+                         Example: ['ground', 'n2', 'n3']
+            free_groups: List of continuum (final) state configuration groups.
+                        The (N-1)-electron ion after ionization + continuum.
+                        Usually simpler than bound; often just ground state + continuum.
+                        Example: ['target'] where target is the ion core
+            **kwargs: Additional parameters:
+                     - energy_grid: Custom energy grid (use SetUsrCIGrid)
+                     - te: Electron temperatures for rate coefficients
+                     - ejected: Energy of ejected electron (changes energy sharing)
 
         Example:
-            >>> fac.CITable('fe.ci.b', ['n2'], ['continuum'])
+            >>> # Ionization of Fe XVII (Ne-like)
+            >>> # Bound: 1s² 2s² 2p⁶ (Ne-like, ground)
+            >>> # Free: 1s² 2s² 2p⁵ (F-like, target) + e
+            >>> fac.Config('2*8', group='bound')
+            >>> fac.Config('2*7', group='free')
+            >>> fac.CITable('fe17_ci.ci.b', ['bound'], ['free'])
+            
+            >>> # Multiple bound states
+            >>> fac.CITable('multi_ci.ci.b', ['ground', 'n3', 'n4'], ['target'])
+            
+            >>> # With custom energy grid
+            >>> fac.SetUsrCIGrid([0.1, 0.5, 1.0, 2.0, 5.0, 10.0])  # Threshold units
+            >>> fac.CITable('custom_ci.ci.b', ['bound'], ['free'])
+
+        Output File:
+            Binary format containing for each ionization channel:
+            - Bound level index (initial state)
+            - Free level index (final ion state)
+            - Ionization threshold energy (Rydberg)
+            - Cross sections σ(E) at grid energies
+            - Rate coefficients ⟨σv⟩ at specified temperatures
+
+        Note:
+            - Requires Structure() for both bound and free groups
+            - Energy grid should extend to several times threshold
+            - Threshold energy = IP of bound level
+            - Cross section typically rises from threshold, peaks, then slowly decreases
+            - Much more expensive than CETable (continuum wavefunction harder)
+            - Convert to ASCII: PrintTable('ci.ci.b', 'ci.ci', 1)
         """
         self._write_command("CITable", output_file, bound_groups, free_groups, **kwargs)
 
@@ -436,16 +767,81 @@ class SFACWriter:
         **kwargs,
     ):
         """
-        Calculate radiative recombination and photoionization cross sections.
+        Calculate radiative recombination (RR) and photoionization (PI) cross sections.
+
+        Computes cross sections for the time-reverse processes:
+        1. **Radiative Recombination**: e + Ion⁺ → Ion + photon (hν)
+        2. **Photoionization**: Ion + photon (hν) → Ion⁺ + e
+        
+        These are related by detailed balance (Milne relation).
+
+        Physical Processes:
+        -------------------
+        **RR**: Free electron captured directly into bound state, emitting photon:
+                e(E_kinetic) + Ion⁺ → Ion[bound] + γ(E_kinetic + IP)
+                
+        **PI**: Photon ionizes bound electron:
+                Ion[bound] + γ(hν) → Ion⁺ + e(E_kinetic)
+                where E_kinetic = hν - IP
+
+        Applications:
+        -------------
+        - Photoionization cross sections for UV/X-ray opacity
+        - Recombination rates for ionization balance
+        - Photoionization equilibrium
+        - Recombination continua in spectra
+        - Plasma cooling rates
+        - Nebular emission modeling
 
         Args:
-            output_file: Output filename (typically .rr.b extension)
-            bound_groups: List of bound state configuration groups
-            free_groups: List of continuum configuration groups
-            **kwargs: Additional parameters
+            output_file: Output binary filename. Convention: '.rr.b' extension
+                        Example: 'fe_rr.rr.b', 'photoion.rr.b'
+            bound_groups: List of bound state configuration groups (N electrons).
+                         Final states for RR, initial states for PI.
+                         Example: ['ground', 'n2', 'n3']
+            free_groups: List of continuum configuration groups (N-1 electrons + e).
+                        Initial states for RR, final states for PI.
+                        Usually just the ion core states.
+                        Example: ['target']
+            **kwargs: Additional parameters:
+                     - energy_grid: Custom photon energy grid (use SetUsrPEGrid)
+                     - te: Electron temperatures for RR rate coefficients
+                     - pwgrid: Partial wave parameters for continuum
 
         Example:
-            >>> fac.RRTable('fe.rr.b', ['n2'], ['continuum'])
+            >>> # Recombination to Fe XVII (Ne-like)
+            >>> # Free: 1s² 2s² 2p⁵ (F-like) + e
+            >>> # Bound: 1s² 2s² 2p⁶ (Ne-like)
+            >>> fac.Config('2*8', group='bound')
+            >>> fac.Config('2*7', group='free')
+            >>> fac.RRTable('fe17_rr.rr.b', ['bound'], ['free'])
+            
+            >>> # Multiple final states
+            >>> fac.RRTable('multi_rr.rr.b', ['ground', 'n3', 'n4'], ['target'])
+            
+            >>> # With custom photon energy grid
+            >>> fac.SetUsrPEGrid([0.5, 1.0, 2.0, 5.0, 10.0, 20.0])  # Rydbergs
+            >>> fac.RRTable('custom_rr.rr.b', ['bound'], ['free'])
+
+        Output File:
+            Binary format containing for each channel:
+            - Bound level index
+            - Free level index  
+            - Ionization threshold (Rydberg)
+            - Photoionization cross sections σ_PI(hν) vs. photon energy
+            - RR rate coefficients α_RR(T) vs. temperature
+            
+        Detailed Balance (Milne Relation):
+            σ_PI(hν) × (g_ion/g_bound) = σ_capture(E_e) × (E_e²)
+            Allows computing RR from PI and vice versa.
+
+        Note:
+            - Requires Structure() for both bound and free groups
+            - PI cross sections typically show resonances near threshold
+            - RR rates decrease with temperature: α_RR ∝ T^(-1/2)
+            - For resonances (DR), use AITable instead
+            - Cross sections needed for photoionization equilibrium
+            - Convert to ASCII: PrintTable('rr.rr.b', 'rr.rr', 1)
         """
         self._write_command("RRTable", output_file, bound_groups, free_groups, **kwargs)
 
@@ -461,19 +857,81 @@ class SFACWriter:
         **kwargs,
     ):
         """
-        Calculate autoionization rates.
+        Calculate Auger (autoionization) decay rates and energies.
 
-        Computes autoionization rates from doubly-excited bound states to
-        continuum states.
+        Computes autoionization rates for doubly-excited resonances that decay by
+        ejecting an electron. This is a radiationless decay process (Auger effect)
+        important for:
+        - Dielectronic recombination (DR)
+        - Resonant photoionization
+        - Inner-shell vacancy decay
+        - X-ray satellite lines
+
+        Process:
+        --------
+        Ion[doubly-excited, N electrons] → Ion[singly-excited, N-1 electrons] + e(E)
+        
+        Example: 1s 2s² 2p⁶ 3l (hollow ion) → 1s² 2s² 2p⁵ + e(Auger)
+
+        Physical Mechanism:
+        -------------------
+        Doubly-excited (or inner-shell vacancy) state is above the ionization limit.
+        Coulomb correlation causes one electron to drop to lower level while ejecting
+        another electron to continuum. Competes with radiative decay.
+
+        Typical Applications:
+        ---------------------
+        1. **Dielectronic Recombination (DR)**: Capture into autoionizing state
+           e + Ion⁺ → Ion** (autoionizing) → Ion⁺ + e  or  Ion + photon
+           
+        2. **Resonant Photoionization**: Photoexcitation to autoionizing resonance
+           Ion + hν → Ion** → Ion⁺ + e
+           
+        3. **Inner-shell processes**: K, L-shell vacancy decay
 
         Args:
-            output_file: Output filename (typically .ai.b extension)
-            bound_groups: List of bound state configuration groups
-            free_groups: List of continuum configuration groups
-            **kwargs: Additional parameters
+            output_file: Output binary filename. Convention: '.ai.b' extension
+                        Example: 'fe_dr.ai.b', 'autoion.ai.b'
+            bound_groups: List of autoionizing (doubly-excited) configuration groups.
+                         These are N-electron states above ionization threshold.
+                         Example: ['recombined'] for DR calculations
+            free_groups: List of target ion + continuum configuration groups.
+                        These are (N-1)-electron states that the resonance decays to.
+                        Example: ['target'] for DR, ['ground', 'excited'] for detailed
+            **kwargs: Additional parameters:
+                     - emin, emax: Energy range for continuum
+                     - msub: Include magnetic sublevel structure
 
         Example:
-            >>> fac.AITable('fe_ai.ai.b', ['recombined'], ['target'])
+            >>> # Dielectronic recombination for Li-like Fe
+            >>> # Recombined: 1s² 2l nl' (doubly-excited)
+            >>> # Target: 1s² 2l (ground) + e
+            >>> fac.Config('1s2 2s1', group='target')
+            >>> fac.Config('1s2 2s2', group='recombined')
+            >>> fac.Config('1s2 2s1 2p1', group='recombined')
+            >>> fac.Config('1s2 2p2', group='recombined')
+            >>> fac.AITable('fe_dr.ai.b', ['recombined'], ['target'])
+            
+            >>> # Hollow ion Auger decay
+            >>> fac.Config('1s1 2s2 2p6 3s1', group='hollow')
+            >>> fac.Config('1s2 2s2 2p5', group='target')
+            >>> fac.AITable('auger.ai.b', ['hollow'], ['target'])
+
+        Output File:
+            Binary format containing for each autoionizing level:
+            - Bound level index (doubly-excited resonance)
+            - Target level index (ion after autoionization)
+            - Autoionization rate Γ_AI (s⁻¹)
+            - Auger electron energy (Rydberg)
+            - Branching ratios (if multiple decay channels)
+
+        Note:
+            - Requires Structure() for both bound_groups and free_groups
+            - Autoionization widths: Γ = ℏ/τ where τ is lifetime
+            - Competes with radiative decay: Γ_total = Γ_AI + Γ_rad
+            - Critical for accurate DR rate coefficients
+            - For resonances: width = autoionization rate
+            - Convert to ASCII: PrintTable('ai.ai.b', 'ai.ai', 1)
         """
         self._write_command("AITable", output_file, bound_groups, free_groups, **kwargs)
 
@@ -506,37 +964,160 @@ class SFACWriter:
 
     def SetBreit(self, mode: int):
         """
-        Enable/disable Breit interaction.
+        Enable/disable Breit interaction (magnetic electron-electron interaction).
+
+        The Breit interaction includes relativistic magnetic corrections to the
+        Coulomb interaction between electrons. This is important for:
+        - Heavy atoms (Z > 20)
+        - Fine-structure splittings
+        - Highly-charged ions
+        - Accurate energy level calculations
+
+        Physical Effect:
+        ----------------
+        The Breit operator accounts for:
+        - Magnetic interactions between electron spins and orbital moments
+        - Retardation effects (finite speed of light)
+        - Gauge-dependent terms
+
+        Formula: H_Breit ≈ -(α/2r₁₂)[(α₁·α₂) + (α₁·r₁₂)(α₂·r₁₂)/r₁₂²]
+        
+        Correction typically:
+        - ~0.01% for light atoms (C, O)
+        - ~0.1% for medium atoms (Fe, Cu)
+        - ~1% for heavy atoms (Au, U)
+        - ~10% for highly-charged ions (H-like Fe, He-like Kr)
 
         Args:
-            mode: 0=off, -1=on (default approximation), >0=specific mode
+            mode: Breit interaction mode
+                 - 0: Off (no Breit interaction) - fastest, least accurate
+                 - -1: On with default approximation (recommended) - good compromise
+                 - 1: Full Breit operator (slower, most accurate)
+                 - 2: Gaunt interaction only (transverse part)
 
         Example:
-            >>> fac.SetBreit(-1)  # Enable Breit interaction
+            >>> # Default: enable Breit
+            >>> fac.SetBreit(-1)
+            
+            >>> # Disable for light atoms (faster calculation)
+            >>> fac.SetBreit(0)
+            
+            >>> # Full Breit for heavy atoms
+            >>> fac.SetBreit(1)
+
+        Note:
+            - Must be called before Structure() to affect energy levels
+            - Affects level energies by ~0.01-1% typically
+            - Negligible effect on light neutral atoms (Z < 10)
+            - Important for spectroscopic accuracy in heavy atoms
+            - Always use for highly-charged ions
         """
         self._write_command("SetBreit", mode)
 
     def SetSE(self, mode: int):
         """
-        Enable/disable self-energy corrections (QED).
+        Enable/disable self-energy corrections (radiative QED correction).
+
+        Self-energy (SE) is a quantum electrodynamics (QED) effect where the electron
+        interacts with its own electromagnetic field. This causes a small energy shift.
+
+        Physical Origin:
+        ----------------
+        Virtual photon emission and reabsorption by the electron creates a "cloud"
+        of virtual particles. This renormalizes:
+        - Electron mass (already included in Dirac equation)
+        - Electron energy levels (Lamb shift)
+
+        The SE correction is primarily important for:
+        - s-electrons (largest effect, penetrate nucleus most)
+        - Heavy atoms and ions (scales as Z⁴α⁵)
+        - Precision spectroscopy
+
+        Typical Magnitude:
+        ------------------
+        - H(1s): ~1057 MHz (Lamb shift, 2P₁/₂ - 2S₁/₂)
+        - Fe XVII (1s): ~few eV
+        - U⁹⁰⁺ (1s): ~hundreds of eV
+        - Scales roughly as Z⁴α⁵ for 1s
+        - Much smaller for higher shells
 
         Args:
-            mode: 0=off, -1=on (default approximation), >0=specific mode
+            mode: Self-energy mode
+                 - 0: Off (no SE correction) - fastest, low Z
+                 - -1: On with default approximation (Welton/Mohr) - recommended
+                 - 1: Full SE with screening (most accurate, slower)
 
         Example:
-            >>> fac.SetSE(-1)  # Enable self-energy corrections
+            >>> # Enable SE for accurate calculations
+            >>> fac.SetSE(-1)
+            
+            >>> # Disable for light atoms (Z < 20)
+            >>> fac.SetSE(0)
+            
+            >>> # Full SE for precision work
+            >>> fac.SetSE(1)
+
+        Note:
+            - Must be called before Structure()
+            - Lamb shift most important for 1s, 2s electrons
+            - Correction is ~Z⁴α⁵ Ry for 1s
+            - For Z=26 (Fe): ~1-10 eV depending on ionization
+            - For Z>50, always include SE
+            - Negligible for valence electrons
         """
         self._write_command("SetSE", mode)
 
     def SetVP(self, mode: int):
         """
-        Enable/disable vacuum polarization corrections (QED).
+        Enable/disable vacuum polarization corrections (QED screening effect).
+
+        Vacuum polarization (VP) is a QED effect where virtual electron-positron pairs
+        screen the nuclear charge. This modifies the effective nuclear potential
+        experienced by electrons, especially near the nucleus.
+
+        Physical Mechanism:
+        -------------------
+        Vacuum fluctuates with virtual e⁺e⁻ pairs. In strong nuclear field:
+        - Pairs polarize (e⁻ closer to nucleus, e⁺ further)
+        - This screens nuclear charge
+        - Electrons see reduced effective Z near nucleus
+
+        Effect is largest for:
+        - Inner-shell electrons (s, p₁/₂)
+        - Heavy nuclei (high Z)
+        - Highly-charged ions
+
+        Typical Magnitude:
+        ------------------
+        - H (1s): ~27 MHz (very small)
+        - Fe XVII (1s): ~0.1-1 eV
+        - U⁹⁰⁺ (1s): ~100 eV
+        - Scales as Z⁴α⁵ (similar to SE)
+        - Opposite sign to SE (VP increases binding)
 
         Args:
-            mode: 0=off, -1=on (default approximation), >0=specific mode
+            mode: Vacuum polarization mode
+                 - 0: Off (no VP correction) - fastest, light atoms
+                 - -1: On with default Uehling potential (recommended)
+                 - 1: Full VP including higher-order terms (most accurate)
 
         Example:
-            >>> fac.SetVP(-1)  # Enable vacuum polarization
+            >>> # Enable VP for heavy atoms/ions
+            >>> fac.SetVP(-1)
+            
+            >>> # Disable for light atoms (Z < 30)
+            >>> fac.SetVP(0)
+            
+            >>> # Full VP for high-Z precision
+            >>> fac.SetVP(1)
+
+        Note:
+            - Must be called before Structure()
+            - Uehling potential is leading-order VP
+            - Correction opposite sign to SE (increases binding)
+            - For Z=26: ~0.1-1 eV for 1s
+            - For Z>60: always include VP
+            - Usually combined with SE: both on or both off
         """
         self._write_command("SetVP", mode)
 
@@ -574,40 +1155,165 @@ class SFACWriter:
 
     def SetUsrCEGrid(self, grid: List[float], grid_type: int = 1):
         """
-        Set user-defined energy grid for collisional excitation.
+        Set custom energy grid for electron-impact excitation cross sections.
+
+        By default, FAC uses an automatic logarithmic energy grid. This function
+        allows you to specify custom energy points for better resolution or coverage.
 
         Args:
-            grid: List of energy values
-            grid_type: 0=incident electron energy, 1=scattered electron energy
+            grid: List of energy values in Rydbergs or threshold-relative units.
+                 Energy values should be in **increasing order**.
+                 For type=1 (default): relative to threshold (E/ΔE)
+                 For type=0: absolute incident electron energy (Rydbergs)
+            grid_type: Energy reference type
+                      - 0: Absolute incident electron energy (E_incident in Ry)
+                      - 1: Relative to threshold (E_scattered/ΔE), **default**
+                           where E_scattered = E_incident - ΔE
+                           ΔE = excitation energy
+                      
+                      Type 1 is usually preferred: gives uniform coverage across
+                      all transitions regardless of excitation energy.
+
+        Grid Selection Guidelines:
+        ---------------------------
+        - **Minimum**: 0.0 (at threshold)
+        - **Maximum**: 5-10× threshold (diminishing returns beyond)
+        - **Spacing**: Logarithmic often best (0.1, 0.2, 0.5, 1, 2, 5, 10, 20)
+        - **Near threshold**: Denser grid captures resonances
+        - **Typical**: 10-30 points adequate
 
         Example:
-            >>> fac.SetUsrCEGrid([0.1, 0.5, 1.0, 2.0, 5.0])
+            >>> # Relative energy grid (recommended, type=1 default)
+            >>> fac.SetUsrCEGrid([0.0, 0.1, 0.2, 0.5, 1.0, 2.0, 5.0, 10.0])
+            
+            >>> # Absolute energy grid in Rydbergs (type=0)
+            >>> fac.SetUsrCEGrid([0.5, 1.0, 2.0, 5.0, 10.0, 20.0], grid_type=0)
+            
+            >>> # Fine grid near threshold for resonances
+            >>> fac.SetUsrCEGrid([0.0, 0.05, 0.1, 0.15, 0.2, 0.3, 0.5, 1.0, 2.0, 5.0])
+            
+            >>> # Set grid before CETable calculation
+            >>> fac.SetUsrCEGrid([0.0, 0.2, 0.5, 1.0, 2.0, 5.0])
+            >>> fac.CETable('ne_ce.ce.b', ['ground'], ['n3'])
+
+        Note:
+            - Must be called before CETable()
+            - Grid applies to ALL CE calculations after it
+            - Not reset between CETable calls - set once at beginning
+            - Default grid usually adequate for first calculations
+            - Use custom grid for: resonance studies, specific applications
         """
         self._write_command("SetUsrCEGrid", grid, grid_type)
 
     def SetUsrCIGrid(self, grid: List[float], grid_type: int = 0):
         """
-        Set user-defined energy grid for collisional ionization.
+        Set custom energy grid for electron-impact ionization cross sections.
+
+        By default, FAC uses automatic energy grid. Custom grid allows better
+        control over energy resolution and range.
 
         Args:
-            grid: List of energy values
-            grid_type: 0=incident electron energy, 1=ejected electron energy
+            grid: List of energy values in threshold-relative or absolute units.
+                 Energy values should be in **increasing order**.
+                 For type=0 (default): relative to threshold (E/IP)
+                 For type=1: absolute ejected electron energy (Rydbergs)
+            grid_type: Energy reference type
+                      - 0: Relative to ionization threshold (E/IP), **default**
+                           where E is incident electron energy, IP is threshold
+                           0.0 = at threshold, 1.0 = 2× threshold, etc.
+                      - 1: Absolute ejected electron energy (Rydbergs)
+                      
+                      Type 0 preferred: gives uniform coverage for all thresholds.
+
+        Grid Selection Guidelines:
+        ---------------------------
+        - **Minimum**: 0.0 (at threshold, but cross section = 0)
+        - **Start**: ~0.1-0.2 (just above threshold where σ > 0)
+        - **Maximum**: 5-10× threshold
+        - **Typical behavior**: σ rises from threshold, peaks at 2-4×, then decreases
+        - **Spacing**: Logarithmic (0.2, 0.5, 1, 2, 5, 10)
+        - **Points**: 10-20 usually sufficient
 
         Example:
-            >>> fac.SetUsrCIGrid([0.1, 0.5, 1.0, 2.0, 5.0])
+            >>> # Relative energy grid (recommended, type=0 default)
+            >>> fac.SetUsrCIGrid([0.0, 0.2, 0.5, 1.0, 2.0, 5.0, 10.0])
+            
+            >>> # Absolute ejected electron energy (type=1)
+            >>> fac.SetUsrCIGrid([0.1, 0.5, 1.0, 2.0, 5.0], grid_type=1)
+            
+            >>> # Dense grid near threshold
+            >>> fac.SetUsrCIGrid([0.0, 0.1, 0.2, 0.3, 0.5, 0.7, 1.0, 1.5, 2.0, 3.0, 5.0])
+            
+            >>> # Usage in calculation
+            >>> fac.SetUsrCIGrid([0.0, 0.5, 1.0, 2.0, 5.0])
+            >>> fac.CITable('fe_ci.ci.b', ['bound'], ['free'])
+
+        Note:
+            - Must be called before CITable()
+            - Applies to all CI calculations after setting
+            - Cross section = 0 exactly at threshold (zero phase space)
+            - Peak typically at 2-4× threshold energy
+            - Default grid usually adequate for most purposes
         """
         self._write_command("SetUsrCIGrid", grid, grid_type)
 
     def SetUsrPEGrid(self, grid: List[float], grid_type: int = 0):
         """
-        Set user-defined energy grid for photoionization.
+        Set custom energy grid for photoionization cross sections.
+
+        By default, FAC uses automatic energy grid. Custom grid provides better
+        control for photoionization opacity tables, resonance studies, etc.
 
         Args:
-            grid: List of energy values
-            grid_type: 0=photon energy, 1=photoelectron energy
+            grid: List of energy values in threshold-relative or absolute units.
+                 Energy values should be in **increasing order**.
+                 For type=0 (default): relative to threshold (hν/IP)
+                 For type=1: absolute photoelectron energy (Rydbergs)
+            grid_type: Energy reference type
+                      - 0: Relative to ionization threshold (hν/IP), **default**
+                           where hν is photon energy, IP is threshold
+                           1.0 = at threshold, 2.0 = twice IP, etc.
+                      - 1: Absolute photoelectron kinetic energy (Rydbergs)
+                           E_electron = hν - IP
+                      
+                      Type 0 preferred for opacity tables (uniform coverage).
+
+        Grid Selection for Different Applications:
+        -------------------------------------------
+        **Opacity Tables** (stellar/plasma modeling):
+        - Wide range: 1.0 to 10-100× threshold
+        - Fine spacing: capture edge jumps and resonances
+        - Example: [1.0, 1.1, 1.2, 1.5, 2.0, 3.0, 5.0, 10.0, 20.0, 50.0]
+
+        **Resonance Studies** (autoionizing states):
+        - Dense grid near threshold: 1.0 to ~2.0
+        - Example: [1.0, 1.02, 1.05, 1.1, 1.15, 1.2, 1.3, 1.5, 2.0]
+
+        **Astrophysical Applications**:
+        - Match observed photon energies
+        - Cover important ionization edges (K, L, M)
 
         Example:
-            >>> fac.SetUsrPEGrid([0.1, 0.5, 1.0, 2.0, 5.0])
+            >>> # Wide range for opacity (relative, type=0 default)
+            >>> fac.SetUsrPEGrid([1.0, 1.2, 1.5, 2.0, 3.0, 5.0, 10.0, 20.0])
+            
+            >>> # Dense near threshold for resonances
+            >>> fac.SetUsrPEGrid([1.0, 1.05, 1.1, 1.15, 1.2, 1.3, 1.5, 2.0, 3.0])
+            
+            >>> # Photoelectron energy grid (type=1)
+            >>> fac.SetUsrPEGrid([0.0, 0.5, 1.0, 2.0, 5.0, 10.0], grid_type=1)
+            
+            >>> # Usage in calculation
+            >>> fac.SetUsrPEGrid([1.0, 1.5, 2.0, 3.0, 5.0, 10.0])
+            >>> fac.RRTable('fe_rr.rr.b', ['bound'], ['free'])
+
+        Note:
+            - Must be called before RRTable()
+            - PI cross section shows sharp edge at threshold
+            - Often has resonances (autoionizing states) just above threshold
+            - Cross section typically decreases as ~E^(-7/2) far above threshold
+            - Type 0 (relative) recommended for wide energy range
+            - For RR rates, PI grid determines temperature coverage
         """
         self._write_command("SetUsrPEGrid", grid, grid_type)
 
