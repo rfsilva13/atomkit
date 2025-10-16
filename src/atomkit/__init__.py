@@ -11,10 +11,18 @@ from .utils import get_element_info, parse_ion_notation
 # Import physics submodule for cross section calculations
 from . import physics
 
+# Import FAC wrapper module
+from . import fac
+
+# Import AUTOSTRUCTURE wrapper module
+from . import autostructure
+
 __all__ = [
     "Shell",
     "Configuration",
     "get_element_info",
     "parse_ion_notation",
     "physics",
+    "fac",
+    "autostructure",
 ]

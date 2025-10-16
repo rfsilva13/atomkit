@@ -1,0 +1,27 @@
+# Ignore FAC output files (generated when running .sf files)
+*.lev.b
+*.lev.asc
+*.lev
+*.tr.b
+*.tr.asc
+*.tr
+*.ai.b
+*.ai.asc
+*.ai
+*.rr.b
+*.rr.asc
+*.rr
+*.ce.b
+*.ce.asc
+*.ce
+*.ci.b
+*.ci.asc
+*.ci
+*.pi.b
+*.pi.asc
+*.pi
+
+# Keep input files
+!*.sf
+!README.md
+!.gitignore

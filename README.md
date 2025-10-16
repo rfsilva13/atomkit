@@ -200,10 +200,66 @@ fig, ax = quick_plot_cross_section(
 )
 ```
 
+### FAC (Flexible Atomic Code) Integration
+
+Atom kit provides a Python wrapper for generating FAC input files without requiring pfac compilation:
+
+```python
+from atomkit.fac import SFACWriter
+from atomkit import Configuration
+
+# Option 1: Generate FAC input from atomkit configurations
+ground = Configuration.from_element("Fe", 23)  # Fe XXIV
+excited = ground.generate_excitations(["2s", "2p", "3s"], 1)
+
+with SFACWriter("fe_calculation.sf") as fac:
+    fac.SetAtom("Fe")
+    fac.SetBreit(-1)  # Enable Breit interaction
+    fac.SetSE(-1)     # Enable QED corrections
+    
+    # Add configurations from atomkit
+    fac.config_from_atomkit(ground, "ground")
+    for i, state in enumerate(excited):
+        fac.config_from_atomkit(state, f"excited{i}")
+    
+    # Perform calculation
+    fac.OptimizeRadial(["ground"])
+    fac.Structure("output.lev.b", ["ground"] + [f"excited{i}" for i in range(len(excited))])
+    fac.PrintTable("output.lev.b", "output.lev", 1)
+
+# Execute the generated file
+# $ sfac fe_calculation.sf
+# $ mpirun -n 24 sfac fe_calculation.sf  # parallel
+
+# Option 2: Direct SFAC syntax (like FAC manual examples)
+with SFACWriter("ne_like_fe.sf") as fac:
+    fac.SetAtom("Fe")
+    fac.Closed("1s")
+    fac.Config("2*8", group="n2")       # n=2 complex
+    fac.Config("2*7 3*1", group="n3")   # n=2 -> n=3 excitation
+    
+    fac.ConfigEnergy(0)
+    fac.OptimizeRadial(["n2"])
+    fac.ConfigEnergy(1)
+    
+    fac.Structure("ne.lev.b", ["n2", "n3"])
+    fac.TransitionTable("ne.tr.b", ["n2"], ["n3"])
+```
+
+The FAC wrapper:
+- ✅ No pfac dependency - pure Python
+- ✅ Generates readable .sf files
+- ✅ Full integration with atomkit configurations
+- ✅ All major FAC functions supported
+- ✅ MPI parallel calculation support
+
+See `examples/fac_wrapper_demo.py` for comprehensive examples and `src/atomkit/fac/README.md` for complete documentation.
+
 ## Documentation
 
 For detailed API documentation, see:
-- [API Reference](API_REFERENCE.md) - Complete function and class documentation
+- [API Reference](docs/API_REFERENCE.md) - Complete function and class documentation
+- [FAC Integration Guide](src/atomkit/fac/README.md) - FAC wrapper documentation
 - [Configuration Guide](DOCUMENTATION.md) - Detailed guide for configuration manipulation
 - [Examples Directory](examples/) - Working examples demonstrating key features
 

@@ -1,0 +1,24 @@
+# Ignore AUTOSTRUCTURE output files (generated when running .dat files)
+olg
+ols
+oic
+opls
+opic
+TERMS
+LEVELS
+*.log
+*.out
+
+# Ignore binary output files
+*.b
+*.asc
+
+# Ignore temporary files
+*~
+*.tmp
+*.swp
+
+# Keep input files
+!*.dat
+!README.md
+!.gitignore
