@@ -199,6 +199,68 @@ class TestSALGEBNamelist:
         content = asw.get_content()
         assert "BORN='INF'" in content
 
+    def test_salgeb_with_kutss_off(self):
+        """Test SALGEB with spin-spin interactions disabled."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with KUTSS=-1")
+        # KUTSS=-1 for LS coupling (no fine-structure in spin-spin)
+        asw.add_salgeb(CUP="LS", RAD="E1", KUTSS=-1)
+
+        content = asw.get_content()
+        assert "KUTSS=-1" in content
+
+    def test_salgeb_with_kutss_perturbative(self):
+        """Test SALGEB with perturbative fine-structure."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with KUTSS=0")
+        # KUTSS=0 for perturbative correction (default)
+        asw.add_salgeb(CUP="IC", RAD="E1", KUTSS=0)
+
+        content = asw.get_content()
+        assert "KUTSS=0" in content
+
+    def test_salgeb_with_kutss_full(self):
+        """Test SALGEB with full fine-structure in matrix."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with KUTSS=1")
+        # KUTSS=1 for fully included spin-spin (high precision)
+        asw.add_salgeb(CUP="IC", RAD="E1", KUTSS=1, KCOR1=1, KCOR2=2)
+
+        content = asw.get_content()
+        assert "KUTSS=1" in content
+        assert "KCOR1=1" in content
+
+    def test_salgeb_with_all_fine_structure(self):
+        """Test SALGEB with all fine-structure parameters."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with complete fine-structure")
+        # Heavy element calculation with all fine-structure
+        asw.add_salgeb(
+            CUP="IC", 
+            RAD="E1",
+            KUTSS=1,  # spin-spin
+            KUTSO=1,  # spin-orbit
+            KUTOO=1,  # orbit-orbit
+            KCOR1=1,
+            KCOR2=3
+        )
+
+        content = asw.get_content()
+        assert "KUTSS=1" in content
+        assert "KUTSO=1" in content
+        assert "KUTOO=1" in content
+
+    def test_salgeb_with_direct_integration(self):
+        """Test SALGEB with direct integration fine-structure."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with KUTSS=2")
+        # KUTSS=2 for direct integration (most accurate)
+        asw.add_salgeb(CUP="IC", RAD="E1", KUTSS=2, KUTSO=2)
+
+        content = asw.get_content()
+        assert "KUTSS=2" in content
+        assert "KUTSO=2" in content
+
 
 class TestSMINIMNamelist:
     """Test SMINIM namelist generation."""

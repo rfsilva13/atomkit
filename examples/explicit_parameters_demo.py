@@ -116,7 +116,77 @@ print(f"✓ Created: examples/as_inputs/structure_with_born.dat")
 print()
 
 # =============================================================================
-# Example 4: Alternative Core Specification with KORB
+# Example 4: High-Precision with Full Fine-Structure
+# =============================================================================
+print("Example 4: High-Precision Fe with Full Fine-Structure")
+print("-" * 80)
+
+# Fe-like structure for high-precision calculation
+ground = Configuration.from_string("1s2.2s2.2p6.3s2.3p6.3d6.4s2")
+excited = ground.generate_excitations(["4p"], excitation_level=1)
+
+with ASWriter("examples/as_inputs/fe_high_precision.dat") as asw:
+    asw.write_header("Fe with full fine-structure interactions")
+    asw.add_comment("KUTSS, KUTSO, KUTOO = 1 for high-precision heavy element")
+    asw.add_comment("Important for accurate transition rates in Fe")
+    asw.add_blank_line()
+    
+    # For heavy elements, include all fine-structure interactions
+    asw.add_salgeb(
+        CUP="IC",
+        RAD="E1",
+        KUTSS=1,  # spin-spin fully included
+        KUTSO=1,  # spin-orbit fully included
+        KUTOO=1,  # orbit-orbit fully included
+        KCOR1=1,
+        KCOR2=3,  # Ne-like core
+    )
+    
+    info = asw.configs_from_atomkit([ground] + excited[:2], last_core_orbital="2p")
+    print(f"  Configurations: {info['n_configs']}")
+    print(f"  Fine-structure: spin-spin, spin-orbit, orbit-orbit all included")
+    
+    asw.add_sminim(NZION=26)
+
+print(f"✓ Created: examples/as_inputs/fe_high_precision.dat")
+print()
+
+# =============================================================================
+# Example 5: LS Coupling with No Fine-Structure
+# =============================================================================
+print("Example 5: LS Coupling with No Fine-Structure")
+print("-" * 80)
+
+# C-like ion in pure LS coupling
+ground = Configuration.from_string("1s2.2s2.2p2")
+excited = ground.generate_excitations(["3s", "3p"], excitation_level=1)
+
+with ASWriter("examples/as_inputs/ls_no_finestructure.dat") as asw:
+    asw.write_header("C-like ion in pure LS coupling")
+    asw.add_comment("KUTSS=-1 explicitly disables fine-structure")
+    asw.add_comment("Use for light elements or when LS is sufficient")
+    asw.add_blank_line()
+    
+    # For pure LS coupling, explicitly disable fine-structure
+    asw.add_salgeb(
+        CUP="LS",
+        RAD="E1",
+        KUTSS=-1,  # No fine-structure in spin-spin
+        KCOR1=1,
+        KCOR2=1,  # 1s core
+    )
+    
+    info = asw.configs_from_atomkit([ground] + excited[:3], last_core_orbital="1s")
+    print(f"  Configurations: {info['n_configs']}")
+    print(f"  Coupling: Pure LS (no fine-structure)")
+    
+    asw.add_sminim(NZION=6)
+
+print(f"✓ Created: examples/as_inputs/ls_no_finestructure.dat")
+print()
+
+# =============================================================================
+# Example 6: Alternative Core Specification with KORB
 # =============================================================================
 print("Example 4: Using KORB1/KORB2 Alternative")
 print("-" * 80)
@@ -148,12 +218,16 @@ print("=" * 80)
 print("Summary of New Explicit Parameters")
 print("=" * 80)
 print()
+print("Core Specification:")
+print("-" * 80)
 print("✓ KCOR1/KCOR2: Specify closed core orbitals (orbital indices)")
 print("  - Important for correlation and R-matrix calculations")
 print("  - Example: KCOR1=1, KCOR2=3 for Ne-like core (1s, 2s, 2p)")
 print()
 print("✓ KORB1/KORB2: Alternative to KCOR1/KCOR2 (functionally equivalent)")
 print()
+print("Collision & Autoionization Control:")
+print("-" * 80)
 print("✓ AUGER: Control autoionization rate calculation")
 print("  - 'YES': Calculate rates when continuum present (default)")
 print("  - 'NO': Disable autoionization (useful for pure PI)")
@@ -163,6 +237,24 @@ print("  - 'INF': Infinite energy limit (useful for high-T plasmas)")
 print("  - 'YES': Finite energy Born strengths")
 print("  - 'NO': Don't calculate (default)")
 print()
-print("These parameters are now explicit in add_salgeb() with full")
-print("documentation and type hints, making the code more readable")
-print("and easier to use correctly.")
+print("Fine-Structure Interaction Control:")
+print("-" * 80)
+print("✓ KUTSS: Fine-structure in 2-body spin-spin interactions")
+print("  - -1: No fine-structure (LS coupling only)")
+print("  - 0: Perturbative correction (default)")
+print("  - 1: Fully included in interaction matrix")
+print("  - 2: Direct integration (most accurate)")
+print()
+print("✓ KUTSO: Fine-structure in 2-body spin-orbit interactions")
+print("  - Same options as KUTSS")
+print("  - Important for relativistic effects")
+print()
+print("✓ KUTOO: Fine-structure in 2-body orbit-orbit interactions")
+print("  - Same options as KUTSS")
+print("  - Critical for heavy elements and high precision")
+print()
+print("=" * 80)
+print("All these parameters are now explicit in add_salgeb() with full")
+print("documentation and type hints, making the code more readable,")
+print("self-documenting, and easier to use correctly.")
+print("=" * 80)

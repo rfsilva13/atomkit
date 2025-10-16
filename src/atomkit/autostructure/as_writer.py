@@ -143,6 +143,10 @@ class ASWriter:
         # Collision/autoionization control
         AUGER: str | None = None,
         BORN: str | None = None,
+        # Fine-structure interaction control
+        KUTSS: int | None = None,
+        KUTSO: int | None = None,
+        KUTOO: int | None = None,
         **kwargs,
     ) -> None:
         """
@@ -203,9 +207,24 @@ class ASWriter:
             - 'INF': Infinite energy limit Born collision strengths
             - 'YES': Finite energy Born collision strengths (Type-1 adf04)
             - 'NO': Do not calculate (default, except if RAD='ALL' then 'INF')
+        KUTSS : int, optional
+            Fine-structure in 2-body spin-spin interactions:
+            - -1: No fine-structure (LS coupling only)
+            - 0: Perturbative fine-structure correction (default)
+            - 1: Include fully in interaction matrix
+            - 2: Include via direct integration
+            Note: For LS coupling (CUP='LS'), KUTSS is forced to -1
+        KUTSO : int, optional
+            Fine-structure in 2-body spin-orbit interactions:
+            - Same options as KUTSS (default: 0)
+            - Controls relativistic spin-orbit contributions
+        KUTOO : int, optional
+            Fine-structure in 2-body orbit-orbit interactions:
+            - Same options as KUTSS (default: 0)
+            - Important for heavy elements and high precision
         **kwargs : dict
             Additional SALGEB parameters for advanced usage.
-            Common options: KUTSS, KUTSO, BASIS, KCUT, NAST, NASTJ, etc.
+            Common options: BASIS, KCUT, NAST, NASTJ, ICFG, etc.
             See AUTOSTRUCTURE manual for complete list.
 
         Notes
@@ -265,6 +284,14 @@ class ASWriter:
             params["AUGER"] = self._quote_value(AUGER)
         if BORN is not None:
             params["BORN"] = self._quote_value(BORN)
+
+        # Fine-structure interaction control
+        if KUTSS is not None:
+            params["KUTSS"] = KUTSS
+        if KUTSO is not None:
+            params["KUTSO"] = KUTSO
+        if KUTOO is not None:
+            params["KUTOO"] = KUTOO
 
         # Add any additional parameters
         for key, value in kwargs.items():
