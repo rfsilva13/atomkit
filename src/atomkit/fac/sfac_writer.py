@@ -15,7 +15,7 @@ context and examples, some technical details may be incomplete or inaccurate.
 
 **MANUAL REVIEW REQUIRED** before relying on docstring information for:
 - Exact parameter meanings and value ranges
-- Physical scaling laws and magnitudes  
+- Physical scaling laws and magnitudes
 - Default behaviors and grid specifications
 - Advanced calculation modes and options
 
