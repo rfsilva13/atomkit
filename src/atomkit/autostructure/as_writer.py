@@ -172,6 +172,12 @@ class ASWriter:
         # Multipole radiation control
         KPOLE: int | None = None,
         KPOLM: int | None = None,
+        # Metastable and target state control
+        NMETA: int | None = None,
+        NMETAJ: int | None = None,
+        INAST: int | None = None,
+        INASTJ: int | None = None,
+        TARGET: int | None = None,
         **kwargs,
     ) -> None:
         """
@@ -355,9 +361,38 @@ class ASWriter:
             - 1: Include M1 (magnetic dipole)
             - 2: Include M1 + M2 (magnetic quadrupole)
             - Important for forbidden transitions and fine-structure mixing
+        NMETA : int, optional
+            Number of metastable terms (LS coupling):
+            - Specifies which terms are considered metastable
+            - Followed by NMETA values of (2S+1, L, π) in data section
+            - Use with CUP='LS' for metastable-state-specific calculations
+            - Important for excitation from metastable states
+        NMETAJ : int, optional
+            Number of metastable levels (IC coupling):
+            - Similar to NMETA but for fine-structure levels
+            - Followed by NMETAJ values of (2S+1, L, 2J, π)
+            - Use with CUP='IC' for J-specific metastable states
+            - More precise than NMETA for heavy elements
+        INAST : int, optional
+            Number of initial terms (LS coupling):
+            - Specifies which terms are initial states for transitions
+            - Similar to NAST but explicitly for initial states
+            - Followed by INAST values of (2S+1, L, π)
+            - Use when initial and final state restrictions differ
+        INASTJ : int, optional
+            Number of initial levels (IC coupling):
+            - Similar to INAST but for fine-structure levels
+            - Followed by INASTJ values of (2S+1, L, 2J, π)
+            - Use with CUP='IC' for explicit initial level selection
+            - Allows different initial/final level restrictions
+        TARGET : int, optional
+            Target state index for collision calculations:
+            - Specifies single target state for scattering calculations
+            - Used in electron impact excitation/ionization
+            - Value is the index of the target state in level list
+            - Useful for calculating cross sections to specific final states
         **kwargs : dict
             Additional SALGEB parameters for advanced usage.
-            Common options: NMETA, NMETAJ, TARGET, INAST, INASTJ, etc.
             See AUTOSTRUCTURE manual for complete list.
 
         Notes
@@ -475,6 +510,18 @@ class ASWriter:
             params["KPOLE"] = KPOLE
         if KPOLM is not None:
             params["KPOLM"] = KPOLM
+
+        # Metastable and target state control
+        if NMETA is not None:
+            params["NMETA"] = NMETA
+        if NMETAJ is not None:
+            params["NMETAJ"] = NMETAJ
+        if INAST is not None:
+            params["INAST"] = INAST
+        if INASTJ is not None:
+            params["INASTJ"] = INASTJ
+        if TARGET is not None:
+            params["TARGET"] = TARGET
 
         # Add any additional parameters
         for key, value in kwargs.items():

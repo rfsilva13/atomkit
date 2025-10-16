@@ -557,9 +557,9 @@ class TestSALGEBNamelist:
             MINLT=1,
             MAXLT=10,  # First 10 initial states
             MINJT=0,
-            MAXJT=6,   # J up to 3
-            KPOLE=3,   # Up to E3
-            KPOLM=2,   # Up to M2
+            MAXJT=6,  # J up to 3
+            KPOLE=3,  # Up to E3
+            KPOLM=2,  # Up to M2
         )
 
         content = asw.get_content()
@@ -569,6 +569,76 @@ class TestSALGEBNamelist:
         assert "MAXJT=6" in content
         assert "KPOLE=3" in content
         assert "KPOLM=2" in content
+
+    def test_salgeb_with_nmeta(self):
+        """Test SALGEB with NMETA (metastable terms in LS coupling)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with NMETA")
+        # NMETA=2 specifies 2 metastable terms
+        asw.add_salgeb(CUP="LS", RAD="E1", NMETA=2)
+
+        content = asw.get_content()
+        assert "NMETA=2" in content
+        assert "CUP='LS'" in content
+
+    def test_salgeb_with_nmetaj(self):
+        """Test SALGEB with NMETAJ (metastable levels in IC coupling)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with NMETAJ")
+        # NMETAJ=3 specifies 3 metastable fine-structure levels
+        asw.add_salgeb(CUP="IC", RAD="E1", NMETAJ=3)
+
+        content = asw.get_content()
+        assert "NMETAJ=3" in content
+        assert "CUP='IC'" in content
+
+    def test_salgeb_with_inast(self):
+        """Test SALGEB with INAST (initial terms in LS coupling)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with INAST")
+        # INAST=4 specifies 4 initial terms for transitions
+        asw.add_salgeb(CUP="LS", RAD="E1", INAST=4)
+
+        content = asw.get_content()
+        assert "INAST=4" in content
+
+    def test_salgeb_with_inastj(self):
+        """Test SALGEB with INASTJ (initial levels in IC coupling)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with INASTJ")
+        # INASTJ=5 specifies 5 initial fine-structure levels
+        asw.add_salgeb(CUP="IC", RAD="E1", INASTJ=5)
+
+        content = asw.get_content()
+        assert "INASTJ=5" in content
+
+    def test_salgeb_with_target(self):
+        """Test SALGEB with TARGET (target state for collisions)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with TARGET")
+        # TARGET=1 for collision calculation to specific state
+        asw.add_salgeb(CUP="IC", RAD="E1", TARGET=1)
+
+        content = asw.get_content()
+        assert "TARGET=1" in content
+
+    def test_salgeb_with_metastable_and_initial(self):
+        """Test SALGEB with metastable and initial state specifications."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with metastable and initial states")
+        # Complete metastable state calculation
+        asw.add_salgeb(
+            CUP="IC",
+            RAD="E1",
+            NMETAJ=2,  # 2 metastable levels
+            INASTJ=3,  # 3 initial levels
+            TARGET=1,  # Target state 1
+        )
+
+        content = asw.get_content()
+        assert "NMETAJ=2" in content
+        assert "INASTJ=3" in content
+        assert "TARGET=1" in content
 
 
 class TestSMINIMNamelist:
