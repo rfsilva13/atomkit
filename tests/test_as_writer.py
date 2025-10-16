@@ -160,6 +160,45 @@ class TestSALGEBNamelist:
         assert "KCOR2=1" in content
         assert "NAST=3" in content
 
+    def test_salgeb_with_core_specification(self):
+        """Test SALGEB with explicit core specification."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with core")
+        asw.add_salgeb(CUP="IC", RAD="E1", KCOR1=1, KCOR2=3)
+
+        content = asw.get_content()
+        assert "KCOR1=1" in content
+        assert "KCOR2=3" in content
+        # Ne-like core (1s, 2s, 2p)
+
+    def test_salgeb_with_korb_alternative(self):
+        """Test SALGEB with KORB alternative for core."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with KORB")
+        asw.add_salgeb(CUP="LS", RAD="E1", KORB1=1, KORB2=2)
+
+        content = asw.get_content()
+        assert "KORB1=1" in content
+        assert "KORB2=2" in content
+
+    def test_salgeb_with_auger_control(self):
+        """Test SALGEB with AUGER parameter."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with AUGER")
+        asw.add_salgeb(RUN="PI", CUP="LS", AUGER="NO")
+
+        content = asw.get_content()
+        assert "AUGER='NO'" in content
+
+    def test_salgeb_with_born(self):
+        """Test SALGEB with Born collision strengths."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with Born")
+        asw.add_salgeb(CUP="IC", RAD="ALL", BORN="INF")
+
+        content = asw.get_content()
+        assert "BORN='INF'" in content
+
 
 class TestSMINIMNamelist:
     """Test SMINIM namelist generation."""

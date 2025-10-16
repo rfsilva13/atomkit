@@ -135,6 +135,14 @@ class ASWriter:
         CUP: str = "LS",
         RAD: str = "  ",
         RUN: str = "  ",
+        # Core specification
+        KCOR1: int | None = None,
+        KCOR2: int | None = None,
+        KORB1: int | None = None,
+        KORB2: int | None = None,
+        # Collision/autoionization control
+        AUGER: str | None = None,
+        BORN: str | None = None,
         **kwargs,
     ) -> None:
         """
@@ -175,22 +183,57 @@ class ASWriter:
             - 'PE': Photoexcitation-autoionization
             - 'RE': Resonant excitation
             - 'DE': Direct electron impact excitation
+        KCOR1 : int, optional
+            First orbital index defining closed core (use with KCOR2).
+            Example: KCOR1=1, KCOR2=1 for 1s core; KCOR1=1, KCOR2=3 for Ne-like core.
+            Alternative to KORB1/KORB2. Defines core model potential for R-matrix.
+        KCOR2 : int, optional
+            Last orbital index defining closed core (use with KCOR1).
+        KORB1 : int, optional
+            Alternative to KCOR1 for closed shell specification.
+        KORB2 : int, optional
+            Alternative to KCOR2 for closed shell specification.
+        AUGER : str, optional
+            Control autoionization rate calculation:
+            - '  ' or 'YES': Calculate autoionization when continuum present (default)
+            - 'NO': Do not calculate autoionization rates
+            Note: Automatically 'NO' when RUN='PI' or 'RR'
+        BORN : str, optional
+            Control Born collision strength calculation:
+            - 'INF': Infinite energy limit Born collision strengths
+            - 'YES': Finite energy Born collision strengths (Type-1 adf04)
+            - 'NO': Do not calculate (default, except if RAD='ALL' then 'INF')
         **kwargs : dict
-            Additional SALGEB parameters (see AS manual)
-            Common options:
-            - KCOR1, KCOR2: Closed shell specification
-            - NAST, NASTJ: Restrict term/level symmetries
-            - KCUT: Correlation configuration handling
+            Additional SALGEB parameters for advanced usage.
+            Common options: KUTSS, KUTSO, BASIS, KCUT, NAST, NASTJ, etc.
+            See AUTOSTRUCTURE manual for complete list.
 
         Notes
         -----
         If using configs_from_atomkit(), MXCONF and MXVORB will be set
         automatically and don't need to be specified here.
+        
+        Core specification (KCOR1/KCOR2 or KORB1/KORB2) is important for:
+        - Defining correlation in structure calculations
+        - Core model potential for R-matrix calculations
+        - Separating core from valence in large calculations
 
         Examples
         --------
+        Basic structure calculation:
         >>> asw.add_salgeb(CUP='IC', RAD='E1')
-        >>> asw.add_salgeb(CUP='LS', RAD='E1', KCOR1=1, KCOR2=1)  # 1s core
+        
+        With 1s closed core (He-like core):
+        >>> asw.add_salgeb(CUP='LS', RAD='E1', KCOR1=1, KCOR2=1)
+        
+        With Ne-like core (1s2.2s2.2p6):
+        >>> asw.add_salgeb(CUP='IC', RAD='E1', KCOR1=1, KCOR2=3)
+        
+        Photoionization without autoionization:
+        >>> asw.add_salgeb(RUN='PI', CUP='LS', AUGER='NO')
+        
+        With Born collision strengths:
+        >>> asw.add_salgeb(CUP='IC', RAD='ALL', BORN='INF')
         """
         params: dict[str, int | str | float] = {
             "CUP": self._quote_value(CUP),
@@ -206,6 +249,22 @@ class ASWriter:
             params["MXVORB"] = MXVORB
         if MXCCF != 0:
             params["MXCCF"] = MXCCF
+
+        # Core specification
+        if KCOR1 is not None:
+            params["KCOR1"] = KCOR1
+        if KCOR2 is not None:
+            params["KCOR2"] = KCOR2
+        if KORB1 is not None:
+            params["KORB1"] = KORB1
+        if KORB2 is not None:
+            params["KORB2"] = KORB2
+
+        # Collision/autoionization control
+        if AUGER is not None:
+            params["AUGER"] = self._quote_value(AUGER)
+        if BORN is not None:
+            params["BORN"] = self._quote_value(BORN)
 
         # Add any additional parameters
         for key, value in kwargs.items():
