@@ -64,7 +64,7 @@ asw = ASWriter.for_structure_calculation(
     coupling="IC",
     radiation="E1",
     core=CoreSpecification.helium_like(),
-    comment="Ne-like iron structure"
+    comment="Ne-like iron structure",
 )
 
 # Just add your configurations and you're done!
@@ -87,7 +87,7 @@ asw_pi = ASWriter.for_photoionization(
     energy_min=0.0,
     energy_max=100.0,
     n_energies=20,
-    coupling="IC"
+    coupling="IC",
 )
 
 print(f"Created photoionization input")
@@ -103,11 +103,7 @@ print("\n2c. Dielectronic recombination preset:")
 rydberg = RydbergSeries(n_min=3, n_max=15, l_max=7)
 
 asw_dr = ASWriter.for_dielectronic_recombination(
-    "ne_dr.dat",
-    nzion=10,
-    rydberg=rydberg,
-    energy_min=0.0,
-    energy_max=150.0
+    "ne_dr.dat", nzion=10, rydberg=rydberg, energy_min=0.0, energy_max=150.0
 )
 
 print(f"Created DR calculation input")
@@ -120,17 +116,11 @@ print(f"  - Automatically configured RUN='DR', SRADCON, and DRR")
 print("\n2d. Collision calculation preset:")
 
 collision = CollisionParams(
-    min_L=0, max_L=10,
-    min_J=0, max_J=20,
-    max_exchange_L=8,
-    include_orbit_orbit=True
+    min_L=0, max_L=10, min_J=0, max_J=20, max_exchange_L=8, include_orbit_orbit=True
 )
 
 asw_coll = ASWriter.for_collision(
-    "ne_collision.dat",
-    nzion=10,
-    collision=collision,
-    coupling="IC"
+    "ne_collision.dat", nzion=10, collision=collision, coupling="IC"
 )
 
 print(f"Created collision input")
@@ -151,17 +141,13 @@ print("Example 3: Fluent Interface (Method Chaining)")
 print("=" * 70)
 
 # Build a complex calculation with readable method chaining
-asw_fluent = (ASWriter("ne_advanced.dat")
+asw_fluent = (
+    ASWriter("ne_advanced.dat")
     .with_core(CoreSpecification.helium_like())
-    .with_optimization(OptimizationParams(
-        include_lowest=10,
-        n_lambdas=5,
-        weighting='statistical'
-    ))
-    .with_energy_shifts(EnergyShifts(
-        ls_shift=0.5,
-        ic_shift=0.3
-    ))
+    .with_optimization(
+        OptimizationParams(include_lowest=10, n_lambdas=5, weighting="statistical")
+    )
+    .with_energy_shifts(EnergyShifts(ls_shift=0.5, ic_shift=0.3))
 )
 
 print("Created writer with chained configuration:")
@@ -185,7 +171,7 @@ print("\n4a. Validation catches missing required sections:")
 
 asw_incomplete = ASWriter("incomplete.dat")
 asw_incomplete.write_header("Test")
-asw_incomplete.add_salgeb(CUP='LS', RAD='E1')
+asw_incomplete.add_salgeb(CUP="LS", RAD="E1")
 
 warnings = asw_incomplete.validate()
 print(f"Validation warnings: {len(warnings)}")
@@ -208,7 +194,7 @@ print("\n4c. Validation catches RUN-type specific requirements:")
 
 asw_pi_missing = ASWriter("pi_missing.dat")
 asw_pi_missing.write_header("PI without SRADCON")
-asw_pi_missing.add_salgeb(CUP='IC', RUN='PI')  # PI requires SRADCON!
+asw_pi_missing.add_salgeb(CUP="IC", RUN="PI")  # PI requires SRADCON!
 asw_pi_missing.add_sminim(NZION=10)
 
 warnings_pi = asw_pi_missing.validate()
@@ -226,7 +212,9 @@ except ValueError as e:
     print(f"❌ Validation failed (as expected):")
     print(f"   {str(e)[:100]}...")
 
-print("\n✅ Validation helps catch configuration errors before running AUTOSTRUCTURE!\n")
+print(
+    "\n✅ Validation helps catch configuration errors before running AUTOSTRUCTURE!\n"
+)
 
 
 # ============================================================================
@@ -245,25 +233,20 @@ ground = Configuration.from_string("1s2.2s2.2p6")
 excited = ground.generate_excitations(["3s", "3p", "3d"], excitation_level=1)
 
 # Create writer with preset and fluent configuration
-asw_complete = (
-    ASWriter.for_structure_calculation(
-        "ne_complete.dat",
-        nzion=10,
-        coupling="IC",
-        radiation="E1",
-        core=CoreSpecification.helium_like(),
-        optimization=OptimizationParams(
-            include_lowest=15,
-            n_lambdas=5,
-            weighting='statistical'
-        ),
-        comment="Ne-like Fe XVI structure with optimization"
-    )
-    .with_energy_shifts(EnergyShifts(ic_shift=0.2))
-)
+asw_complete = ASWriter.for_structure_calculation(
+    "ne_complete.dat",
+    nzion=10,
+    coupling="IC",
+    radiation="E1",
+    core=CoreSpecification.helium_like(),
+    optimization=OptimizationParams(
+        include_lowest=15, n_lambdas=5, weighting="statistical"
+    ),
+    comment="Ne-like Fe XVI structure with optimization",
+).with_energy_shifts(EnergyShifts(ic_shift=0.2))
 
 # Add configurations
-asw_complete.configs_from_atomkit([ground] + excited, last_core_orbital='1s')
+asw_complete.configs_from_atomkit([ground] + excited, last_core_orbital="1s")
 
 # Validate before writing
 print("\nValidating configuration...")
@@ -293,7 +276,8 @@ print("=" * 70)
 print("Summary: Code Comparison")
 print("=" * 70)
 
-print("""
+print(
+    """
 BEFORE (Verbose, error-prone):
 -------------------------------
 asw = ASWriter("pi.dat")
@@ -326,7 +310,8 @@ Benefits:
 ✅ Early error detection via validation
 ✅ Method chaining for fluent API
 ✅ Reusable configuration objects
-""")
+"""
+)
 
 print("=" * 70)
 print("🎉 Phase 6 UX Enhancements Complete!")

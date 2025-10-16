@@ -94,7 +94,7 @@ class TestHelperClasses:
             max_exchange_L=8,
             include_orbit_orbit=True,
             include_fine_structure=True,
-            max_J_fine_structure=15
+            max_J_fine_structure=15,
         )
         assert coll.max_exchange_L == 8
         assert coll.include_orbit_orbit
@@ -110,13 +110,13 @@ class TestHelperClasses:
 
     def test_optimization_params_weighting(self):
         """Test optimization weighting schemes."""
-        opt_stat = OptimizationParams(weighting='statistical')
+        opt_stat = OptimizationParams(weighting="statistical")
         assert opt_stat.get_iwght() == 1
 
-        opt_equal = OptimizationParams(weighting='equal')
+        opt_equal = OptimizationParams(weighting="equal")
         assert opt_equal.get_iwght() == 0
 
-        opt_custom = OptimizationParams(weighting='custom')
+        opt_custom = OptimizationParams(weighting="custom")
         assert opt_custom.get_iwght() == -1
 
     def test_rydberg_series(self):
@@ -141,12 +141,9 @@ class TestPresetMethods:
         """Test basic structure calculation preset."""
         filename = tmp_path / "structure.dat"
         asw = ASWriter.for_structure_calculation(
-            str(filename),
-            nzion=10,
-            coupling="LS",
-            radiation="E1"
+            str(filename), nzion=10, coupling="LS", radiation="E1"
         )
-        
+
         content = asw.get_content()
         assert "A.S." in content
         assert "Structure calculation for Z=10" in content
@@ -159,12 +156,9 @@ class TestPresetMethods:
         filename = tmp_path / "structure_core.dat"
         core = CoreSpecification.helium_like()
         asw = ASWriter.for_structure_calculation(
-            str(filename),
-            nzion=10,
-            coupling="IC",
-            core=core
+            str(filename), nzion=10, coupling="IC", core=core
         )
-        
+
         content = asw.get_content()
         assert "KCOR1=1" in content
         assert "KCOR2=1" in content
@@ -174,64 +168,52 @@ class TestPresetMethods:
         filename = tmp_path / "structure_opt.dat"
         opt = OptimizationParams(include_lowest=10, n_lambdas=5, n_variational=3)
         asw = ASWriter.for_structure_calculation(
-            str(filename),
-            nzion=10,
-            optimization=opt
+            str(filename), nzion=10, optimization=opt
         )
-        
+
         # Check that optimization params are stored
-        assert hasattr(asw, '_pending_sminim')
-        assert asw._pending_sminim['INCLUD'] == 10
-        assert asw._pending_sminim['NLAM'] == 5
-        assert asw._pending_sminim['NVAR'] == 3
+        assert hasattr(asw, "_pending_sminim")
+        assert asw._pending_sminim["INCLUD"] == 10
+        assert asw._pending_sminim["NLAM"] == 5
+        assert asw._pending_sminim["NVAR"] == 3
 
     def test_for_photoionization(self, tmp_path):
         """Test photoionization preset."""
         filename = tmp_path / "pi.dat"
         asw = ASWriter.for_photoionization(
-            str(filename),
-            nzion=10,
-            energy_min=0.0,
-            energy_max=50.0,
-            n_energies=20
+            str(filename), nzion=10, energy_min=0.0, energy_max=50.0, n_energies=20
         )
-        
+
         content = asw.get_content()
         assert "Photoionization for Z=10" in content
         assert "RUN='PI'" in content
-        assert hasattr(asw, '_pending_sradcon')
-        assert asw._pending_sradcon['MENG'] == -20
-        assert asw._pending_sradcon['EMIN'] == 0.0
-        assert asw._pending_sradcon['EMAX'] == 50.0
+        assert hasattr(asw, "_pending_sradcon")
+        assert asw._pending_sradcon["MENG"] == -20
+        assert asw._pending_sradcon["EMIN"] == 0.0
+        assert asw._pending_sradcon["EMAX"] == 50.0
 
     def test_for_dielectronic_recombination(self, tmp_path):
         """Test DR preset."""
         filename = tmp_path / "dr.dat"
         ryd = RydbergSeries(n_min=3, n_max=15, l_max=7)
         asw = ASWriter.for_dielectronic_recombination(
-            str(filename),
-            nzion=10,
-            rydberg=ryd
+            str(filename), nzion=10, rydberg=ryd
         )
-        
+
         content = asw.get_content()
         assert "Dielectronic recombination for Z=10" in content
         assert "RUN='DR'" in content
-        assert hasattr(asw, '_pending_drr')
-        assert asw._pending_drr['NMIN'] == 3
-        assert asw._pending_drr['NMAX'] == 15
-        assert asw._pending_drr['LMAX'] == 7
+        assert hasattr(asw, "_pending_drr")
+        assert asw._pending_drr["NMIN"] == 3
+        assert asw._pending_drr["NMAX"] == 15
+        assert asw._pending_drr["LMAX"] == 7
 
     def test_for_collision(self, tmp_path):
         """Test collision preset."""
         filename = tmp_path / "collision.dat"
         coll = CollisionParams(min_L=0, max_L=10, min_J=0, max_J=20)
-        asw = ASWriter.for_collision(
-            str(filename),
-            nzion=10,
-            collision=coll
-        )
-        
+        asw = ASWriter.for_collision(str(filename), nzion=10, collision=coll)
+
         content = asw.get_content()
         assert "Electron impact excitation for Z=10" in content
         assert "RUN='DE'" in content
@@ -248,14 +230,10 @@ class TestPresetMethods:
             max_L=10,
             max_exchange_L=8,
             max_exchange_multipole=5,
-            include_orbit_orbit=True
+            include_orbit_orbit=True,
         )
-        asw = ASWriter.for_collision(
-            str(filename),
-            nzion=10,
-            collision=coll
-        )
-        
+        asw = ASWriter.for_collision(str(filename), nzion=10, collision=coll)
+
         content = asw.get_content()
         assert "MAXLX=8" in content
         assert "MXLAMX=5" in content
@@ -301,15 +279,17 @@ class TestFluentInterface:
         core = CoreSpecification.neon_like()
         opt = OptimizationParams(include_lowest=5)
         shifts = EnergyShifts(ls_shift=0.3)
-        
-        asw = (ASWriter(str(filename))
-               .with_core(core)
-               .with_optimization(opt)
-               .with_energy_shifts(shifts))
-        
-        assert hasattr(asw, '_pending_core')
-        assert hasattr(asw, '_pending_optimization')
-        assert hasattr(asw, '_pending_shifts')
+
+        asw = (
+            ASWriter(str(filename))
+            .with_core(core)
+            .with_optimization(opt)
+            .with_energy_shifts(shifts)
+        )
+
+        assert hasattr(asw, "_pending_core")
+        assert hasattr(asw, "_pending_optimization")
+        assert hasattr(asw, "_pending_shifts")
 
 
 class TestValidationMethods:
@@ -320,7 +300,7 @@ class TestValidationMethods:
         filename = tmp_path / "empty.dat"
         asw = ASWriter(str(filename))
         warnings = asw.validate()
-        
+
         assert len(warnings) > 0
         assert any("header" in w.lower() for w in warnings)
         assert any("salgeb" in w.lower() for w in warnings)
@@ -332,7 +312,7 @@ class TestValidationMethods:
         asw = ASWriter(str(filename))
         asw.write_header("Test")
         warnings = asw.validate()
-        
+
         assert len(warnings) > 0
         assert not any("header" in w.lower() for w in warnings)
         assert any("salgeb" in w.lower() for w in warnings)
@@ -342,11 +322,11 @@ class TestValidationMethods:
         filename = tmp_path / "complete.dat"
         asw = ASWriter(str(filename))
         asw.write_header("Test")
-        asw.add_salgeb(CUP='LS', RAD='E1')
+        asw.add_salgeb(CUP="LS", RAD="E1")
         asw.add_orbitals([(1, 0), (2, 0)])
         asw.add_configurations([[2, 0], [1, 1]])
         asw.add_sminim(NZION=10)
-        
+
         warnings = asw.validate()
         assert len(warnings) == 0
 
@@ -355,9 +335,9 @@ class TestValidationMethods:
         filename = tmp_path / "pi_incomplete.dat"
         asw = ASWriter(str(filename))
         asw.write_header("Test")
-        asw.add_salgeb(CUP='IC', RUN='PI')
+        asw.add_salgeb(CUP="IC", RUN="PI")
         asw.add_sminim(NZION=10)
-        
+
         warnings = asw.validate()
         assert any("SRADCON" in w and "PI" in w for w in warnings)
 
@@ -366,9 +346,9 @@ class TestValidationMethods:
         filename = tmp_path / "dr_incomplete.dat"
         asw = ASWriter(str(filename))
         asw.write_header("Test")
-        asw.add_salgeb(CUP='IC', RUN='DR')
+        asw.add_salgeb(CUP="IC", RUN="DR")
         asw.add_sminim(NZION=10)
-        
+
         warnings = asw.validate()
         assert any("DRR" in w and "DR" in w for w in warnings)
 
@@ -377,9 +357,9 @@ class TestValidationMethods:
         filename = tmp_path / "ls_j_error.dat"
         asw = ASWriter(str(filename))
         asw.write_header("Test")
-        asw.add_salgeb(CUP='LS', NASTJ=5)  # NASTJ shouldn't be used with LS
+        asw.add_salgeb(CUP="LS", NASTJ=5)  # NASTJ shouldn't be used with LS
         asw.add_sminim(NZION=10)
-        
+
         warnings = asw.validate()
         assert any("LS" in w and "J" in w for w in warnings)
 
@@ -387,10 +367,10 @@ class TestValidationMethods:
         """Test validate_and_raise throws exception."""
         filename = tmp_path / "error.dat"
         asw = ASWriter(str(filename))
-        
+
         with pytest.raises(ValueError) as exc_info:
             asw.validate_and_raise()
-        
+
         assert "validation failed" in str(exc_info.value).lower()
 
     def test_validate_and_raise_with_no_errors(self, tmp_path):
@@ -398,9 +378,9 @@ class TestValidationMethods:
         filename = tmp_path / "valid.dat"
         asw = ASWriter(str(filename))
         asw.write_header("Test")
-        asw.add_salgeb(CUP='LS')
+        asw.add_salgeb(CUP="LS")
         asw.add_sminim(NZION=10)
-        
+
         # Should not raise
         asw.validate_and_raise()
 
@@ -409,7 +389,7 @@ class TestValidationMethods:
         filename = tmp_path / "incomplete.dat"
         asw = ASWriter(str(filename))
         asw.write_header("Test")
-        
+
         assert not asw.check_completeness()
 
     def test_check_completeness_complete(self, tmp_path):
@@ -417,9 +397,9 @@ class TestValidationMethods:
         filename = tmp_path / "complete.dat"
         asw = ASWriter(str(filename))
         asw.write_header("Test")
-        asw.add_salgeb(CUP='LS')
+        asw.add_salgeb(CUP="LS")
         asw.add_sminim(NZION=10)
-        
+
         assert asw.check_completeness()
 
 
@@ -430,20 +410,17 @@ class TestIntegrationWithExistingFeatures:
         """Test using preset methods with configs_from_atomkit."""
         pytest.importorskip("atomkit")
         from atomkit import Configuration
-        
+
         filename = tmp_path / "integrated.dat"
         ground = Configuration.from_string("1s2.2s2.2p6")
-        
+
         asw = ASWriter.for_structure_calculation(
-            str(filename),
-            nzion=10,
-            coupling="IC",
-            core=CoreSpecification.helium_like()
+            str(filename), nzion=10, coupling="IC", core=CoreSpecification.helium_like()
         )
-        
+
         # Now add configurations
-        asw.configs_from_atomkit([ground], last_core_orbital='1s')
-        
+        asw.configs_from_atomkit([ground], last_core_orbital="1s")
+
         content = asw.get_content()
         # Check that configurations are present (in AS binary format)
         assert "2 0  2 1" in content  # Orbitals: 2s 2p
@@ -452,17 +429,19 @@ class TestIntegrationWithExistingFeatures:
     def test_fluent_interface_with_real_calculation(self, tmp_path):
         """Test fluent interface with complete calculation setup."""
         filename = tmp_path / "fluent_complete.dat"
-        
-        asw = (ASWriter(str(filename))
-               .with_core(CoreSpecification.helium_like())
-               .with_optimization(OptimizationParams(include_lowest=10)))
-        
+
+        asw = (
+            ASWriter(str(filename))
+            .with_core(CoreSpecification.helium_like())
+            .with_optimization(OptimizationParams(include_lowest=10))
+        )
+
         asw.write_header("Fluent test")
-        asw.add_salgeb(CUP='IC', RAD='E1')
+        asw.add_salgeb(CUP="IC", RAD="E1")
         asw.add_orbitals([(1, 0), (2, 0), (2, 1)])
         asw.add_configurations([[2, 0, 0], [2, 2, 1]])
         asw.add_sminim(NZION=10)
-        
+
         # Validation should pass
         warnings = asw.validate()
         assert len(warnings) == 0

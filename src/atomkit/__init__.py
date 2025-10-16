@@ -17,6 +17,10 @@ from . import fac
 # Import AUTOSTRUCTURE wrapper module
 from . import autostructure
 
+# Import unified interface (NEW in Phase 7!)
+from . import core
+from .core import AtomicCalculation
+
 __all__ = [
     "Shell",
     "Configuration",
@@ -25,4 +29,6 @@ __all__ = [
     "physics",
     "fac",
     "autostructure",
+    "core",  # Unified interface module
+    "AtomicCalculation",  # Main unified class
 ]
