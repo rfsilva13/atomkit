@@ -2,10 +2,12 @@
 AUTOSTRUCTURE input file writer.
 
 This module provides the ASWriter class for generating AUTOSTRUCTURE .dat files
-with a Pythonic interface.
+with a Pythonic interface, including helper classes for common configurations
+and high-level presets for typical calculation types.
 """
 
 from __future__ import annotations
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Mapping, Sequence
@@ -25,6 +27,210 @@ except ImportError:
     Configuration = None  # type: ignore
     Shell = None  # type: ignore
     L_QUANTUM_MAP = {}  # type: ignore
+
+
+# ============================================================================
+#                           HELPER CLASSES
+# ============================================================================
+
+
+@dataclass
+class CoreSpecification:
+    """
+    Helper class for specifying closed core shells.
+    
+    Makes it easy to specify cores like He, Ne, Ar, etc. without
+    remembering orbital indices.
+    
+    Examples
+    --------
+    >>> core = CoreSpecification.helium_like()  # 1s2
+    >>> core = CoreSpecification.neon_like()    # 1s2 2s2 2p6
+    >>> core = CoreSpecification.from_orbitals(1, 3)  # 1s through 2p
+    """
+    kcor1: int
+    kcor2: int
+    
+    @classmethod
+    def helium_like(cls) -> CoreSpecification:
+        """1s² core (He-like)."""
+        return cls(kcor1=1, kcor2=1)
+    
+    @classmethod
+    def neon_like(cls) -> CoreSpecification:
+        """1s² 2s² 2p⁶ core (Ne-like)."""
+        return cls(kcor1=1, kcor2=3)
+    
+    @classmethod
+    def argon_like(cls) -> CoreSpecification:
+        """1s² 2s² 2p⁶ 3s² 3p⁶ core (Ar-like)."""
+        return cls(kcor1=1, kcor2=6)
+    
+    @classmethod
+    def from_orbitals(cls, first: int, last: int) -> CoreSpecification:
+        """
+        Define core from first and last orbital indices.
+        
+        Parameters
+        ----------
+        first : int
+            First orbital index (usually 1 for 1s)
+        last : int
+            Last orbital index in core
+        """
+        return cls(kcor1=first, kcor2=last)
+
+
+@dataclass
+class SymmetryRestriction:
+    """
+    Helper class for symmetry restrictions in calculations.
+    
+    Simplifies specifying which terms/levels to include in calculations.
+    
+    Examples
+    --------
+    >>> # Restrict to ground state only
+    >>> sym = SymmetryRestriction.single_term(S=0, L=0, parity=1)
+    
+    >>> # Restrict to specific levels in IC coupling
+    >>> sym = SymmetryRestriction.levels([(1, 0, 0, 1), (1, 0, 2, 1)])
+    """
+    nast: int | None = None
+    nastj: int | None = None
+    term_list: list[tuple[int, int, int]] | None = field(default=None)  # [(2S+1, L, π), ...]
+    level_list: list[tuple[int, int, int, int]] | None = field(default=None)  # [(2S+1, L, 2J, π), ...]
+    
+    @classmethod
+    def single_term(cls, S: int, L: int, parity: int) -> SymmetryRestriction:
+        """
+        Restrict to a single LS term.
+        
+        Parameters
+        ----------
+        S : int
+            Total spin
+        L : int
+            Total orbital angular momentum
+        parity : int
+            Parity (1 for even, -1 for odd)
+        """
+        return cls(nast=1, term_list=[(2*S+1, L, parity)])
+    
+    @classmethod
+    def terms(cls, terms: list[tuple[int, int, int]]) -> SymmetryRestriction:
+        """
+        Restrict to specific LS terms.
+        
+        Parameters
+        ----------
+        terms : list of (2S+1, L, π)
+            List of terms as (multiplicity, L, parity)
+        """
+        return cls(nast=len(terms), term_list=terms)
+    
+    @classmethod
+    def levels(cls, levels: list[tuple[int, int, int, int]]) -> SymmetryRestriction:
+        """
+        Restrict to specific fine-structure levels.
+        
+        Parameters
+        ----------
+        levels : list of (2S+1, L, 2J, π)
+            List of levels as (multiplicity, L, 2J, parity)
+        """
+        return cls(nastj=len(levels), level_list=levels)
+
+
+@dataclass
+class EnergyShifts:
+    """
+    Helper class for energy shift specifications.
+    
+    Useful for correcting known deficiencies in calculated energies.
+    
+    Examples
+    --------
+    >>> shifts = EnergyShifts(ls_shift=0.5, ic_shift=0.3)
+    """
+    ls_shift: float = 0.0  # ISHFTLS value
+    ic_shift: float = 0.0  # ISHFTIC value
+    continuum_ls: float = 0.0  # ECORLS
+    continuum_ic: float = 0.0  # ECORIC
+
+
+@dataclass
+class CollisionParams:
+    """
+    Helper class for collision calculation parameters.
+    
+    Simplifies setting up electron impact excitation calculations.
+    
+    Examples
+    --------
+    >>> # Basic collision setup
+    >>> coll = CollisionParams(min_L=0, max_L=10, min_J=0, max_J=20)
+    
+    >>> # With exchange control
+    >>> coll = CollisionParams(min_L=0, max_L=10, max_exchange_L=8)
+    """
+    min_L: int | None = None
+    max_L: int | None = None
+    min_S: int | None = None
+    max_S: int | None = None
+    min_J: int | None = None
+    max_J: int | None = None
+    max_exchange_L: int | None = None
+    max_exchange_multipole: int | None = None
+    include_orbit_orbit: bool = False
+    include_fine_structure: bool = False
+    max_J_fine_structure: int | None = None
+
+
+@dataclass
+class OptimizationParams:
+    """
+    Helper class for orbital optimization parameters.
+    
+    Simplifies variational calculations and orbital optimization.
+    
+    Examples
+    --------
+    >>> # Basic optimization
+    >>> opt = OptimizationParams(include_lowest=10, n_lambdas=5)
+    
+    >>> # With specific weighting
+    >>> opt = OptimizationParams(include_lowest=20, weighting='equal')
+    """
+    include_lowest: int = 0  # INCLUD
+    n_lambdas: int = 0  # NLAM
+    n_variational: int = 0  # NVAR
+    weighting: str = 'statistical'  # 'statistical', 'equal', or 'custom'
+    orthogonalization: str | None = None  # 'YES', 'NO', 'LPS'
+    fix_orbitals: int | None = None  # IFIX
+    
+    def get_iwght(self) -> int:
+        """Convert weighting string to IWGHT value."""
+        mapping = {'statistical': 1, 'equal': 0, 'custom': -1}
+        return mapping.get(self.weighting, 1)
+
+
+@dataclass
+class RydbergSeries:
+    """
+    Helper class for Rydberg series specification in DR/RR calculations.
+    
+    Examples
+    --------
+    >>> # Basic Rydberg series
+    >>> ryd = RydbergSeries(n_min=3, n_max=15, l_max=7)
+    """
+    n_min: int
+    n_max: int
+    l_min: int = 0
+    l_max: int = 7
+    use_internal_mesh: bool = True  # NMESH=-1 for production
+    limit_radiative: int | None = None  # NRAD
 
 
 class ASWriter:
@@ -1443,3 +1649,498 @@ class ASWriter:
             # Handle high l values
             l_symbol = f"[l={l}]"
         return f"{n}{l_symbol}"
+
+    # ========================================================================
+    #                     HIGH-LEVEL PRESET METHODS
+    # ========================================================================
+
+    @classmethod
+    def for_structure_calculation(
+        cls,
+        filename: str,
+        nzion: int,
+        coupling: str = "LS",
+        radiation: str = "E1",
+        core: CoreSpecification | None = None,
+        optimization: OptimizationParams | None = None,
+        comment: str = ""
+    ) -> ASWriter:
+        """
+        Create an ASWriter configured for a basic structure calculation.
+        
+        This is the most common use case: calculate energy levels and
+        radiative transition rates.
+        
+        Parameters
+        ----------
+        filename : str
+            Output .dat filename
+        nzion : int
+            Nuclear charge (atomic number)
+        coupling : str, optional
+            Coupling scheme ('LS', 'IC', 'CA'). Default is 'LS'.
+        radiation : str, optional
+            Radiation type ('E1', 'E2', 'M1', 'ALL'). Default is 'E1'.
+        core : CoreSpecification, optional
+            Closed core specification
+        optimization : OptimizationParams, optional
+            Orbital optimization parameters
+        comment : str, optional
+            Description for header
+        
+        Returns
+        -------
+        ASWriter
+            Pre-configured writer instance
+        
+        Examples
+        --------
+        >>> from atomkit.autostructure import ASWriter, CoreSpecification
+        >>> 
+        >>> asw = ASWriter.for_structure_calculation(
+        ...     "ne_structure.dat",
+        ...     nzion=10,
+        ...     coupling="IC",
+        ...     core=CoreSpecification.helium_like()
+        ... )
+        >>> # Now add configurations and close
+        """
+        writer = cls(filename)
+        writer.write_header(comment or f"Structure calculation for Z={nzion}")
+        
+        # Configure SALGEB
+        salgeb_params: dict[str, Any] = {"CUP": coupling, "RAD": radiation}
+        if core:
+            salgeb_params["KCOR1"] = core.kcor1
+            salgeb_params["KCOR2"] = core.kcor2
+        writer.add_salgeb(**salgeb_params)  # type: ignore  # type: ignore
+        
+        # Will add configurations next (user's responsibility)
+        # Then add SMINIM
+        sminim_params: dict[str, Any] = {"NZION": nzion}
+        if optimization:
+            sminim_params["INCLUD"] = optimization.include_lowest
+            sminim_params["NLAM"] = optimization.n_lambdas
+            sminim_params["NVAR"] = optimization.n_variational
+            sminim_params["IWGHT"] = optimization.get_iwght()
+            if optimization.orthogonalization:
+                sminim_params["ORTHOG"] = optimization.orthogonalization
+            if optimization.fix_orbitals:
+                sminim_params["IFIX"] = optimization.fix_orbitals
+        
+        writer._pending_sminim = sminim_params  # Store for later
+        return writer
+    
+    @classmethod
+    def for_photoionization(
+        cls,
+        filename: str,
+        nzion: int,
+        energy_min: float,
+        energy_max: float,
+        n_energies: int = 15,
+        coupling: str = "IC",
+        core: CoreSpecification | None = None,
+        comment: str = ""
+    ) -> ASWriter:
+        """
+        Create an ASWriter configured for photoionization calculations.
+        
+        Parameters
+        ----------
+        filename : str
+            Output .dat filename
+        nzion : int
+            Nuclear charge
+        energy_min : float
+            Minimum photon energy (Rydbergs)
+        energy_max : float
+            Maximum photon energy (Rydbergs)
+        n_energies : int, optional
+            Number of energy points. Default is 15.
+        coupling : str, optional
+            Coupling scheme. Default is 'IC'.
+        core : CoreSpecification, optional
+            Closed core specification
+        comment : str, optional
+            Description for header
+        
+        Returns
+        -------
+        ASWriter
+            Pre-configured writer instance
+        
+        Examples
+        --------
+        >>> asw = ASWriter.for_photoionization(
+        ...     "ne_pi.dat",
+        ...     nzion=10,
+        ...     energy_min=0.0,
+        ...     energy_max=50.0,
+        ...     n_energies=20
+        ... )
+        """
+        writer = cls(filename)
+        writer.write_header(comment or f"Photoionization for Z={nzion}")
+        
+        # SALGEB with PI run type
+        salgeb_params: dict[str, Any] = {"CUP": coupling, "RAD": "E1", "RUN": "PI"}
+        if core:
+            salgeb_params["KCOR1"] = core.kcor1
+            salgeb_params["KCOR2"] = core.kcor2
+        writer.add_salgeb(**salgeb_params)  # type: ignore
+        
+        # Store SMINIM and SRADCON parameters
+        writer._pending_sminim = {"NZION": nzion}
+        writer._pending_sradcon = {
+            "MENG": -abs(n_energies),
+            "EMIN": energy_min,
+            "EMAX": energy_max
+        }
+        return writer
+    
+    @classmethod
+    def for_dielectronic_recombination(
+        cls,
+        filename: str,
+        nzion: int,
+        rydberg: RydbergSeries,
+        energy_min: float = 0.0,
+        energy_max: float = 100.0,
+        coupling: str = "IC",
+        core: CoreSpecification | None = None,
+        comment: str = ""
+    ) -> ASWriter:
+        """
+        Create an ASWriter configured for dielectronic recombination (DR).
+        
+        Parameters
+        ----------
+        filename : str
+            Output .dat filename
+        nzion : int
+            Nuclear charge
+        rydberg : RydbergSeries
+            Rydberg series specification
+        energy_min : float, optional
+            Minimum energy (Rydbergs). Default is 0.
+        energy_max : float, optional
+            Maximum energy (Rydbergs). Default is 100.
+        coupling : str, optional
+            Coupling scheme. Default is 'IC'.
+        core : CoreSpecification, optional
+            Closed core specification
+        comment : str, optional
+            Description for header
+        
+        Returns
+        -------
+        ASWriter
+            Pre-configured writer instance
+        
+        Examples
+        --------
+        >>> from atomkit.autostructure import RydbergSeries
+        >>> ryd = RydbergSeries(n_min=3, n_max=15, l_max=7)
+        >>> asw = ASWriter.for_dielectronic_recombination(
+        ...     "ne_dr.dat",
+        ...     nzion=10,
+        ...     rydberg=ryd
+        ... )
+        """
+        writer = cls(filename)
+        writer.write_header(comment or f"Dielectronic recombination for Z={nzion}")
+        
+        # SALGEB with DR run type
+        salgeb_params: dict[str, Any] = {"CUP": coupling, "RAD": "E1", "RUN": "DR"}
+        if core:
+            salgeb_params["KCOR1"] = core.kcor1
+            salgeb_params["KCOR2"] = core.kcor2
+        writer.add_salgeb(**salgeb_params)  # type: ignore
+        
+        # Store pending namelists
+        writer._pending_sminim = {"NZION": nzion}
+        writer._pending_sradcon = {
+            "MENG": -15,
+            "EMIN": energy_min,
+            "EMAX": energy_max
+        }
+        writer._pending_drr = {
+            "NMIN": rydberg.n_min,
+            "NMAX": rydberg.n_max,
+            "LMIN": rydberg.l_min,
+            "LMAX": rydberg.l_max,
+            "NMESH": -1 if rydberg.use_internal_mesh else 0
+        }
+        if rydberg.limit_radiative:
+            writer._pending_drr["NRAD"] = rydberg.limit_radiative
+        
+        return writer
+    
+    @classmethod
+    def for_collision(
+        cls,
+        filename: str,
+        nzion: int,
+        collision: CollisionParams,
+        coupling: str = "IC",
+        core: CoreSpecification | None = None,
+        comment: str = ""
+    ) -> ASWriter:
+        """
+        Create an ASWriter configured for electron impact excitation.
+        
+        Parameters
+        ----------
+        filename : str
+            Output .dat filename
+        nzion : int
+            Nuclear charge
+        collision : CollisionParams
+            Collision calculation parameters
+        coupling : str, optional
+            Coupling scheme. Default is 'IC'.
+        core : CoreSpecification, optional
+            Closed core specification
+        comment : str, optional
+            Description for header
+        
+        Returns
+        -------
+        ASWriter
+            Pre-configured writer instance
+        
+        Examples
+        --------
+        >>> from atomkit.autostructure import CollisionParams
+        >>> coll = CollisionParams(min_L=0, max_L=10, min_J=0, max_J=20)
+        >>> asw = ASWriter.for_collision(
+        ...     "ne_collision.dat",
+        ...     nzion=10,
+        ...     collision=coll
+        ... )
+        """
+        writer = cls(filename)
+        writer.write_header(comment or f"Electron impact excitation for Z={nzion}")
+        
+        # SALGEB with DE run type and collision parameters
+        salgeb_params: dict[str, Any] = {"CUP": coupling, "RAD": "E1", "RUN": "DE"}
+        if core:
+            salgeb_params["KCOR1"] = core.kcor1
+            salgeb_params["KCOR2"] = core.kcor2
+        
+        # Add collision-specific parameters
+        if collision.min_L is not None:
+            salgeb_params["MINLT"] = collision.min_L
+        if collision.max_L is not None:
+            salgeb_params["MAXLT"] = collision.max_L
+        if collision.min_S is not None:
+            salgeb_params["MINST"] = collision.min_S
+        if collision.max_S is not None:
+            salgeb_params["MAXST"] = collision.max_S
+        if collision.min_J is not None:
+            salgeb_params["MINJT"] = collision.min_J
+        if collision.max_J is not None:
+            salgeb_params["MAXJT"] = collision.max_J
+        if collision.max_exchange_L is not None:
+            salgeb_params["MAXLX"] = collision.max_exchange_L
+        if collision.max_exchange_multipole is not None:
+            salgeb_params["MXLAMX"] = collision.max_exchange_multipole
+        if collision.include_orbit_orbit:
+            salgeb_params["KUTOOX"] = 1
+        if collision.include_fine_structure:
+            salgeb_params["KUTSSX"] = 1
+        if collision.max_J_fine_structure is not None:
+            salgeb_params["MAXJFS"] = collision.max_J_fine_structure
+        
+        writer.add_salgeb(**salgeb_params)  # type: ignore
+        writer._pending_sminim = {"NZION": nzion}
+        return writer
+
+    # ========================================================================
+    #                     FLUENT INTERFACE (METHOD CHAINING)
+    # ========================================================================
+
+    def with_core(self, core: CoreSpecification) -> ASWriter:
+        """
+        Add core specification (fluent interface).
+        
+        This method allows method chaining for a more fluent API.
+        
+        Parameters
+        ----------
+        core : CoreSpecification
+            Core specification
+        
+        Returns
+        -------
+        ASWriter
+            self for method chaining
+        
+        Examples
+        --------
+        >>> asw = (ASWriter("file.dat")
+        ...     .with_core(CoreSpecification.neon_like())
+        ...     .with_optimization(OptimizationParams(include_lowest=10))
+        ... )
+        """
+        # Update last SALGEB if it exists, or store for later
+        if hasattr(self, '_pending_core'):
+            self._pending_core = core
+        else:
+            self._pending_core = core
+        return self
+    
+    def with_optimization(self, opt: OptimizationParams) -> ASWriter:
+        """
+        Add optimization parameters (fluent interface).
+        
+        Parameters
+        ----------
+        opt : OptimizationParams
+            Optimization parameters
+        
+        Returns
+        -------
+        ASWriter
+            self for method chaining
+        """
+        self._pending_optimization = opt
+        return self
+    
+    def with_symmetry(self, sym: SymmetryRestriction) -> ASWriter:
+        """
+        Add symmetry restrictions (fluent interface).
+        
+        Parameters
+        ----------
+        sym : SymmetryRestriction
+            Symmetry restriction
+        
+        Returns
+        -------
+        ASWriter
+            self for method chaining
+        """
+        self._pending_symmetry = sym
+        return self
+    
+    def with_energy_shifts(self, shifts: EnergyShifts) -> ASWriter:
+        """
+        Add energy shift corrections (fluent interface).
+        
+        Parameters
+        ----------
+        shifts : EnergyShifts
+            Energy shift parameters
+        
+        Returns
+        -------
+        ASWriter
+            self for method chaining
+        """
+        self._pending_shifts = shifts
+        return self
+
+    # ========================================================================
+    #                     VALIDATION METHODS
+    # ========================================================================
+
+    def validate(self) -> list[str]:
+        """
+        Validate the current configuration and return warnings/errors.
+        
+        Checks for common mistakes and missing required parameters.
+        
+        Returns
+        -------
+        list of str
+            List of warning/error messages. Empty if valid.
+        
+        Examples
+        --------
+        >>> asw = ASWriter("test.dat")
+        >>> warnings = asw.validate()
+        >>> if warnings:
+        ...     for w in warnings:
+        ...         print(f"Warning: {w}")
+        """
+        warnings = []
+        
+        # Check if header exists
+        if not self.lines or not self.lines[0].startswith("A.S."):
+            warnings.append("Missing header! Call write_header() first.")
+        
+        # Check if SALGEB exists
+        if not any("&SALGEB" in line for line in self.lines):
+            warnings.append("Missing SALGEB namelist! Call add_salgeb().")
+        
+        # Check if configurations exist
+        if not self.configurations and not any("&SALGEB" in line for line in self.lines):
+            warnings.append("No configurations specified! Call add_configurations() or configs_from_atomkit().")
+        
+        # Check if SMINIM exists
+        if not any("&SMINIM" in line for line in self.lines):
+            warnings.append("Missing SMINIM namelist! Call add_sminim().")
+        
+        # Check for RUN type specific requirements
+        for line in self.lines:
+            if "RUN='PI'" in line or 'RUN="PI"' in line:
+                if not any("&SRADCON" in l for l in self.lines):
+                    warnings.append("RUN='PI' requires SRADCON namelist for continuum energy grid.")
+            if "RUN='DR'" in line or 'RUN="DR"' in line:
+                if not any("&DRR" in l for l in self.lines):
+                    warnings.append("RUN='DR' requires DRR namelist for Rydberg series.")
+                if not any("&SRADCON" in l for l in self.lines):
+                    warnings.append("RUN='DR' requires SRADCON namelist for continuum energy grid.")
+            if "RUN='RR'" in line or 'RUN="RR"' in line:
+                if not any("&DRR" in l for l in self.lines):
+                    warnings.append("RUN='RR' requires DRR namelist for Rydberg series.")
+        
+        # Check for coupling scheme consistency
+        for line in self.lines:
+            if "CUP='LS'" in line or 'CUP="LS"' in line:
+                if "NASTJ" in line or "NMETAJ" in line or "INASTJ" in line:
+                    warnings.append("LS coupling doesn't use J quantum numbers. Use NAST/NMETA/INAST instead.")
+        
+        return warnings
+    
+    def validate_and_raise(self) -> None:
+        """
+        Validate configuration and raise exception if errors found.
+        
+        Raises
+        ------
+        ValueError
+            If validation errors are found
+        
+        Examples
+        --------
+        >>> asw = ASWriter("test.dat")
+        >>> asw.write_header("Test")
+        >>> asw.validate_and_raise()  # Raises ValueError with details
+        """
+        warnings = self.validate()
+        if warnings:
+            msg = "AUTOSTRUCTURE input validation failed:\n" + "\n".join(f"  - {w}" for w in warnings)
+            raise ValueError(msg)
+    
+    def check_completeness(self) -> bool:
+        """
+        Check if the input file is complete and ready to write.
+        
+        Returns
+        -------
+        bool
+            True if complete, False otherwise
+        
+        Examples
+        --------
+        >>> if asw.check_completeness():
+        ...     asw.close()
+        ... else:
+        ...     print("Still missing required sections!")
+        """
+        required = ["A.S.", "&SALGEB", "&SMINIM"]
+        return all(any(req in line for line in self.lines) for req in required)
+
