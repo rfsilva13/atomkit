@@ -167,8 +167,18 @@ class ASWriter:
         # Direct excitation range control
         MINLT: int | None = None,
         MAXLT: int | None = None,
+        MINST: int | None = None,
+        MAXST: int | None = None,
         MINJT: int | None = None,
         MAXJT: int | None = None,
+        # Collision exchange control
+        MAXLX: int | None = None,
+        MXLAMX: int | None = None,
+        LRGLAM: int | None = None,
+        # Collision fine-structure control
+        KUTOOX: int | None = None,
+        KUTSSX: int | None = None,
+        MAXJFS: int | None = None,
         # Multipole radiation control
         KPOLE: int | None = None,
         KPOLM: int | None = None,
@@ -178,6 +188,10 @@ class ASWriter:
         INAST: int | None = None,
         INASTJ: int | None = None,
         TARGET: int | None = None,
+        # Very large-scale calculation optimizations
+        MSTART: int | None = None,
+        KUTDSK: int | None = None,
+        KUTLS: int | None = None,
         **kwargs,
     ) -> None:
         """
@@ -339,6 +353,16 @@ class ASWriter:
             Maximum target level index for direct excitation:
             - Use with MINLT to restrict initial state range
             - Helps reduce calculation size for large level schemes
+        MINST : int, optional
+            Minimum total spin multiplicity (2S+1) for collision calculations:
+            - Use with RUN='DE' for direct electron impact excitation
+            - Restricts collision algebra to specific spin channels
+            - Example: MINST=1, MAXST=3 for singlet and triplet only
+            - Not necessary to set (default: all multiplicities)
+        MAXST : int, optional
+            Maximum total spin multiplicity (2S+1) for collision calculations:
+            - Use with MINST to restrict spin channel range
+            - Reduces computational cost by excluding high-spin channels
         MINJT : int, optional
             Minimum 2J value for initial states:
             - Restricts calculations to specific J quantum numbers
@@ -348,6 +372,41 @@ class ASWriter:
             Maximum 2J value for initial states:
             - Use with MINJT for J quantum number range restriction
             - Note: 2J used (not J) so integers work for half-integer J
+        MAXLX : int, optional
+            Maximum total L for exchange in collision calculations:
+            - Use with RUN='DE' for electron impact excitation
+            - Exchange neglected for L > MAXLX
+            - Default: twice max exchange multipole (2*MXLAMX)
+            - You should not normally need to change this
+        MXLAMX : int, optional
+            Maximum exchange multipole for collisions:
+            - Controls exchange interaction range in scattering
+            - Default: 2*(max target orbital l) + 3
+            - Negative values: neglect exchange completely
+            - Smaller values: restrict direct scattering as well
+        LRGLAM : int, optional
+            Top-up lambda for collision calculations:
+            - Automatically set to MAXLT or MAXJT
+            - Can be reduced/switched-off for testing
+            - Controls convergence of partial wave expansion
+        KUTOOX : int, optional
+            Collisional two-body orbit-orbit interaction:
+            - -1: Off (default)
+            - 1: Include in same fashion as target KUTOO
+            - Use with RUN='DE' for high-precision collisions
+            - Independent of target KUTOO setting
+        KUTSSX : int, optional
+            Collisional two-body fine-structure:
+            - -1: Off (default)
+            - -999: All possible fine-structure terms
+            - 1: First target configuration only
+            - Similar interpretation as target KUTSS
+            - Time-consuming; recommended only for weak transitions
+        MAXJFS : int, optional
+            Maximum 2J for collisional fine-structure:
+            - Limits expensive fine-structure calculations
+            - Use with KUTSSX to control computational cost
+            - Only important for weak transitions
         KPOLE : int, optional
             Maximum multipole order for radiation:
             - 1: Electric dipole (E1) only (default for RAD='E1')
@@ -391,6 +450,26 @@ class ASWriter:
             - Used in electron impact excitation/ionization
             - Value is the index of the target state in level list
             - Useful for calculating cross sections to specific final states
+        MSTART : int, optional
+            Starting configuration number for isoelectronic sequence restarts:
+            - > 0: Start from configuration MSTART (restart facility)
+            - = 0: Start from beginning (default)
+            - Use for restarting long isoelectronic sequence calculations
+            - Requires previous calculation output for configurations < MSTART
+        KUTDSK : int, optional
+            Disk storage control for vector coupling coefficients:
+            - > 0: Store on SCRATCH disk for configurations > KUTDSK
+            - <= 0: All on disk with small I/O buffer (default)
+            - Default: Store all in memory
+            - Essential for terabyte-scale calculations (thousands of configs)
+            - Use when memory limitations prevent in-core storage
+        KUTLS : int, optional
+            Configuration mixing control for large calculations:
+            - < 0: Restrict mixing to *within* each (nl) configuration
+            - > 0: Allow mixing between first KUTLS configs, restrict rest
+            - Default: No restriction (full LS mixing)
+            - Negative: Speeds up by repartitioning Hamiltonian
+            - Positive: Eliminates unphysical n-mixing in high Rydberg states
         **kwargs : dict
             Additional SALGEB parameters for advanced usage.
             See AUTOSTRUCTURE manual for complete list.
@@ -500,10 +579,30 @@ class ASWriter:
             params["MINLT"] = MINLT
         if MAXLT is not None:
             params["MAXLT"] = MAXLT
+        if MINST is not None:
+            params["MINST"] = MINST
+        if MAXST is not None:
+            params["MAXST"] = MAXST
         if MINJT is not None:
             params["MINJT"] = MINJT
         if MAXJT is not None:
             params["MAXJT"] = MAXJT
+
+        # Collision exchange control
+        if MAXLX is not None:
+            params["MAXLX"] = MAXLX
+        if MXLAMX is not None:
+            params["MXLAMX"] = MXLAMX
+        if LRGLAM is not None:
+            params["LRGLAM"] = LRGLAM
+
+        # Collision fine-structure control
+        if KUTOOX is not None:
+            params["KUTOOX"] = KUTOOX
+        if KUTSSX is not None:
+            params["KUTSSX"] = KUTSSX
+        if MAXJFS is not None:
+            params["MAXJFS"] = MAXJFS
 
         # Multipole radiation control
         if KPOLE is not None:
@@ -522,6 +621,14 @@ class ASWriter:
             params["INASTJ"] = INASTJ
         if TARGET is not None:
             params["TARGET"] = TARGET
+
+        # Very large-scale calculation optimizations
+        if MSTART is not None:
+            params["MSTART"] = MSTART
+        if KUTDSK is not None:
+            params["KUTDSK"] = KUTDSK
+        if KUTLS is not None:
+            params["KUTLS"] = KUTLS
 
         # Add any additional parameters
         for key, value in kwargs.items():
@@ -808,7 +915,7 @@ class ASWriter:
         NVAR : int, optional
             Number of variational parameters to optimize.
             Default is 0 (no optimization)
-        
+
         Optimization Control
         --------------------
         IWGHT : int, optional
@@ -840,7 +947,7 @@ class ASWriter:
             Fix certain orbitals in self-consistent calculation:
             = 0: Optimize all orbitals
             > 0: Fix first IFIX orbitals from STO/previous calc
-        
+
         Potential Specification
         -----------------------
         MEXPOT : int, optional
@@ -853,7 +960,7 @@ class ASWriter:
             'FAC': Flexible atomic code potential
             None: No plasma effects (default)
             Or specify 'ION' for ion-sphere model
-        
+
         Output Control
         --------------
         PRINT : str, optional
@@ -867,7 +974,7 @@ class ASWriter:
         MAXE : float, optional
             Maximum scattering energy in Rydbergs.
             Used for photoionization/collision calculations.
-        
+
         Energy Shifts
         -------------
         ISHFTLS : int, optional
@@ -878,7 +985,7 @@ class ASWriter:
             Energy shifts in IC coupling:
             = 0: No shifts (default)
             > 0: Read ISHFTIC level energy shifts
-        
+
         Relativistic Options (for CUP='ICR')
         ------------------------------------
         IREL : int, optional
@@ -904,7 +1011,7 @@ class ASWriter:
             Retardation effects:
             = 0: No retardation (default)
             = 1: Full retardation
-        
+
         Advanced Data Bundling (for large calculations)
         -----------------------------------------------
         NMETAR : int, optional
@@ -925,7 +1032,7 @@ class ASWriter:
         NDEN : int, optional
             Number of plasma density/temperature pairs.
             Used with PPOT for plasma calculations.
-        
+
         **kwargs : dict
             Additional SMINIM parameters not explicitly listed.
 
@@ -933,16 +1040,16 @@ class ASWriter:
         --------
         >>> # Basic structure calculation
         >>> asw.add_sminim(NZION=6)
-        
+
         >>> # Optimized calculation with lambda parameters
         >>> asw.add_sminim(NZION=26, INCLUD=6, NLAM=3, NVAR=2, IWGHT=1)
-        
+
         >>> # Relativistic calculation with QED
         >>> asw.add_sminim(NZION=92, IREL=2, QED=1, INUKE=1)
-        
+
         >>> # Large DR calculation with bundling
         >>> asw.add_sminim(NZION=26, NMETAR=2, NRSLMX=50000)
-        
+
         >>> # Plasma calculation
         >>> asw.add_sminim(NZION=26, PPOT='ION', NDEN=5)
         """
@@ -1059,7 +1166,7 @@ class ASWriter:
             Minimum continuum energy (Rydbergs)
         EMAX : float, optional
             Maximum continuum energy (Rydbergs)
-        
+
         Additional Energy Grids
         -----------------------
         MENGI : int, optional
@@ -1079,7 +1186,7 @@ class ASWriter:
         NIDX : int, optional
             Number of extra energies beyond EMAX.
             Useful for extending the energy grid for specific transitions.
-        
+
         Energy Corrections
         ------------------
         ECORLS : float, optional
@@ -1090,7 +1197,7 @@ class ASWriter:
             Energy correction for target continuum in IC coupling (Rydbergs).
             = 0.0: No correction (default)
             Adjusts the target continuum threshold.
-        
+
         **kwargs : dict
             Additional SRADCON parameters not explicitly listed.
 
@@ -1098,13 +1205,13 @@ class ASWriter:
         --------
         >>> # Standard photoionization grid
         >>> asw.add_sradcon(MENG=-15, EMIN=0.0, EMAX=25.0)
-        
+
         >>> # With excitation energies
         >>> asw.add_sradcon(MENG=-15, EMIN=0.0, EMAX=100.0, NDE=-10, DEMIN=0.0, DEMAX=50.0)
-        
+
         >>> # With energy correction
         >>> asw.add_sradcon(MENG=-20, EMIN=0.0, EMAX=150.0, ECORIC=0.5)
-        
+
         >>> # Auto-select energies
         >>> asw.add_sradcon()
         """
@@ -1178,7 +1285,7 @@ class ASWriter:
             > 0: Read NMESH values after namelist
             < 0: Use internal n-mesh (RECOMMENDED for production)
             = None: Don't specify (use AS default)
-        
+
         Radiation Control
         -----------------
         NRAD : int, optional
@@ -1186,13 +1293,13 @@ class ASWriter:
             are calculated. Default is 1000 in AUTOSTRUCTURE.
             Useful for limiting computational cost in large calculations.
             Example: NRAD=100 means rates only computed up to n=100
-        
+
         Continuum Specification
         -----------------------
         LCON : int, optional
             Number of continuum l-values to include in calculation.
             Allows control over angular momentum channels in continuum.
-        
+
         **kwargs : dict
             Additional DRR parameters not explicitly listed.
 
@@ -1200,13 +1307,13 @@ class ASWriter:
         --------
         >>> # Standard DR calculation
         >>> asw.add_drr(NMIN=3, NMAX=15, LMIN=0, LMAX=7)
-        
+
         >>> # With internal n-mesh for production
         >>> asw.add_drr(NMIN=3, NMAX=10, LMIN=0, LMAX=5, NMESH=-1)
-        
+
         >>> # Limit radiative rates for efficiency
         >>> asw.add_drr(NMIN=3, NMAX=20, LMAX=7, NRAD=100)
-        
+
         >>> # Control continuum channels
         >>> asw.add_drr(NMIN=3, NMAX=15, LMAX=7, LCON=8)
         """
@@ -1260,7 +1367,7 @@ class ASWriter:
         --------
         >>> # Read external orbitals in APAP format
         >>> asw.add_sradwin(KEY=-9)
-        
+
         >>> # Read STO orbitals
         >>> asw.add_sradwin(KEY=-10)
 
