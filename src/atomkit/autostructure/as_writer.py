@@ -149,6 +149,10 @@ class ASWriter:
         KUTOO: int | None = None,
         # Orbital basis control
         BASIS: str | None = None,
+        # Configuration handling
+        KCUT: int | None = None,
+        KCUTCC: int | None = None,
+        KCUTI: int | None = None,
         **kwargs,
     ) -> None:
         """
@@ -231,9 +235,26 @@ class ASWriter:
             - 'SRLX': Simplified relaxed - partially relaxed basis
             Note: Use with KCOR specification for core-valence separation.
             RLX/SRLX reduce size of STO parameter space in R-matrix calculations.
+        KCUT : int, optional
+            Configuration cutoff control:
+            - Positive: Include only first KCUT configurations (spectroscopic)
+            - Negative: Include first |KCUT| configs + all correlation configs
+            - 0 or None: Include all configurations (default)
+            Spectroscopic configs are those with holes in valence only.
+            Correlation configs have holes in core (important for CI).
+        KCUTCC : int, optional
+            Cutoff for (N+1)-electron bound configurations in autoionization:
+            - Similar to KCUT but applies to MXCCF configurations
+            - Used with RUN='AI' or when MXCCF > 0
+            - Separates spectroscopic from correlation (N+1) configs
+        KCUTI : int, optional
+            Cutoff for continuum configurations:
+            - Controls which target states can photoionize/autoionize
+            - Positive: First KCUTI target states only
+            - Used with RUN='PI', 'AI', or 'RR' calculations
         **kwargs : dict
             Additional SALGEB parameters for advanced usage.
-            Common options: KCUT, NAST, NASTJ, ICFG, NXTRA, etc.
+            Common options: NAST, NASTJ, ICFG, NXTRA, NMETA, etc.
             See AUTOSTRUCTURE manual for complete list.
 
         Notes
@@ -305,6 +326,14 @@ class ASWriter:
         # Orbital basis control
         if BASIS is not None:
             params["BASIS"] = self._quote_value(BASIS)
+
+        # Configuration handling
+        if KCUT is not None:
+            params["KCUT"] = KCUT
+        if KCUTCC is not None:
+            params["KCUTCC"] = KCUTCC
+        if KCUTI is not None:
+            params["KCUTI"] = KCUTI
 
         # Add any additional parameters
         for key, value in kwargs.items():

@@ -290,6 +290,71 @@ class TestSALGEBNamelist:
         content = asw.get_content()
         assert "BASIS='SRLX'" in content
 
+    def test_salgeb_with_kcut_positive(self):
+        """Test SALGEB with KCUT positive (spectroscopic only)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with KCUT=5")
+        # KCUT=5 means include only first 5 configurations (spectroscopic)
+        asw.add_salgeb(CUP="IC", RAD="E1", KCUT=5)
+
+        content = asw.get_content()
+        assert "KCUT=5" in content
+
+    def test_salgeb_with_kcut_negative(self):
+        """Test SALGEB with KCUT negative (spectroscopic + correlation)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with KCUT=-10")
+        # KCUT=-10 means first 10 spectroscopic + all correlation configs
+        asw.add_salgeb(CUP="IC", RAD="E1", KCUT=-10, KCOR1=1, KCOR2=2)
+
+        content = asw.get_content()
+        assert "KCUT=-10" in content
+        assert "KCOR1=1" in content
+
+    def test_salgeb_with_kcutcc(self):
+        """Test SALGEB with KCUTCC for (N+1) configurations."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with KCUTCC")
+        # KCUTCC for autoionization with (N+1)-electron configs
+        asw.add_salgeb(RUN="AI", CUP="IC", RAD="E1", MXCCF=10, KCUTCC=5)
+
+        content = asw.get_content()
+        assert "KCUTCC=5" in content
+        assert "MXCCF=10" in content
+
+    def test_salgeb_with_kcuti(self):
+        """Test SALGEB with KCUTI for continuum configurations."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with KCUTI")
+        # KCUTI=3 means only first 3 target states can photoionize
+        asw.add_salgeb(RUN="PI", CUP="LS", RAD="  ", KCUTI=3)
+
+        content = asw.get_content()
+        assert "KCUTI=3" in content
+        assert "RUN='PI'" in content
+
+    def test_salgeb_with_all_kcut_parameters(self):
+        """Test SALGEB with all configuration cutoff parameters."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with complete configuration control")
+        # Complete autoionization calculation with all cutoffs
+        asw.add_salgeb(
+            RUN="AI",
+            CUP="IC",
+            RAD="E1",
+            MXCCF=20,
+            KCUT=-15,    # First 15 spectroscopic + correlation
+            KCUTCC=10,   # First 10 (N+1) configs
+            KCUTI=5,     # First 5 target states
+            KCOR1=1,
+            KCOR2=2
+        )
+
+        content = asw.get_content()
+        assert "KCUT=-15" in content
+        assert "KCUTCC=10" in content
+        assert "KCUTI=5" in content
+
 
 class TestSMINIMNamelist:
     """Test SMINIM namelist generation."""
