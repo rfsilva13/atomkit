@@ -164,6 +164,14 @@ class ASWriter:
         NXTRA: int | None = None,
         LXTRA: int | None = None,
         IFILL: int | None = None,
+        # Direct excitation range control
+        MINLT: int | None = None,
+        MAXLT: int | None = None,
+        MINJT: int | None = None,
+        MAXJT: int | None = None,
+        # Multipole radiation control
+        KPOLE: int | None = None,
+        KPOLM: int | None = None,
         **kwargs,
     ) -> None:
         """
@@ -315,9 +323,41 @@ class ASWriter:
             - 1: Fill configurations by l quantum number priority
             - 2: Alternative filling scheme for specific systems
             - Affects which configurations ICFG generates
+        MINLT : int, optional
+            Minimum target level index for direct excitation:
+            - Restricts which target states can be excited from
+            - Use with MAXLT to define a range of initial states
+            - Useful for calculating specific transition subsets
+            - Example: MINLT=1, MAXLT=5 calculates from first 5 levels
+        MAXLT : int, optional
+            Maximum target level index for direct excitation:
+            - Use with MINLT to restrict initial state range
+            - Helps reduce calculation size for large level schemes
+        MINJT : int, optional
+            Minimum 2J value for initial states:
+            - Restricts calculations to specific J quantum numbers
+            - Use with CUP='IC' for fine-structure selection
+            - Example: MINJT=0, MAXJT=4 for J=0, 1/2, 1, 3/2, 2
+        MAXJT : int, optional
+            Maximum 2J value for initial states:
+            - Use with MINJT for J quantum number range restriction
+            - Note: 2J used (not J) so integers work for half-integer J
+        KPOLE : int, optional
+            Maximum multipole order for radiation:
+            - 1: Electric dipole (E1) only (default for RAD='E1')
+            - 2: E1 + E2 (electric quadrupole)
+            - 3: E1 + E2 + E3, etc.
+            - Automatically set based on RAD parameter if not specified
+            - Use for high-precision forbidden transition rates
+        KPOLM : int, optional
+            Include magnetic multipoles:
+            - 0 or None: Electric multipoles only (default)
+            - 1: Include M1 (magnetic dipole)
+            - 2: Include M1 + M2 (magnetic quadrupole)
+            - Important for forbidden transitions and fine-structure mixing
         **kwargs : dict
             Additional SALGEB parameters for advanced usage.
-            Common options: NMETA, NMETAJ, TARGET, MINLT, MAXLT, etc.
+            Common options: NMETA, NMETAJ, TARGET, INAST, INASTJ, etc.
             See AUTOSTRUCTURE manual for complete list.
 
         Notes
@@ -419,6 +459,22 @@ class ASWriter:
             params["LXTRA"] = LXTRA
         if IFILL is not None:
             params["IFILL"] = IFILL
+
+        # Direct excitation range control
+        if MINLT is not None:
+            params["MINLT"] = MINLT
+        if MAXLT is not None:
+            params["MAXLT"] = MAXLT
+        if MINJT is not None:
+            params["MINJT"] = MINJT
+        if MAXJT is not None:
+            params["MAXJT"] = MAXJT
+
+        # Multipole radiation control
+        if KPOLE is not None:
+            params["KPOLE"] = KPOLE
+        if KPOLM is not None:
+            params["KPOLM"] = KPOLM
 
         # Add any additional parameters
         for key, value in kwargs.items():

@@ -489,12 +489,12 @@ class TestSALGEBNamelist:
         asw.add_salgeb(
             CUP="IC",
             RAD="E1",
-            ICFG=2,    # Double excitations
-            NXTRA=7,   # Add 7 extra orbitals
-            LXTRA=3,   # Up to f orbitals
-            IFILL=0,   # Standard energy filling
+            ICFG=2,  # Double excitations
+            NXTRA=7,  # Add 7 extra orbitals
+            LXTRA=3,  # Up to f orbitals
+            IFILL=0,  # Standard energy filling
             KCOR1=1,
-            KCOR2=2    # He-like core
+            KCOR2=2,  # He-like core
         )
 
         content = asw.get_content()
@@ -502,6 +502,73 @@ class TestSALGEBNamelist:
         assert "NXTRA=7" in content
         assert "LXTRA=3" in content
         assert "IFILL=0" in content
+
+    def test_salgeb_with_minlt_maxlt(self):
+        """Test SALGEB with MINLT/MAXLT (initial state range)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with MINLT/MAXLT")
+        # MINLT=1, MAXLT=5 restricts calculations from first 5 levels
+        asw.add_salgeb(CUP="IC", RAD="E1", MINLT=1, MAXLT=5)
+
+        content = asw.get_content()
+        assert "MINLT=1" in content
+        assert "MAXLT=5" in content
+
+    def test_salgeb_with_minjt_maxjt(self):
+        """Test SALGEB with MINJT/MAXJT (J quantum number range)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with MINJT/MAXJT")
+        # MINJT=0, MAXJT=4 for J=0, 1/2, 1, 3/2, 2
+        asw.add_salgeb(CUP="IC", RAD="E1", MINJT=0, MAXJT=4)
+
+        content = asw.get_content()
+        assert "MINJT=0" in content
+        assert "MAXJT=4" in content
+
+    def test_salgeb_with_kpole(self):
+        """Test SALGEB with KPOLE (multipole order)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with KPOLE")
+        # KPOLE=2 for E1 + E2 (quadrupole) transitions
+        asw.add_salgeb(CUP="IC", RAD="E1", KPOLE=2)
+
+        content = asw.get_content()
+        assert "KPOLE=2" in content
+
+    def test_salgeb_with_kpolm(self):
+        """Test SALGEB with KPOLM (magnetic multipoles)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with KPOLM")
+        # KPOLM=1 to include M1 (magnetic dipole) transitions
+        asw.add_salgeb(CUP="IC", RAD="ALL", KPOLM=1)
+
+        content = asw.get_content()
+        assert "KPOLM=1" in content
+        assert "RAD='ALL'" in content
+
+    def test_salgeb_with_multipole_and_range(self):
+        """Test SALGEB with multipole and state range combined."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with multipole and range")
+        # Complete transition control: range + multipole orders
+        asw.add_salgeb(
+            CUP="IC",
+            RAD="E1",
+            MINLT=1,
+            MAXLT=10,  # First 10 initial states
+            MINJT=0,
+            MAXJT=6,   # J up to 3
+            KPOLE=3,   # Up to E3
+            KPOLM=2,   # Up to M2
+        )
+
+        content = asw.get_content()
+        assert "MINLT=1" in content
+        assert "MAXLT=10" in content
+        assert "MINJT=0" in content
+        assert "MAXJT=6" in content
+        assert "KPOLE=3" in content
+        assert "KPOLM=2" in content
 
 
 class TestSMINIMNamelist:
