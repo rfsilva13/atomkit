@@ -14,6 +14,9 @@ from . import physics
 # Import FAC wrapper module
 from . import fac
 
+# Import AUTOSTRUCTURE wrapper module
+from . import autostructure
+
 __all__ = [
     "Shell",
     "Configuration",
@@ -21,4 +24,5 @@ __all__ = [
     "parse_ion_notation",
     "physics",
     "fac",
+    "autostructure",
 ]

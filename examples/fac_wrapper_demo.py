@@ -19,7 +19,7 @@ print("=" * 70)
 
 # Create a FAC input file for Ne-like iron (Fe XVII)
 # This reproduces the example from the FAC manual
-with SFACWriter("fe17_structure.sf") as fac:
+with SFACWriter("examples/fac_inputs/fe17_structure.sf") as fac:
     fac.add_comment("Ne-like Iron (Fe XVII) structure calculation")
     fac.add_comment("This calculates energy levels and radiative transitions")
     fac.add_comment("between n=2 and n=3 complexes")
@@ -44,7 +44,7 @@ with SFACWriter("fe17_structure.sf") as fac:
     fac.add_blank_line()
     fac.add_comment("Calculate energy levels")
     fac.Structure("ne.lev.b", ["n2", "n3"])
-    fac.MemENTable("ne.lev.b")
+    fac.MemENTable("ne.lev.b")  # IMPORTANT: Store in memory for later use
     fac.PrintTable("ne.lev.b", "ne.lev", 1)
 
     # Calculate transitions
@@ -53,8 +53,8 @@ with SFACWriter("fe17_structure.sf") as fac:
     fac.TransitionTable("ne.tr.b", ["n2"], ["n3"])
     fac.PrintTable("ne.tr.b", "ne.tr", 1)
 
-print(f"✓ Created: fe17_structure.sf")
-print(f"  Execute with: sfac fe17_structure.sf")
+print(f"✓ Created: examples/fac_inputs/fe17_structure.sf")
+print(f"  Execute with: cd examples/fac_inputs && sfac fe17_structure.sf")
 print()
 
 print("=" * 70)
@@ -80,7 +80,7 @@ autoionizing = Configuration.generate_doubly_excited_autoionizing(
 print(f"Generated {len(autoionizing)} autoionizing states")
 
 # Create FAC input using these configurations
-with SFACWriter("fe24_autoionization.sf") as fac:
+with SFACWriter("examples/fac_inputs/fe24_autoionization.sf") as fac:
     fac.add_comment("Fe XXIV (Li-like) autoionization calculation")
     fac.add_comment(f"Generated using atomkit Configuration class")
     fac.add_blank_line()
@@ -120,6 +120,7 @@ with SFACWriter("fe24_autoionization.sf") as fac:
     fac.add_blank_line()
     fac.add_comment("Calculate energy levels")
     fac.Structure("fe24.lev.b", target_groups + auto_groups)
+    fac.MemENTable("fe24.lev.b")  # IMPORTANT: Store in memory for later use
     fac.PrintTable("fe24.lev.b", "fe24.lev.asc", 1)
 
     # Transitions between autoionizing states
@@ -134,8 +135,8 @@ with SFACWriter("fe24_autoionization.sf") as fac:
     fac.AITable("fe24_ai.ai.b", auto_groups, target_groups)
     fac.PrintTable("fe24_ai.ai.b", "fe24_ai.ai.asc", 1)
 
-print(f"✓ Created: fe24_autoionization.sf")
-print(f"  Execute with: sfac fe24_autoionization.sf")
+print(f"✓ Created: examples/fac_inputs/fe24_autoionization.sf")
+print(f"  Execute with: cd examples/fac_inputs && sfac fe24_autoionization.sf")
 print()
 
 print("=" * 70)
@@ -143,7 +144,7 @@ print("Example 3: Parallel Calculation with MPI")
 print("=" * 70)
 
 # Large-scale calculation with MPI parallelization
-with SFACWriter("cu_photoionization.sf") as fac:
+with SFACWriter("examples/fac_inputs/cu_photoionization.sf") as fac:
     fac.add_comment("Cu I photoionization - parallel calculation")
     fac.add_blank_line()
 
@@ -174,6 +175,7 @@ with SFACWriter("cu_photoionization.sf") as fac:
     cont_groups = ["cont_s", "cont_d"]
 
     fac.Structure("cu.lev.b", bound_groups + cont_groups)
+    fac.MemENTable("cu.lev.b")  # IMPORTANT: Store in memory for later use
     fac.PrintTable("cu.lev.b", "cu.lev.asc", 0)
 
     # Set energy grid for photoionization
@@ -191,8 +193,8 @@ with SFACWriter("cu_photoionization.sf") as fac:
     # Finalize MPI
     fac.FinalizeMPI()
 
-print(f"✓ Created: cu_photoionization.sf")
-print(f"  Execute with: mpirun -n 24 sfac cu_photoionization.sf")
+print(f"✓ Created: examples/fac_inputs/cu_photoionization.sf")
+print(f"  Execute with: cd examples/fac_inputs && mpirun -n 24 sfac cu_photoionization.sf")
 print()
 
 print("=" * 70)
@@ -200,7 +202,7 @@ print("Example 4: Previewing SFAC Content")
 print("=" * 70)
 
 # You can preview the content before writing to file
-fac = SFACWriter("preview.sf")
+fac = SFACWriter("examples/fac_inputs/preview.sf")
 fac.SetAtom("O")
 fac.Closed("1s")
 fac.Config("2s2 2p4", group="ground")
