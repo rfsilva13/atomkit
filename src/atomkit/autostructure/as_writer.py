@@ -159,6 +159,11 @@ class ASWriter:
         NASTS: int | None = None,
         NASTP: int | None = None,
         NASTPJ: int | None = None,
+        # CI expansion control
+        ICFG: int | None = None,
+        NXTRA: int | None = None,
+        LXTRA: int | None = None,
+        IFILL: int | None = None,
         **kwargs,
     ) -> None:
         """
@@ -285,9 +290,34 @@ class ASWriter:
             - Similar to NASTP but for IC coupling (includes J)
             - Followed by NASTPJ values of (2S+1, L, 2J, π)
             - Most restrictive parent specification
+        ICFG : int, optional
+            Configuration generation mode:
+            - 0: No automatic generation (default, use explicit configs)
+            - 1: Generate single excitations from reference configs
+            - 2: Generate single + double excitations
+            - 3: Generate triple excitations
+            Use with NXTRA to extend orbital basis for CI expansion.
+        NXTRA : int, optional
+            Number of extra orbitals to add for CI expansion:
+            - Adds NXTRA orbitals beyond those in reference configs
+            - Use with LXTRA to specify maximum l of extra orbitals
+            - Essential for systematic CI convergence studies
+            - Example: NXTRA=5 adds 5 more n-values for each l
+        LXTRA : int, optional
+            Maximum l quantum number for extra orbitals:
+            - Limits angular momentum of orbitals added by NXTRA
+            - Example: LXTRA=2 means add only s, p, d orbitals
+            - Default: Same as highest l in reference configuration
+            - Use to control size of CI expansion
+        IFILL : int, optional
+            Configuration filling control:
+            - 0: Standard filling based on energy order (default)
+            - 1: Fill configurations by l quantum number priority
+            - 2: Alternative filling scheme for specific systems
+            - Affects which configurations ICFG generates
         **kwargs : dict
             Additional SALGEB parameters for advanced usage.
-            Common options: ICFG, NXTRA, LXTRA, NMETA, TARGET, etc.
+            Common options: NMETA, NMETAJ, TARGET, MINLT, MAXLT, etc.
             See AUTOSTRUCTURE manual for complete list.
 
         Notes
@@ -379,6 +409,16 @@ class ASWriter:
             params["NASTP"] = NASTP
         if NASTPJ is not None:
             params["NASTPJ"] = NASTPJ
+
+        # CI expansion control
+        if ICFG is not None:
+            params["ICFG"] = ICFG
+        if NXTRA is not None:
+            params["NXTRA"] = NXTRA
+        if LXTRA is not None:
+            params["LXTRA"] = LXTRA
+        if IFILL is not None:
+            params["IFILL"] = IFILL
 
         # Add any additional parameters
         for key, value in kwargs.items():

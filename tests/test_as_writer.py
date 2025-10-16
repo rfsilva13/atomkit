@@ -419,15 +419,89 @@ class TestSALGEBNamelist:
             RUN="PI",
             CUP="LS",
             RAD="  ",
-            NAST=3,   # 3 bound terms
+            NAST=3,  # 3 bound terms
             NASTS=2,  # 2 continuum terms
             KCOR1=1,
-            KCOR2=1
+            KCOR2=1,
         )
 
         content = asw.get_content()
         assert "NAST=3" in content
         assert "NASTS=2" in content
+
+    def test_salgeb_with_icfg_single(self):
+        """Test SALGEB with ICFG=1 (single excitations)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with ICFG=1")
+        # ICFG=1 generates single excitations from reference configs
+        asw.add_salgeb(CUP="IC", RAD="E1", ICFG=1)
+
+        content = asw.get_content()
+        assert "ICFG=1" in content
+
+    def test_salgeb_with_icfg_double(self):
+        """Test SALGEB with ICFG=2 (single + double excitations)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with ICFG=2")
+        # ICFG=2 for systematic CI with double excitations
+        asw.add_salgeb(CUP="IC", RAD="E1", ICFG=2, KCOR1=1, KCOR2=2)
+
+        content = asw.get_content()
+        assert "ICFG=2" in content
+
+    def test_salgeb_with_nxtra(self):
+        """Test SALGEB with NXTRA (orbital extension)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with NXTRA")
+        # NXTRA=5 adds 5 extra orbitals for CI expansion
+        asw.add_salgeb(CUP="IC", RAD="E1", NXTRA=5)
+
+        content = asw.get_content()
+        assert "NXTRA=5" in content
+
+    def test_salgeb_with_lxtra(self):
+        """Test SALGEB with LXTRA (maximum l for extra orbitals)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with LXTRA")
+        # LXTRA=2 limits extra orbitals to s, p, d only
+        asw.add_salgeb(CUP="IC", RAD="E1", NXTRA=5, LXTRA=2)
+
+        content = asw.get_content()
+        assert "NXTRA=5" in content
+        assert "LXTRA=2" in content
+
+    def test_salgeb_with_ifill(self):
+        """Test SALGEB with IFILL (filling control)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with IFILL")
+        # IFILL=1 for l-based filling priority
+        asw.add_salgeb(CUP="IC", RAD="E1", ICFG=2, IFILL=1)
+
+        content = asw.get_content()
+        assert "IFILL=1" in content
+        assert "ICFG=2" in content
+
+    def test_salgeb_with_complete_ci_expansion(self):
+        """Test SALGEB with complete CI expansion parameters."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with complete CI expansion")
+        # Complete CI expansion setup for systematic calculation
+        asw.add_salgeb(
+            CUP="IC",
+            RAD="E1",
+            ICFG=2,    # Double excitations
+            NXTRA=7,   # Add 7 extra orbitals
+            LXTRA=3,   # Up to f orbitals
+            IFILL=0,   # Standard energy filling
+            KCOR1=1,
+            KCOR2=2    # He-like core
+        )
+
+        content = asw.get_content()
+        assert "ICFG=2" in content
+        assert "NXTRA=7" in content
+        assert "LXTRA=3" in content
+        assert "IFILL=0" in content
 
 
 class TestSMINIMNamelist:
