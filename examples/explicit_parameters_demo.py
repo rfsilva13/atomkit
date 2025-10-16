@@ -27,18 +27,18 @@ with ASWriter("examples/as_inputs/fe_with_core.dat") as asw:
     asw.write_header("Fe XVII (Ne-like) with explicit Ne core")
     asw.add_comment("Using KCOR1=1, KCOR2=3 to specify 1s2.2s2.2p6 closed core")
     asw.add_blank_line()
-    
+
     # KCOR1=1, KCOR2=3 means orbitals 1 (1s), 2 (2s), 3 (2p) form the core
     # This is important for:
     # - Defining the correlation in structure calculations
     # - Core model potential for R-matrix
     asw.add_salgeb(CUP="IC", RAD="E1", KCOR1=1, KCOR2=3)
-    
+
     info = asw.configs_from_atomkit([ground] + excited[:3], last_core_orbital="2p")
     print(f"  Configurations: {info['n_configs']}")
     print(f"  Core orbitals: {info['core_orbitals']}")
     print(f"  Valence orbitals: {info['valence_orbitals']}")
-    
+
     asw.add_sminim(NZION=26)
 
 print(f"✓ Created: examples/as_inputs/fe_with_core.dat")
@@ -60,7 +60,7 @@ with ASWriter("examples/as_inputs/pi_no_auger.dat") as asw:
     asw.add_comment("Using AUGER='NO' to disable autoionization rates")
     asw.add_comment("Only photoionization cross sections will be calculated")
     asw.add_blank_line()
-    
+
     # For pure photoionization, we don't want autoionization rates
     asw.add_salgeb(
         RUN="PI",
@@ -71,11 +71,11 @@ with ASWriter("examples/as_inputs/pi_no_auger.dat") as asw:
         KCOR1=1,
         KCOR2=1,  # 1s core
     )
-    
+
     asw.configs_from_atomkit([target], last_core_orbital=None)
     asw.add_blank_line()
     asw.configs_from_atomkit([initial_2s, initial_2p], last_core_orbital="1s")
-    
+
     asw.add_sminim(NZION=26)
     asw.add_sradcon(MENG=-15, EMIN=0.0, EMAX=1500.0)
 
@@ -97,7 +97,7 @@ with ASWriter("examples/as_inputs/structure_with_born.dat") as asw:
     asw.add_comment("Using BORN='INF' for infinite energy limit Born strengths")
     asw.add_comment("This is useful for high-temperature plasma applications")
     asw.add_blank_line()
-    
+
     # Born collision strengths require RAD='ALL'
     asw.add_salgeb(
         CUP="IC",
@@ -106,10 +106,10 @@ with ASWriter("examples/as_inputs/structure_with_born.dat") as asw:
         KCOR1=1,
         KCOR2=1,  # 1s core
     )
-    
+
     info = asw.configs_from_atomkit([ground] + excited[:4], last_core_orbital="1s")
     print(f"  Configurations: {info['n_configs']}")
-    
+
     asw.add_sminim(NZION=6)
 
 print(f"✓ Created: examples/as_inputs/structure_with_born.dat")
@@ -130,7 +130,7 @@ with ASWriter("examples/as_inputs/fe_high_precision.dat") as asw:
     asw.add_comment("KUTSS, KUTSO, KUTOO = 1 for high-precision heavy element")
     asw.add_comment("Important for accurate transition rates in Fe")
     asw.add_blank_line()
-    
+
     # For heavy elements, include all fine-structure interactions
     asw.add_salgeb(
         CUP="IC",
@@ -141,11 +141,11 @@ with ASWriter("examples/as_inputs/fe_high_precision.dat") as asw:
         KCOR1=1,
         KCOR2=3,  # Ne-like core
     )
-    
+
     info = asw.configs_from_atomkit([ground] + excited[:2], last_core_orbital="2p")
     print(f"  Configurations: {info['n_configs']}")
     print(f"  Fine-structure: spin-spin, spin-orbit, orbit-orbit all included")
-    
+
     asw.add_sminim(NZION=26)
 
 print(f"✓ Created: examples/as_inputs/fe_high_precision.dat")
@@ -166,7 +166,7 @@ with ASWriter("examples/as_inputs/ls_no_finestructure.dat") as asw:
     asw.add_comment("KUTSS=-1 explicitly disables fine-structure")
     asw.add_comment("Use for light elements or when LS is sufficient")
     asw.add_blank_line()
-    
+
     # For pure LS coupling, explicitly disable fine-structure
     asw.add_salgeb(
         CUP="LS",
@@ -175,11 +175,11 @@ with ASWriter("examples/as_inputs/ls_no_finestructure.dat") as asw:
         KCOR1=1,
         KCOR2=1,  # 1s core
     )
-    
+
     info = asw.configs_from_atomkit([ground] + excited[:3], last_core_orbital="1s")
     print(f"  Configurations: {info['n_configs']}")
     print(f"  Coupling: Pure LS (no fine-structure)")
-    
+
     asw.add_sminim(NZION=6)
 
 print(f"✓ Created: examples/as_inputs/ls_no_finestructure.dat")
@@ -198,14 +198,14 @@ with ASWriter("examples/as_inputs/mg_with_korb.dat") as asw:
     asw.write_header("Mg-like ion with KORB specification")
     asw.add_comment("KORB1/KORB2 is alternative to KCOR1/KCOR2")
     asw.add_blank_line()
-    
+
     # Using KORB instead of KCOR (functionally equivalent)
     asw.add_salgeb(CUP="LS", RAD="E1", KORB1=1, KORB2=3)
-    
+
     info = asw.configs_from_atomkit([ground] + excited[:2], last_core_orbital="2p")
     print(f"  Core: {info['core_orbitals']}")
     print(f"  Valence: {info['valence_orbitals']}")
-    
+
     asw.add_sminim(NZION=26)
 
 print(f"✓ Created: examples/as_inputs/mg_with_korb.dat")

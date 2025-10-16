@@ -153,6 +153,12 @@ class ASWriter:
         KCUT: int | None = None,
         KCUTCC: int | None = None,
         KCUTI: int | None = None,
+        # Symmetry restrictions
+        NAST: int | None = None,
+        NASTJ: int | None = None,
+        NASTS: int | None = None,
+        NASTP: int | None = None,
+        NASTPJ: int | None = None,
         **kwargs,
     ) -> None:
         """
@@ -252,16 +258,43 @@ class ASWriter:
             - Controls which target states can photoionize/autoionize
             - Positive: First KCUTI target states only
             - Used with RUN='PI', 'AI', or 'RR' calculations
+        NAST : int, optional
+            Number of allowed spectroscopic terms (LS coupling):
+            - Restricts calculation to specific SLπ terms
+            - Followed by NAST values of (2S+1, L, π) in data section
+            - Use with CUP='LS' for term-specific calculations
+            - Example: NAST=2 to restrict to ground and first excited term
+        NASTJ : int, optional
+            Number of allowed levels (IC coupling):
+            - Restricts calculation to specific LSJπ levels
+            - Followed by NASTJ values of (2S+1, L, 2J, π) in data section
+            - Use with CUP='IC' for level-specific calculations
+            - More restrictive than NAST (specifies J quantum number)
+        NASTS : int, optional
+            Number of allowed LS terms for continuum states:
+            - Restricts which LS terms can couple to continuum
+            - Use with RUN='PI', 'RR' for term-selective photoionization
+            - Followed by NASTS values of (2S+1, L, π)
+        NASTP : int, optional
+            Number of allowed parent terms for autoionization:
+            - Restricts parent ion terms in autoionization
+            - Use with RUN='AI' or when MXCCF > 0
+            - Followed by NASTP values of (2S+1, L, π)
+        NASTPJ : int, optional
+            Number of allowed parent levels for autoionization:
+            - Similar to NASTP but for IC coupling (includes J)
+            - Followed by NASTPJ values of (2S+1, L, 2J, π)
+            - Most restrictive parent specification
         **kwargs : dict
             Additional SALGEB parameters for advanced usage.
-            Common options: NAST, NASTJ, ICFG, NXTRA, NMETA, etc.
+            Common options: ICFG, NXTRA, LXTRA, NMETA, TARGET, etc.
             See AUTOSTRUCTURE manual for complete list.
 
         Notes
         -----
         If using configs_from_atomkit(), MXCONF and MXVORB will be set
         automatically and don't need to be specified here.
-        
+
         Core specification (KCOR1/KCOR2 or KORB1/KORB2) is important for:
         - Defining correlation in structure calculations
         - Core model potential for R-matrix calculations
@@ -271,16 +304,16 @@ class ASWriter:
         --------
         Basic structure calculation:
         >>> asw.add_salgeb(CUP='IC', RAD='E1')
-        
+
         With 1s closed core (He-like core):
         >>> asw.add_salgeb(CUP='LS', RAD='E1', KCOR1=1, KCOR2=1)
-        
+
         With Ne-like core (1s2.2s2.2p6):
         >>> asw.add_salgeb(CUP='IC', RAD='E1', KCOR1=1, KCOR2=3)
-        
+
         Photoionization without autoionization:
         >>> asw.add_salgeb(RUN='PI', CUP='LS', AUGER='NO')
-        
+
         With Born collision strengths:
         >>> asw.add_salgeb(CUP='IC', RAD='ALL', BORN='INF')
         """
@@ -334,6 +367,18 @@ class ASWriter:
             params["KCUTCC"] = KCUTCC
         if KCUTI is not None:
             params["KCUTI"] = KCUTI
+
+        # Symmetry restrictions
+        if NAST is not None:
+            params["NAST"] = NAST
+        if NASTJ is not None:
+            params["NASTJ"] = NASTJ
+        if NASTS is not None:
+            params["NASTS"] = NASTS
+        if NASTP is not None:
+            params["NASTP"] = NASTP
+        if NASTPJ is not None:
+            params["NASTPJ"] = NASTPJ
 
         # Add any additional parameters
         for key, value in kwargs.items():

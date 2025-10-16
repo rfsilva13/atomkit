@@ -236,13 +236,13 @@ class TestSALGEBNamelist:
         asw.write_header("Test with complete fine-structure")
         # Heavy element calculation with all fine-structure
         asw.add_salgeb(
-            CUP="IC", 
+            CUP="IC",
             RAD="E1",
             KUTSS=1,  # spin-spin
             KUTSO=1,  # spin-orbit
             KUTOO=1,  # orbit-orbit
             KCOR1=1,
-            KCOR2=3
+            KCOR2=3,
         )
 
         content = asw.get_content()
@@ -343,17 +343,91 @@ class TestSALGEBNamelist:
             CUP="IC",
             RAD="E1",
             MXCCF=20,
-            KCUT=-15,    # First 15 spectroscopic + correlation
-            KCUTCC=10,   # First 10 (N+1) configs
-            KCUTI=5,     # First 5 target states
+            KCUT=-15,  # First 15 spectroscopic + correlation
+            KCUTCC=10,  # First 10 (N+1) configs
+            KCUTI=5,  # First 5 target states
             KCOR1=1,
-            KCOR2=2
+            KCOR2=2,
         )
 
         content = asw.get_content()
         assert "KCUT=-15" in content
         assert "KCUTCC=10" in content
         assert "KCUTI=5" in content
+
+    def test_salgeb_with_nast(self):
+        """Test SALGEB with NAST (term restriction in LS coupling)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with NAST")
+        # NAST=2 restricts to 2 specific LS terms
+        asw.add_salgeb(CUP="LS", RAD="E1", NAST=2)
+
+        content = asw.get_content()
+        assert "NAST=2" in content
+        assert "CUP='LS'" in content
+
+    def test_salgeb_with_nastj(self):
+        """Test SALGEB with NASTJ (level restriction in IC coupling)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with NASTJ")
+        # NASTJ=5 restricts to 5 specific LSJ levels
+        asw.add_salgeb(CUP="IC", RAD="E1", NASTJ=5)
+
+        content = asw.get_content()
+        assert "NASTJ=5" in content
+        assert "CUP='IC'" in content
+
+    def test_salgeb_with_nasts(self):
+        """Test SALGEB with NASTS (continuum term restriction)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with NASTS")
+        # NASTS=3 for photoionization to specific continuum terms
+        asw.add_salgeb(RUN="PI", CUP="LS", RAD="  ", NASTS=3)
+
+        content = asw.get_content()
+        assert "NASTS=3" in content
+        assert "RUN='PI'" in content
+
+    def test_salgeb_with_nastp(self):
+        """Test SALGEB with NASTP (parent term restriction)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with NASTP")
+        # NASTP=2 restricts autoionization to specific parent terms
+        asw.add_salgeb(RUN="AI", CUP="LS", RAD="E1", MXCCF=10, NASTP=2)
+
+        content = asw.get_content()
+        assert "NASTP=2" in content
+        assert "RUN='AI'" in content
+
+    def test_salgeb_with_nastpj(self):
+        """Test SALGEB with NASTPJ (parent level restriction)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with NASTPJ")
+        # NASTPJ=4 restricts autoionization to specific parent levels
+        asw.add_salgeb(RUN="AI", CUP="IC", RAD="E1", MXCCF=15, NASTPJ=4)
+
+        content = asw.get_content()
+        assert "NASTPJ=4" in content
+        assert "MXCCF=15" in content
+
+    def test_salgeb_with_multiple_symmetry_restrictions(self):
+        """Test SALGEB with multiple symmetry restrictions."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with multiple symmetry parameters")
+        # Photoionization with term restrictions on both bound and continuum
+        asw.add_salgeb(
+            RUN="PI",
+            CUP="LS",
+            RAD="  ",
+            NAST=3,   # 3 bound terms
+            NASTS=2,  # 2 continuum terms
+            KCOR1=1,
+            KCOR2=1
+        )
+
+        content = asw.get_content()
+        assert "NAST=3" in content
+        assert "NASTS=2" in content
 
 
 class TestSMINIMNamelist:
