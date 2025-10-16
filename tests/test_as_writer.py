@@ -674,6 +674,192 @@ class TestSMINIMNamelist:
         content = asw.get_content()
         assert "NPRN=1" in content
 
+    # Phase 2: Optimization control tests
+    def test_sminim_with_iwght(self):
+        """Test SMINIM with weighting scheme."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=26, IWGHT=0)
+        content = asw.get_content()
+        assert "IWGHT=0" in content
+
+    def test_sminim_with_orthog(self):
+        """Test SMINIM with orthogonalization method."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=26, ORTHOG="YES")
+        content = asw.get_content()
+        assert "ORTHOG='YES'" in content
+
+    def test_sminim_with_mcfmx(self):
+        """Test SMINIM with configuration for TFD potential."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=26, MCFMX=3)
+        content = asw.get_content()
+        assert "MCFMX=3" in content
+
+    def test_sminim_with_nfix_mgrp(self):
+        """Test SMINIM with tied scaling parameters and groups."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=26, NFIX=2, MGRP=3)
+        content = asw.get_content()
+        assert "NFIX=2" in content
+        assert "MGRP=3" in content
+
+    def test_sminim_with_nocc(self):
+        """Test SMINIM with user-defined occupations."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=26, NOCC=5)
+        content = asw.get_content()
+        assert "NOCC=5" in content
+
+    def test_sminim_with_ifix(self):
+        """Test SMINIM with fixed orbitals."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=26, IFIX=3)
+        content = asw.get_content()
+        assert "IFIX=3" in content
+
+    # Phase 2: Potential specification tests
+    def test_sminim_with_mexpot(self):
+        """Test SMINIM with exchange potential."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=26, MEXPOT=1)
+        content = asw.get_content()
+        assert "MEXPOT=1" in content
+
+    def test_sminim_with_ppot(self):
+        """Test SMINIM with plasma potential."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=26, PPOT="ION")
+        content = asw.get_content()
+        assert "PPOT='ION'" in content
+
+    def test_sminim_with_print_unform(self):
+        """Test SMINIM with unformatted output."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=26, PRINT="UNFORM")
+        content = asw.get_content()
+        assert "PRINT='UNFORM'" in content
+
+    def test_sminim_with_radout(self):
+        """Test SMINIM with radial output for R-matrix."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=26, RADOUT="YES")
+        content = asw.get_content()
+        assert "RADOUT='YES'" in content
+
+    def test_sminim_with_maxe(self):
+        """Test SMINIM with maximum scattering energy."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=26, MAXE=150.0)
+        content = asw.get_content()
+        assert "MAXE=150.0" in content
+
+    # Phase 2: Energy shifts tests
+    def test_sminim_with_ishftls(self):
+        """Test SMINIM with LS energy shifts."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=26, ISHFTLS=5)
+        content = asw.get_content()
+        assert "ISHFTLS=5" in content
+
+    def test_sminim_with_ishftic(self):
+        """Test SMINIM with IC energy shifts."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=26, ISHFTIC=10)
+        content = asw.get_content()
+        assert "ISHFTIC=10" in content
+
+    # Phase 2: Relativistic options tests
+    def test_sminim_with_irel(self):
+        """Test SMINIM with relativistic treatment."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=92, IREL=2)
+        content = asw.get_content()
+        assert "IREL=2" in content
+
+    def test_sminim_with_inuke(self):
+        """Test SMINIM with nuclear charge distribution."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=92, INUKE=1)
+        content = asw.get_content()
+        assert "INUKE=1" in content
+
+    def test_sminim_with_ibreit(self):
+        """Test SMINIM with Breit interaction."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=92, IBREIT=1)
+        content = asw.get_content()
+        assert "IBREIT=1" in content
+
+    def test_sminim_with_qed(self):
+        """Test SMINIM with QED corrections."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=92, QED=1)
+        content = asw.get_content()
+        assert "QED=1" in content
+
+    def test_sminim_with_irtard(self):
+        """Test SMINIM with retardation effects."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=92, IRTARD=1)
+        content = asw.get_content()
+        assert "IRTARD=1" in content
+
+    # Phase 2: Advanced bundling tests
+    def test_sminim_with_nmetar(self):
+        """Test SMINIM with electron-target bundling."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=26, NMETAR=2)
+        content = asw.get_content()
+        assert "NMETAR=2" in content
+
+    def test_sminim_with_nmetarj(self):
+        """Test SMINIM with electron-target level bundling."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=26, NMETARJ=5)
+        content = asw.get_content()
+        assert "NMETARJ=5" in content
+
+    def test_sminim_with_nrslmx(self):
+        """Test SMINIM with radiative data bundling."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=26, NRSLMX=50000)
+        content = asw.get_content()
+        assert "NRSLMX=50000" in content
+
+    def test_sminim_with_nmetap(self):
+        """Test SMINIM with photon-target bundling."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=26, NMETAP=999999)
+        content = asw.get_content()
+        assert "NMETAP=999999" in content
+
+    def test_sminim_with_nmetapj(self):
+        """Test SMINIM with photon-target level bundling."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=26, NMETAPJ=999999)
+        content = asw.get_content()
+        assert "NMETAPJ=999999" in content
+
+    def test_sminim_with_nden(self):
+        """Test SMINIM with plasma density/temperature pairs."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=26, PPOT="ION", NDEN=5)
+        content = asw.get_content()
+        assert "NDEN=5" in content
+
+    def test_sminim_comprehensive_relativistic(self):
+        """Test SMINIM with comprehensive relativistic setup."""
+        asw = ASWriter("test.dat")
+        asw.add_sminim(NZION=92, IREL=2, INUKE=1, IBREIT=1, QED=1, IRTARD=1)
+        content = asw.get_content()
+        assert "NZION=92" in content
+        assert "IREL=2" in content
+        assert "INUKE=1" in content
+        assert "IBREIT=1" in content
+        assert "QED=1" in content
+        assert "IRTARD=1" in content
+
 
 class TestSRADCONNamelist:
     """Test SRADCON namelist generation."""
@@ -697,6 +883,63 @@ class TestSRADCONNamelist:
         assert "&SRADCON" in content
         assert "&END" in content
 
+    # Phase 3: Additional energy grids tests
+    def test_sradcon_with_mengi(self):
+        """Test SRADCON with interpolation energies."""
+        asw = ASWriter("test.dat")
+        asw.add_sradcon(MENG=-15, EMIN=0.0, EMAX=1000.0, MENGI=10)
+        content = asw.get_content()
+        assert "MENGI=10" in content
+
+    def test_sradcon_with_nde(self):
+        """Test SRADCON with excitation energies."""
+        asw = ASWriter("test.dat")
+        asw.add_sradcon(MENG=-15, EMIN=0.0, EMAX=100.0, NDE=-10, DEMIN=0.0, DEMAX=50.0)
+        content = asw.get_content()
+        assert "NDE=-10" in content
+        assert "DEMIN=0.0" in content
+        assert "DEMAX=50.0" in content
+
+    def test_sradcon_with_nidx(self):
+        """Test SRADCON with extra energies beyond EMAX."""
+        asw = ASWriter("test.dat")
+        asw.add_sradcon(MENG=-15, EMIN=0.0, EMAX=100.0, NIDX=5)
+        content = asw.get_content()
+        assert "NIDX=5" in content
+
+    def test_sradcon_with_ecorls(self):
+        """Test SRADCON with LS energy correction."""
+        asw = ASWriter("test.dat")
+        asw.add_sradcon(MENG=-15, EMIN=0.0, EMAX=100.0, ECORLS=0.5)
+        content = asw.get_content()
+        assert "ECORLS=0.5" in content
+
+    def test_sradcon_with_ecoric(self):
+        """Test SRADCON with IC energy correction."""
+        asw = ASWriter("test.dat")
+        asw.add_sradcon(MENG=-15, EMIN=0.0, EMAX=100.0, ECORIC=0.3)
+        content = asw.get_content()
+        assert "ECORIC=0.3" in content
+
+    def test_sradcon_comprehensive(self):
+        """Test SRADCON with multiple advanced parameters."""
+        asw = ASWriter("test.dat")
+        asw.add_sradcon(
+            MENG=-20,
+            EMIN=0.0,
+            EMAX=150.0,
+            NDE=-10,
+            DEMIN=0.0,
+            DEMAX=75.0,
+            ECORIC=0.5,
+            NIDX=3,
+        )
+        content = asw.get_content()
+        assert "MENG=-20" in content
+        assert "NDE=-10" in content
+        assert "ECORIC=0.5" in content
+        assert "NIDX=3" in content
+
 
 class TestDRRNamelist:
     """Test DRR namelist generation."""
@@ -718,6 +961,58 @@ class TestDRRNamelist:
 
         content = asw.get_content()
         assert "NMESH=-1" in content
+
+    # Phase 4: Advanced DRR tests
+    def test_drr_with_nrad(self):
+        """Test DRR with radiation control."""
+        asw = ASWriter("test.dat")
+        asw.add_drr(NMIN=3, NMAX=20, LMAX=7, NRAD=100)
+        content = asw.get_content()
+        assert "NRAD=100" in content
+
+    def test_drr_with_lcon(self):
+        """Test DRR with continuum l-values."""
+        asw = ASWriter("test.dat")
+        asw.add_drr(NMIN=3, NMAX=15, LMAX=7, LCON=8)
+        content = asw.get_content()
+        assert "LCON=8" in content
+
+    def test_drr_comprehensive(self):
+        """Test DRR with all advanced parameters."""
+        asw = ASWriter("test.dat")
+        asw.add_drr(NMIN=3, NMAX=20, LMIN=0, LMAX=9, NMESH=-1, NRAD=100, LCON=10)
+        content = asw.get_content()
+        assert "NMIN=3" in content
+        assert "NMAX=20" in content
+        assert "LMAX=9" in content
+        assert "NMESH=-1" in content
+        assert "NRAD=100" in content
+        assert "LCON=10" in content
+
+
+class TestSRADWINNamelist:
+    """Test SRADWIN namelist generation."""
+
+    def test_sradwin_default(self):
+        """Test basic SRADWIN namelist with default KEY."""
+        asw = ASWriter("test.dat")
+        asw.add_sradwin()
+        content = asw.get_content()
+        assert "&SRADWIN KEY=-9 &END" in content
+
+    def test_sradwin_with_sto(self):
+        """Test SRADWIN for STO orbitals."""
+        asw = ASWriter("test.dat")
+        asw.add_sradwin(KEY=-10)
+        content = asw.get_content()
+        assert "KEY=-10" in content
+
+    def test_sradwin_with_apap(self):
+        """Test SRADWIN for APAP format orbitals."""
+        asw = ASWriter("test.dat")
+        asw.add_sradwin(KEY=-9)
+        content = asw.get_content()
+        assert "KEY=-9" in content
 
 
 class TestManualConfiguration:

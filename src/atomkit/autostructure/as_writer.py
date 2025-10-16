@@ -750,7 +750,43 @@ class ASWriter:
         }
 
     def add_sminim(
-        self, NZION: int, INCLUD: int = 0, NLAM: int = 0, NVAR: int = 0, **kwargs
+        self,
+        NZION: int,
+        INCLUD: int = 0,
+        NLAM: int = 0,
+        NVAR: int = 0,
+        # Optimization control
+        IWGHT: int = 1,
+        ORTHOG: str | None = None,
+        MCFMX: int = 0,
+        NFIX: int | None = None,
+        MGRP: int | None = None,
+        NOCC: int = 0,
+        IFIX: int | None = None,
+        # Potential specification
+        MEXPOT: int = 0,
+        PPOT: str | None = None,
+        # Output control
+        PRINT: str = "FORM",
+        RADOUT: str = "NO",
+        MAXE: float | None = None,
+        # Energy shifts
+        ISHFTLS: int = 0,
+        ISHFTIC: int = 0,
+        # Relativistic options (for CUP='ICR')
+        IREL: int = 1,
+        INUKE: int | None = None,
+        IBREIT: int = 0,
+        QED: int = 0,
+        IRTARD: int = 0,
+        # Advanced bundling
+        NMETAR: int | None = None,
+        NMETARJ: int | None = None,
+        NRSLMX: int = 10000,
+        NMETAP: int | None = None,
+        NMETAPJ: int | None = None,
+        NDEN: int | None = None,
+        **kwargs,
     ) -> None:
         """
         Add SMINIM namelist (radial potential and minimization).
@@ -772,19 +808,143 @@ class ASWriter:
         NVAR : int, optional
             Number of variational parameters to optimize.
             Default is 0 (no optimization)
+        
+        Optimization Control
+        --------------------
+        IWGHT : int, optional
+            Weighting scheme for variational minimization:
+            = 1: Weight by 2J+1 (default)
+            = 0: Equal weights
+            = -1: Use user-specified weights
+        ORTHOG : str, optional
+            Orthogonalization method:
+            'YES': Schmidt orthogonalization
+            'NO': No orthogonalization
+            'LPS': Löwdin-Pauncz-Schwartz orthogonalization
+            None: Auto-select (default)
+        MCFMX : int, optional
+            Configuration index for statistical TFD potential.
+            = 0: Use average (default)
+            > 0: Use specific configuration
+        NFIX : int, optional
+            Number of tied scaling parameters.
+            Allows multiple orbitals to share the same lambda.
+        MGRP : int, optional
+            Number of orbital epsilon groups for grouping orbitals
+            with similar energies in optimization.
+        NOCC : int, optional
+            Number of user-defined occupation numbers.
+            = 0: Use default occupations (default)
+            > 0: Read NOCC occupation specifications
+        IFIX : int, optional
+            Fix certain orbitals in self-consistent calculation:
+            = 0: Optimize all orbitals
+            > 0: Fix first IFIX orbitals from STO/previous calc
+        
+        Potential Specification
+        -----------------------
+        MEXPOT : int, optional
+            Exchange potential:
+            = 0: Hartree only (default)
+            = 1: Hartree + local exchange approximation
+        PPOT : str, optional
+            Plasma potential specification:
+            'SCCA': Self-consistent continuum approximation
+            'FAC': Flexible atomic code potential
+            None: No plasma effects (default)
+            Or specify 'ION' for ion-sphere model
+        
+        Output Control
+        --------------
+        PRINT : str, optional
+            Output format:
+            'FORM': Formatted detailed output (default)
+            'UNFORM': Unformatted compact output
+        RADOUT : str, optional
+            Radial function output for R-matrix:
+            'YES': Write radial functions
+            'NO': Don't write (default)
+        MAXE : float, optional
+            Maximum scattering energy in Rydbergs.
+            Used for photoionization/collision calculations.
+        
+        Energy Shifts
+        -------------
+        ISHFTLS : int, optional
+            Energy shifts in LS coupling:
+            = 0: No shifts (default)
+            > 0: Read ISHFTLS term energy shifts
+        ISHFTIC : int, optional
+            Energy shifts in IC coupling:
+            = 0: No shifts (default)
+            > 0: Read ISHFTIC level energy shifts
+        
+        Relativistic Options (for CUP='ICR')
+        ------------------------------------
+        IREL : int, optional
+            Relativistic treatment:
+            = 1: Large component only (default)
+            = 2: Large + small components
+        INUKE : int, optional
+            Nuclear charge distribution:
+            = -1: Point nucleus
+            = 0: Uniform sphere
+            = 1: Fermi distribution
+            None: Auto-select based on Z (default)
+        IBREIT : int, optional
+            Breit interaction:
+            = 0: Standard Breit (default)
+            = 1: Generalized Breit
+        QED : int, optional
+            QED corrections:
+            = 0: No QED (default)
+            = 1: Vacuum polarization + self-energy
+            = -1: Include additional QED terms
+        IRTARD : int, optional
+            Retardation effects:
+            = 0: No retardation (default)
+            = 1: Full retardation
+        
+        Advanced Data Bundling (for large calculations)
+        -----------------------------------------------
+        NMETAR : int, optional
+            Electron-target bundling resolution.
+            Groups (N+1)-electron terms for memory efficiency.
+        NMETARJ : int, optional
+            Electron-target level bundling resolution.
+            Groups (N+1)-electron levels for memory efficiency.
+        NRSLMX : int, optional
+            Radiative data bundling limit.
+            = 10000: Default maximum
+        NMETAP : int, optional
+            Photon-target bundling resolution.
+            Groups target terms for photoionization.
+        NMETAPJ : int, optional
+            Photon-target level bundling resolution.
+            Groups target levels for photoionization.
+        NDEN : int, optional
+            Number of plasma density/temperature pairs.
+            Used with PPOT for plasma calculations.
+        
         **kwargs : dict
-            Additional SMINIM parameters:
-            - PRINT: 'FORM' (default, detailed) or 'UNFORM' (compact)
-            - MAXE: Maximum scattering energy (Rydbergs)
-            - ORTHOG: 'YES'/'NO' for Schmidt orthogonalization
-            - IREL: Relativistic mode (for CUP='ICR')
-            - INUKE: Nuclear model (for relativistic calculations)
-            - QED: QED corrections (0=off, 1=on)
+            Additional SMINIM parameters not explicitly listed.
 
         Examples
         --------
-        >>> asw.add_sminim(NZION=6)  # Carbon
-        >>> asw.add_sminim(NZION=26, INCLUD=6, NLAM=3, NVAR=2)  # Optimized Fe
+        >>> # Basic structure calculation
+        >>> asw.add_sminim(NZION=6)
+        
+        >>> # Optimized calculation with lambda parameters
+        >>> asw.add_sminim(NZION=26, INCLUD=6, NLAM=3, NVAR=2, IWGHT=1)
+        
+        >>> # Relativistic calculation with QED
+        >>> asw.add_sminim(NZION=92, IREL=2, QED=1, INUKE=1)
+        
+        >>> # Large DR calculation with bundling
+        >>> asw.add_sminim(NZION=26, NMETAR=2, NRSLMX=50000)
+        
+        >>> # Plasma calculation
+        >>> asw.add_sminim(NZION=26, PPOT='ION', NDEN=5)
         """
         params: dict[str, int | str | float] = {"NZION": NZION}
 
@@ -794,6 +954,68 @@ class ASWriter:
             params["NLAM"] = NLAM
         if NVAR != 0:
             params["NVAR"] = NVAR
+
+        # Optimization control
+        if IWGHT != 1:
+            params["IWGHT"] = IWGHT
+        if ORTHOG is not None:
+            params["ORTHOG"] = self._quote_value(ORTHOG)
+        if MCFMX != 0:
+            params["MCFMX"] = MCFMX
+        if NFIX is not None:
+            params["NFIX"] = NFIX
+        if MGRP is not None:
+            params["MGRP"] = MGRP
+        if NOCC != 0:
+            params["NOCC"] = NOCC
+        if IFIX is not None:
+            params["IFIX"] = IFIX
+
+        # Potential specification
+        if MEXPOT != 0:
+            params["MEXPOT"] = MEXPOT
+        if PPOT is not None:
+            params["PPOT"] = self._quote_value(PPOT)
+
+        # Output control
+        if PRINT != "FORM":
+            params["PRINT"] = self._quote_value(PRINT)
+        if RADOUT != "NO":
+            params["RADOUT"] = self._quote_value(RADOUT)
+        if MAXE is not None:
+            params["MAXE"] = MAXE
+
+        # Energy shifts
+        if ISHFTLS != 0:
+            params["ISHFTLS"] = ISHFTLS
+        if ISHFTIC != 0:
+            params["ISHFTIC"] = ISHFTIC
+
+        # Relativistic options
+        if IREL != 1:
+            params["IREL"] = IREL
+        if INUKE is not None:
+            params["INUKE"] = INUKE
+        if IBREIT != 0:
+            params["IBREIT"] = IBREIT
+        if QED != 0:
+            params["QED"] = QED
+        if IRTARD != 0:
+            params["IRTARD"] = IRTARD
+
+        # Advanced bundling
+        if NMETAR is not None:
+            params["NMETAR"] = NMETAR
+        if NMETARJ is not None:
+            params["NMETARJ"] = NMETARJ
+        if NRSLMX != 10000:
+            params["NRSLMX"] = NRSLMX
+        if NMETAP is not None:
+            params["NMETAP"] = NMETAP
+        if NMETAPJ is not None:
+            params["NMETAPJ"] = NMETAPJ
+        if NDEN is not None:
+            params["NDEN"] = NDEN
 
         # Add any additional parameters
         for key, value in kwargs.items():
@@ -809,6 +1031,15 @@ class ASWriter:
         MENG: int = 0,
         EMIN: float | None = None,
         EMAX: float | None = None,
+        # Additional energy grids
+        MENGI: int | None = None,
+        NDE: int = 0,
+        DEMIN: float | None = None,
+        DEMAX: float | None = None,
+        NIDX: int | None = None,
+        # Energy corrections
+        ECORLS: float = 0.0,
+        ECORIC: float = 0.0,
         **kwargs,
     ) -> None:
         """
@@ -828,15 +1059,54 @@ class ASWriter:
             Minimum continuum energy (Rydbergs)
         EMAX : float, optional
             Maximum continuum energy (Rydbergs)
+        
+        Additional Energy Grids
+        -----------------------
+        MENGI : int, optional
+            Number of interpolation energies for intermediate calculations.
+            Similar to MENG but for internal interpolation.
+        NDE : int, optional
+            Number of excitation energies:
+            = 0: No excitation energies (default)
+            > 0: Read NDE excitation energies
+            < 0: Generate -NDE energies between DEMIN and DEMAX
+        DEMIN : float, optional
+            Minimum excitation energy (Rydbergs).
+            Used when NDE < 0.
+        DEMAX : float, optional
+            Maximum excitation energy (Rydbergs).
+            Used when NDE < 0.
+        NIDX : int, optional
+            Number of extra energies beyond EMAX.
+            Useful for extending the energy grid for specific transitions.
+        
+        Energy Corrections
+        ------------------
+        ECORLS : float, optional
+            Energy correction for target continuum in LS coupling (Rydbergs).
+            = 0.0: No correction (default)
+            Adjusts the target continuum threshold.
+        ECORIC : float, optional
+            Energy correction for target continuum in IC coupling (Rydbergs).
+            = 0.0: No correction (default)
+            Adjusts the target continuum threshold.
+        
         **kwargs : dict
-            Additional SRADCON parameters:
-            - ECORLS/ECORIC: Energy correction for target continuum
-            - NDE: Number of excitation energies
+            Additional SRADCON parameters not explicitly listed.
 
         Examples
         --------
+        >>> # Standard photoionization grid
         >>> asw.add_sradcon(MENG=-15, EMIN=0.0, EMAX=25.0)
-        >>> asw.add_sradcon()  # Auto-select energies
+        
+        >>> # With excitation energies
+        >>> asw.add_sradcon(MENG=-15, EMIN=0.0, EMAX=100.0, NDE=-10, DEMIN=0.0, DEMAX=50.0)
+        
+        >>> # With energy correction
+        >>> asw.add_sradcon(MENG=-20, EMIN=0.0, EMAX=150.0, ECORIC=0.5)
+        
+        >>> # Auto-select energies
+        >>> asw.add_sradcon()
         """
         params = {}
 
@@ -846,6 +1116,24 @@ class ASWriter:
             params["EMIN"] = EMIN
         if EMAX is not None:
             params["EMAX"] = EMAX
+
+        # Additional energy grids
+        if MENGI is not None:
+            params["MENGI"] = MENGI
+        if NDE != 0:
+            params["NDE"] = NDE
+        if DEMIN is not None:
+            params["DEMIN"] = DEMIN
+        if DEMAX is not None:
+            params["DEMAX"] = DEMAX
+        if NIDX is not None:
+            params["NIDX"] = NIDX
+
+        # Energy corrections
+        if ECORLS != 0.0:
+            params["ECORLS"] = ECORLS
+        if ECORIC != 0.0:
+            params["ECORIC"] = ECORIC
 
         # Add any additional parameters
         for key, value in kwargs.items():
@@ -863,6 +1151,10 @@ class ASWriter:
         LMIN: int = 0,
         LMAX: int = 7,
         NMESH: int | None = None,
+        # Radiation control
+        NRAD: int | None = None,
+        # Continuum specification
+        LCON: int | None = None,
         **kwargs,
     ) -> None:
         """
@@ -886,15 +1178,37 @@ class ASWriter:
             > 0: Read NMESH values after namelist
             < 0: Use internal n-mesh (RECOMMENDED for production)
             = None: Don't specify (use AS default)
+        
+        Radiation Control
+        -----------------
+        NRAD : int, optional
+            Principal quantum number above which no new radiative rates
+            are calculated. Default is 1000 in AUTOSTRUCTURE.
+            Useful for limiting computational cost in large calculations.
+            Example: NRAD=100 means rates only computed up to n=100
+        
+        Continuum Specification
+        -----------------------
+        LCON : int, optional
+            Number of continuum l-values to include in calculation.
+            Allows control over angular momentum channels in continuum.
+        
         **kwargs : dict
-            Additional DRR parameters:
-            - NRAD: n-value above which no new radiative rates are calculated
-            - LCON: Number of continuum l-values
+            Additional DRR parameters not explicitly listed.
 
         Examples
         --------
+        >>> # Standard DR calculation
         >>> asw.add_drr(NMIN=3, NMAX=15, LMIN=0, LMAX=7)
+        
+        >>> # With internal n-mesh for production
         >>> asw.add_drr(NMIN=3, NMAX=10, LMIN=0, LMAX=5, NMESH=-1)
+        
+        >>> # Limit radiative rates for efficiency
+        >>> asw.add_drr(NMIN=3, NMAX=20, LMAX=7, NRAD=100)
+        
+        >>> # Control continuum channels
+        >>> asw.add_drr(NMIN=3, NMAX=15, LMAX=7, LCON=8)
         """
         params: dict[str, int | str | float] = {
             "NMIN": NMIN,
@@ -906,6 +1220,14 @@ class ASWriter:
         if NMESH is not None:
             params["NMESH"] = NMESH
 
+        # Radiation control
+        if NRAD is not None:
+            params["NRAD"] = NRAD
+
+        # Continuum specification
+        if LCON is not None:
+            params["LCON"] = LCON
+
         # Add any additional parameters
         for key, value in kwargs.items():
             if isinstance(value, str):
@@ -914,6 +1236,51 @@ class ASWriter:
                 params[key] = value
 
         self._write_namelist("DRR", params)
+
+    def add_sradwin(self, KEY: int = -9, **kwargs) -> None:
+        """
+        Add SRADWIN namelist (external orbital specification).
+
+        This namelist is used to specify external orbitals read from files,
+        typically for calculations using Opacity/Iron Project orbitals or
+        Slater-Type-Orbitals.
+
+        Parameters
+        ----------
+        KEY : int, optional
+            Format specifier:
+            = -9: Opacity/Iron/RmaX/APAP Project format (default)
+            = -10: Free-formatted STO/Clementi orbitals from UNIT5
+            Other values: See AUTOSTRUCTURE manual
+        **kwargs : dict
+            Additional SRADWIN parameters.
+            May include specifications for which orbitals to read.
+
+        Examples
+        --------
+        >>> # Read external orbitals in APAP format
+        >>> asw.add_sradwin(KEY=-9)
+        
+        >>> # Read STO orbitals
+        >>> asw.add_sradwin(KEY=-10)
+
+        Notes
+        -----
+        External orbital files must be provided separately and specified
+        via UNIT assignments in the AUTOSTRUCTURE execution environment.
+        This is an advanced feature - most calculations use internally
+        generated orbitals (no SRADWIN needed).
+        """
+        params: dict[str, int | str | float] = {"KEY": KEY}
+
+        # Add any additional parameters
+        for key, value in kwargs.items():
+            if isinstance(value, str):
+                params[key] = self._quote_value(value)
+            else:
+                params[key] = value
+
+        self._write_namelist("SRADWIN", params)
 
     def get_content(self) -> str:
         """
