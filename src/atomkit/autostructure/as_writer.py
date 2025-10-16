@@ -147,6 +147,8 @@ class ASWriter:
         KUTSS: int | None = None,
         KUTSO: int | None = None,
         KUTOO: int | None = None,
+        # Orbital basis control
+        BASIS: str | None = None,
         **kwargs,
     ) -> None:
         """
@@ -222,9 +224,16 @@ class ASWriter:
             Fine-structure in 2-body orbit-orbit interactions:
             - Same options as KUTSS (default: 0)
             - Important for heavy elements and high precision
+        BASIS : str, optional
+            Orbital basis optimization mode (3 characters):
+            - '   ' (3 spaces): Each configuration has unique orbitals (default)
+            - 'RLX': Relaxed orbitals - optimize for each configuration separately
+            - 'SRLX': Simplified relaxed - partially relaxed basis
+            Note: Use with KCOR specification for core-valence separation.
+            RLX/SRLX reduce size of STO parameter space in R-matrix calculations.
         **kwargs : dict
             Additional SALGEB parameters for advanced usage.
-            Common options: BASIS, KCUT, NAST, NASTJ, ICFG, etc.
+            Common options: KCUT, NAST, NASTJ, ICFG, NXTRA, etc.
             See AUTOSTRUCTURE manual for complete list.
 
         Notes
@@ -292,6 +301,10 @@ class ASWriter:
             params["KUTSO"] = KUTSO
         if KUTOO is not None:
             params["KUTOO"] = KUTOO
+
+        # Orbital basis control
+        if BASIS is not None:
+            params["BASIS"] = self._quote_value(BASIS)
 
         # Add any additional parameters
         for key, value in kwargs.items():

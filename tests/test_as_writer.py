@@ -261,6 +261,35 @@ class TestSALGEBNamelist:
         assert "KUTSS=2" in content
         assert "KUTSO=2" in content
 
+    def test_salgeb_with_basis_unique(self):
+        """Test SALGEB with BASIS='   ' (unique orbitals)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with unique basis")
+        asw.add_salgeb(CUP="IC", RAD="E1", BASIS="   ")
+
+        content = asw.get_content()
+        assert "BASIS='   '" in content
+
+    def test_salgeb_with_basis_rlx(self):
+        """Test SALGEB with BASIS='RLX' (relaxed orbitals)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with relaxed basis")
+        # RLX for R-matrix with core-valence separation
+        asw.add_salgeb(CUP="IC", RAD="E1", BASIS="RLX", KCOR1=1, KCOR2=2)
+
+        content = asw.get_content()
+        assert "BASIS='RLX'" in content
+        assert "KCOR1=1" in content
+
+    def test_salgeb_with_basis_srlx(self):
+        """Test SALGEB with BASIS='SRLX' (simplified relaxed)."""
+        asw = ASWriter("test.dat")
+        asw.write_header("Test with simplified relaxed basis")
+        asw.add_salgeb(CUP="IC", RAD="E1", BASIS="SRLX", KCOR1=1, KCOR2=3)
+
+        content = asw.get_content()
+        assert "BASIS='SRLX'" in content
+
 
 class TestSMINIMNamelist:
     """Test SMINIM namelist generation."""
