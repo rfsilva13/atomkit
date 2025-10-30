@@ -1,8 +1,8 @@
 # AtomKit
 
-![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)
+![Python Version](https://img.shields.io/badge/python-3.13%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Tests](https://img.shields.io/badge/tests-37%20passed-brightgreen)
+![Tests](https://img.shields.io/badge/tests-147%20passed-brightgreen)
 
 ## AtomKit: Code-Agnostic Atomic Physics
 
