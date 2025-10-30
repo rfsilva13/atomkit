@@ -16,7 +16,7 @@ AtomKit's design philosophy is **"Physics First, Code Second."** It abstracts th
 
 ### Core Features
 
-#### 🔬 Physics-First Abstraction
+#### ⚛️ Physics-First Abstraction
 * **Define Calculations Physically:** Structure your problem using high-level physical terms (e.g., coupling schemes, transition types, configurations) instead of code-specific syntax.
 * **Agnostic Workflow:** Automatically translate your physics definitions into the specific input formats for various supported codes (e.g., AUTOSTRUCTURE, FAC, GRASP).
 * **Interchangeable Codes:** Seamlessly switch between different atomic codes without needing to rewrite your entire workflow.
