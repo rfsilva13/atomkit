@@ -4,28 +4,31 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Tests](https://img.shields.io/badge/tests-37%20passed-brightgreen)
 
-**Code-Agnostic Atomic Physics Made Simple**
+## AtomKit: Code-Agnostic Atomic Physics
 
-AtomKit is a modern Python framework for atomic structure calculations and spectroscopic data analysis that works seamlessly with multiple atomic physics codes. Think of it as a universal translator and analysis platform for atomic physics—define your physics once, run it anywhere, analyze it consistently.
+AtomKit is a modern Python framework for atomic structure calculations and spectroscopic data analysis. It acts as a universal translator and a unified analysis platform, allowing you to define your physics calculations once and run them across multiple atomic physics codes.
 
-## Why AtomKit?
+### Why Use AtomKit?
 
-**🔬 Physics First, Code Second**
-- Define atomic calculations in physical terms (coupling schemes, transition types, configurations)
-- Automatically translate to code-specific formats (AUTOSTRUCTURE, FAC, GRASP, etc.)
-- Switch between codes without rewriting your workflow
+AtomKit's design philosophy is **"Physics First, Code Second."** It abstracts the underlying code implementation, letting you focus on the physics.
 
-**📊 Unified Analysis Pipeline**
-- Parse outputs from different codes into consistent formats
-- Compare results across multiple codes seamlessly
-- Generate publication-ready plots and tables
-- Export data for radiative transfer codes, databases, and modeling platforms
+---
 
-**🎯 Production Ready**
-- Battle-tested with official AUTOSTRUCTURE test suite
-- Used for stellar atmosphere modeling and plasma diagnostics
-- Comprehensive test coverage and validation
-- Clean, maintainable, well-documented codebase
+### Core Features
+
+#### 🔬 Physics-First Abstraction
+* **Define Calculations Physically:** Structure your problem using high-level physical terms (e.g., coupling schemes, transition types, configurations) instead of code-specific syntax.
+* **Agnostic Workflow:** Automatically translate your physics definitions into the specific input formats for various supported codes (e.g., AUTOSTRUCTURE, FAC, GRASP).
+* **Interchangeable Codes:** Seamlessly switch between different atomic codes without needing to rewrite your entire workflow.
+
+#### 📊 Unified Analysis & Visualization
+* **Agnostic Parsing:** Ingest and parse the outputs from different codes into a single, consistent, and easy-to-use data structure.
+* **Comparative Analysis:** Directly compare results (e.g., energy levels, transition probabilities) from multiple codes in one environment.
+* **Data Visualization:** Generate a wide range of analysis plots and publication-ready tables directly from the unified data objects.
+
+#### 🎯 Versatile Data Export
+* **Standardized Output:** Export your processed and analyzed data into common formats.
+* **Cross-Platform Integration:** Create outputs ready for use in other scientific platforms, including radiative transfer codes, plasma modeling suites, and spectroscopic databases.
 
 ## Core Capabilities
 
