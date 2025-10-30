@@ -105,6 +105,7 @@ class AutostructureBackend(Backend):
                 "CAR",
                 "LSR",
                 "ICR",
+                "jj",  # Approximated by IC in AUTOSTRUCTURE
             ],
             "relativistic": ["none", "Breit", "Breit_full", "QED", "retardation"],
             "qed": True,
@@ -174,7 +175,6 @@ class AutostructureBackend(Backend):
         params: dict[str, Any] = {}
 
         # Coupling: Direct mapping to CUP (no modification needed!)
-        # Only add if not default ICR to match reference files
         if calc.coupling is not None:
             coupling_map = {
                 "CA": "CA",
@@ -186,10 +186,10 @@ class AutostructureBackend(Backend):
                 "CAR": "CAR",
                 "LSR": "LSR",
                 "ICR": "ICR",
+                "jj": "IC",  # AUTOSTRUCTURE approximates jj with IC
             }
-            cup_value = coupling_map.get(calc.coupling, "ICR")
-            if cup_value != "ICR":  # Only add if not default
-                params["CUP"] = cup_value
+            cup_value = coupling_map.get(calc.coupling, "LS")
+            params["CUP"] = cup_value  # Always add CUP parameter
 
         # Relativistic: Independent additions (NOT modifying CUP!)
         if calc.relativistic == "Breit" or calc.relativistic == "Breit_full":
@@ -303,28 +303,67 @@ class AutostructureBackend(Backend):
         asw.write_header(f"{calc.element} {calc.charge}+ {calc.calculation_type}")
 
         # Add SALGEB with translated parameters
-        # Only include non-default values to match reference files
         salgeb_params = {}
 
-        # Only add CUP if not default LS
-        if "CUP" in params and params["CUP"] != "LS":
-            salgeb_params["CUP"] = params["CUP"]
-        else:
-            salgeb_params["CUP"] = None  # Explicitly None to skip it
+        # SALGEB-specific parameters (not SMINIM, SRADCON, DRR)
+        # Parameters that belong in SALGEB namelist
+        salgeb_keys = {
+            "CUP",
+            "RAD",
+            "RUN",
+            "MXCONF",
+            "MXVORB",
+            "MXCCF",
+            "KCOR1",
+            "KCOR2",
+            "KORB1",
+            "KORB2",
+            "KORB",
+            "AUGER",
+            "BORN",
+            "BP",
+            "KUTSS",
+            "KUTSO",
+            "KUTOO",
+            "BASIS",
+            "KCUT",
+            "KCUTCC",
+            "KCUTI",
+            "NAST",
+            "NASTJ",
+            "NASTS",
+            "NASTP",
+            "NASTPJ",
+            "ICFG",
+            "NXTRA",
+            "LXTRA",
+            "IFILL",
+            "MINLT",
+            "MAXLT",
+            "MINST",
+            "MAXST",
+            "MINJT",
+            "MAXJT",
+            "MAXLX",
+            "MXLAMX",
+            "LRGLAM",
+            "KUTOOX",
+            "KUTSSX",
+            "MAXJFS",
+            "KPOLE",
+            "KPOLM",
+            "NMETA",
+            "NMETAJ",
+            "INAST",
+            "INASTJ",
+            "TARGET",
+            "MSTART",
+            "KUTDSK",
+            "KUTLS",
+        }
 
-        # Only add RAD if specified (not empty/default)
-        if "RAD" in params and params["RAD"].strip():
-            salgeb_params["RAD"] = params["RAD"]
-        else:
-            salgeb_params["RAD"] = None  # Explicitly None to skip it
-
-        # Always add RUN, KCOR if present
-        for key in ["RUN", "KCOR1", "KCOR2"]:
-            if key in params:
-                salgeb_params[key] = params[key]
-
-        # Add advanced parameters to SALGEB
-        for key in ["ICFG", "NXTRA", "LXTRA", "BASIS"]:
+        # Add all SALGEB parameters from params
+        for key in salgeb_keys:
             if key in params:
                 salgeb_params[key] = params[key]
 
@@ -423,10 +462,18 @@ class AutostructureBackend(Backend):
 
         # Add DRR for DR/RR calculations
         if calc.calculation_type in ["DR", "RR"]:
+            # Collect DRR parameters from code_options
+            drr_params = {}
+            drr_keys = {"NMIN", "NMAX", "JND", "LMIN", "LMAX", "NMESH", "RNUC"}
+            if calc.code_options:
+                for k in drr_keys:
+                    if k in calc.code_options:
+                        drr_params[k] = calc.code_options[k]
+
             # Use sensible defaults if not specified
-            drr_params = calc.code_options.get("DRR", {}) if calc.code_options else {}
             drr_params.setdefault("NMIN", 3)
             drr_params.setdefault("NMAX", 15)
+            drr_params.setdefault("LMIN", 0)
             drr_params.setdefault("LMAX", 7)
             drr_params.setdefault("NMESH", -1)  # Production mesh
             asw.add_drr(**drr_params)
@@ -468,8 +515,12 @@ class FACBackend(Backend):
     def capabilities(self) -> dict[str, Any]:
         """Report FAC capabilities."""
         return {
-            "coupling_schemes": [],  # FAC cannot change coupling (always jj-based)
-            "relativistic": ["Breit", "QED"],  # Always Dirac, can add Breit/QED
+            "coupling_schemes": ["jj"],  # FAC is always jj-based (Dirac)
+            "relativistic": [
+                "Dirac",
+                "Breit",
+                "QED",
+            ],  # Always Dirac, can add Breit/QED
             "qed": True,
             "optimization": ["energy", "potential"],
             "calculation_types": [
@@ -482,8 +533,8 @@ class FACBackend(Backend):
                 "collision",
             ],
             "limitations": [
-                "Always fully relativistic (Dirac equation)",
                 "Always jj-coupling based (cannot change to LS/IC)",
+                "Always fully relativistic (Dirac equation)",
                 "Can request LS term labels but physics is jj",
                 "No lambda scaling (uses potential optimization)",
             ],

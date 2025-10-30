@@ -1,0 +1,7 @@
+A.S. CADW for all Be-like CFs 2ln'l' up to n=5. Use MXVORB<0 for standard order.
+ &SALGEB RUN='DE' RAD='YES' CUP='CA' MXVORB=-14 MXCONF=1 ICFG=1 NMETA=99 KCOR1=1 KCOR2=1 &END
+ 14*0                !minimum occupation nos
+ 14*1                !maximum occupation nos
+ 1 1 12*0  1         !base config and no. of promotions
+ &SMINIM NZION=26 MAXE=500 &END
+ &SRADCON &END

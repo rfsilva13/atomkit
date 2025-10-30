@@ -1,0 +1,6 @@
+A.S. Generate all Be-like CFs nln'l' up to n=5. Use MXVORB<0 for standard order.
+ &SALGEB KCOR1=1 KCOR2=1 MXVORB=-14 MXCONF=1 ICFG=1 &END
+ 14*0                !minimum occupation nos
+ 14*2                !maximum occupation nos
+ 2 13*0  2           !base config and no. of promotions
+ &SMINIM NZION=26 &END

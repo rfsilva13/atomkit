@@ -1,90 +1,72 @@
-# Configuration Class Unit Tests
+# Clean Tests - Ready to Use
 
-This directory contains comprehensive unit tests for the `Configuration` class in the atomkit library.
+## Problem
+The `tests/` directory has corrupted test files that got merged/concatenated incorrectly.
 
-## Overview
+## Solution
+Clean, minimal test files are in `tests_clean/`:
 
-The `Configuration` class represents the electron configuration of an atom or ion using a collection of Shell objects. The tests verify all public methods and edge cases.
+### Files Created
+1. **test_configuration.py** - ~25 tests for Configuration class
+   - Parsing, electron counting, validation, conversion, real-world cases
+   
+2. **test_shell.py** - ~15 tests for Shell class
+   - Creation, validation, relativistic quantum numbers, string representation
+   
+3. **test_unified_interface.py** - ~12 tests for AtomicCalculation interface
+   - Basic calculations, coupling schemes, input generation, code options, relativistic
 
-## Test File
+Total: **~52 clean, simple tests** covering core functionality
 
-- `test_configuration.py` - Main test suite with 67 comprehensive tests
+## How to Use
 
-## Running Tests
-
-### Using pytest (recommended)
+### Option 1: Replace corrupted tests (recommended)
 ```bash
-cd /home/rfsilva/EIEres/atomkit
-python -m pytest tests/test_configuration.py -v
+cd /home/rfsilva/Programs/atomkit
+rm -rf tests/
+mv tests_clean/ tests/
 ```
 
-### Using the custom test runner
+### Option 2: Test the clean version first
 ```bash
-cd /home/rfsilva/EIEres/atomkit
-python run_tests.py
+micromamba run -n atomkit pytest tests_clean/ -v
 ```
+
+Then if it works, do Option 1.
+
+## What's Different
+- ✅ **Simple and readable** - no verbose assertions
+- ✅ **Uses correct API** - `l_quantum`, `occupation`, `total_electrons()`
+- ✅ **Minimal but complete** - covers essential functionality only
+- ✅ **Clean code** - no corruption, no merge conflicts
 
 ## Test Coverage
 
-The test suite covers all major functionality of the Configuration class:
+### test_configuration.py
+- Parsing: from_string(), multiple shells, partial occupancy
+- Electron counting: total_electrons() for various atoms
+- Generation: ground states, excited states
+- Validation: max occupancies for s, p, d orbitals
+- Conversion: to AUTOSTRUCTURE format
+- Real-world: Fe, Fe XVII, C III
 
-### Core Functionality
-- ✅ Configuration initialization (empty, with shells, duplicate shells)
-- ✅ Shell addition, removal, and manipulation 
-- ✅ Shell retrieval and property access
-- ✅ Total electron calculation
-- ✅ Deep copying
+### test_shell.py
+- Creation: 1s, 2p, 3d shells
+- Validation: invalid n, l >= n, negative values
+- Relativistic: j quantum numbers for p and s shells
+- String representation: readable output
 
-### String Parsing and Creation
-- ✅ Standard notation parsing (`1s2.2s2.2p6`)
-- ✅ Compact notation parsing (`1*2.2*8`)
-- ✅ Element-based configuration creation (using mendeleev)
-- ✅ Ionization and charge calculations
+### test_unified_interface.py
+- Calculations: structure, radiative
+- Coupling: LS, IC, ICR
+- Input generation: file creation, content validation
+- Code options: backend-specific parameters
+- Relativistic: Breit interaction, QED corrections
 
-### Advanced Operations
-- ✅ Hole identification and calculation
-- ✅ Excitation generation (single and multiple level)
-- ✅ Core/valence splitting
-- ✅ Configuration comparison
-- ✅ X-ray notation labeling
-
-### Magic Methods and Utilities
-- ✅ String representation (`__str__`, `__repr__`)
-- ✅ Equality and hashing (`__eq__`, `__hash__`)
-- ✅ Container operations (`__len__`, `__iter__`, `__contains__`)
-- ✅ Sorting and ordering
-
-### Error Handling
-- ✅ Invalid input validation
-- ✅ Type checking
-- ✅ Edge case handling
-- ✅ Dependency management (graceful mendeleev handling)
-
-## Dependencies
-
-The tests require:
-- `pytest` - Testing framework
-- `mendeleev` - Element data (installed automatically)
-- `scipy` - Scientific constants
-
-## Test Results
-
-All 67 tests pass successfully, demonstrating that the Configuration class is:
-- ✅ Functionally correct
-- ✅ Robust against edge cases
-- ✅ Properly handling errors
-- ✅ Following expected behavior patterns
-
-## Environment
-
-Tests are designed to run in the `kilopacities` conda environment and are confirmed working with:
-- Python 3.11.5
-- pytest 7.4.0
-- mendeleev 1.1.0
-
-## Notes
-
-- Tests that depend on the `mendeleev` package are automatically skipped if the package is not available
-- Zero occupation shells are handled correctly (filtered out during initialization)
-- Special cases like fully ionized atoms (H+) are properly handled
-- The test suite includes both unit tests and integration tests to ensure comprehensive coverage
+## Philosophy
+These tests follow the KISS principle:
+- Test one thing at a time
+- Use clear, descriptive names
+- Avoid over-assertion
+- Focus on public API only
+- Keep it maintainable

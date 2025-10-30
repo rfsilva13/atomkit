@@ -1,0 +1,4152 @@
+
+
+
+************************************************************************************************************************************
+************************************************************************************************************************************
+
+
+                                AAAAAAAA      UU      UU     TTTTTTTTTT      OOOOOOOO
+                               AAAAAAAAAA     UU      UU     TTTTTTTTTT     OOOOOOOOOO
+                               AA      AA     UU      UU         TT         OO      OO
+                               AA      AA     UU      UU         TT         OO      OO
+                               AA      AA     UU      UU         TT         OO      OO
+                               AA      AA     UU      UU         TT         OO      OO
+                               AAAAAAAAAA     UU      UU         TT         OO      OO
+                               AAAAAAAAAA     UU      UU         TT         OO      OO
+                               AA      AA     UU      UU         TT         OO      OO
+                               AA      AA     UU      UU         TT         OO      OO
+                               AA      AA     UUUUUUUUUU         TT         OOOOOOOOOO
+                               AA      AA      UUUUUUUU          TT          OOOOOOOO
+
+
+  SSSSSSSS      TTTTTTTTTT     RRRRRRRRR      UU      UU      CCCCCCCC      TTTTTTTTTT     UU      UU     RRRRRRRRR      EEEEEEEEEE
+ SSSSSSSSSS     TTTTTTTTTT     RRRRRRRRRR     UU      UU     CCCCCCCCCC     TTTTTTTTTT     UU      UU     RRRRRRRRRR     EEEEEEEEEE
+ SS                 TT         RR      RR     UU      UU     CC      CC         TT         UU      UU     RR      RR     EE
+ SS                 TT         RR      RR     UU      UU     CC                 TT         UU      UU     RR      RR     EE
+ SS                 TT         RR     RR      UU      UU     CC                 TT         UU      UU     RR     RR      EE
+ SSSSSSSSS          TT         RRRRRRRR       UU      UU     CC                 TT         UU      UU     RRRRRRRR       EEEEEEEEE
+  SSSSSSSSS         TT         RRRRRR         UU      UU     CC                 TT         UU      UU     RRRRRR         EEEEEEEEE
+         SS         TT         RR   RR        UU      UU     CC                 TT         UU      UU     RR   RR        EE
+         SS         TT         RR    RR       UU      UU     CC                 TT         UU      UU     RR    RR       EE
+         SS         TT         RR     RR      UU      UU     CC     CC          TT         UU      UU     RR     RR      EE
+ SSSSSSSSSS         TT         RR      RR     UUUUUUUUUU     CCCCCCCCC          TT         UUUUUUUUUU     RR      RR     EEEEEEEEEE
+  SSSSSSSS          TT         RR       RR     UUUUUUUU       CCCCCCC           TT          UUUUUUUU      RR       RR    EEEEEEEEEE
+
+
+************************************************************************************************************************************
+************************************************************************************************************************************
+
+
+
+
+
+ WORD INFO-
+
+            LOGICAL BYTE LENGTH=  1
+
+      SHORT INTEGER BYTE LENGTH=  2     RANGE=    4
+    DEFAULT INTEGER BYTE LENGTH=  4     RANGE=    9
+   EXTENDED INTEGER BYTE LENGTH=  8     RANGE=   18
+
+      SHORT    REAL BYTE LENGTH=  4     RANGE=   37     PRECISION= 6
+    DEFAULT    REAL BYTE LENGTH=  8     RANGE=  307     PRECISION=15
+
+
+
+
+
+ THIS VERSION OF AUTOSTRUCTURE (30.19) IS COMPILED WITH THE FOLLOWING ALLOCATABLE STORAGE PARAMETERS-
+
+
+    NAME      VALUE              NAME      VALUE              NAME      VALUE              NAME      VALUE
+
+   MXAAI         -1             MXAAK         -1             MAXAD         -1             MXADJ         -1
+   MXAJS         -1             MAXB1         -1             MAXB2         -1             MXBIF         -1
+   MXBLM         -1             MXCAS         -1             MAXCF         -1             MXCHG         -1
+   MAXCL         -1             MAXCT         -1             MAXDC   80000000             MAXDF         -1
+   MXDFS         -1             MAXDI         -1             MAXDK         -1             MXEL0         -1
+   MXENG         -1             MXEST         -1             MXFSL         -1             MXFSS         -1
+   MXFOO         -1             MAXGR         -1             MXGRB         -1             MAXJG         -1
+   MAXJU         -1             MAXLL         -1             MAXLV         -1             MAXMI     100000
+   MXNOR         -1             MXPOT         -1             MAXRK    2500000             MXRKO         -1
+   MXRKS    2500000             MAXRL       9995             MXRLO         -1             MXRLS       9995
+   MXROS         -1             MXRSS   25000000             MAXSL         -1             MXSOC   20000000
+   MXSOI      15000             MXST0     400050             MXSTX     400000             MXSYJ         -1
+   MXS1C   20000000             MXS1I      15000             MXS2C   25000000             MXS2I     100000
+   MAXTM         -1             MAXTR         -1             MAXUC         -1             MXVAR         -1
+
+
+
+
+ ---------------------------------------------------------------------------------------------------------
+
+ A.S. Be-like Fe DW (BP)                                                         
+
+ ---------------------------------------------------------------------------------------------------------
+
+
+
+      OPTION CHOSEN, NOPTN=    3 FOR ORBITALS MXORB=   3
+ BASIC CONFIGURATION    1                                    2  0
+ BASIC CONFIGURATION    2                                    1  1
+ BASIC CONFIGURATION    3                                    0  2
+
+    3    3
+  2 0  2 1
+   1: 2 0
+   2: 1 1
+   3: 0 2
+
+
+ ------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+ ATOM WITH   2+  2 ELECTRONS IN    3 CONFIGURATIONS, CLOSED (N L)-SHELLS: 
+          1  0
+
+
+ ATTENTION: SOME OF THE INTERNAL ORBITALS MAY HAVE BEEN REDEFINED, AND MAY NOT BE THE STANDARD CODE (K=1,2,3... FOR  1S,2S,2P...)
+    K       1      2      3      4      5      6      7      8      9     10     11     12     13     14     15
+   N L    1  0   2  0   2  1
+
+
+ CONFIGURATION CF=   1,          0 ON DISK, (N-L)-COMBINATIONS     2  0   2  0
+ SLATER-STATES STORED IN         2=JA         2=JB, MAXST=        61; VCC STORED UP TO         1=MTGD, MAXDC=  80000000; MAXDF=   1; MOD=-1
+       1 SPECTROSCOPIC TERMS   (2S+1 L DP):    1  0  1
+
+
+ CONFIGURATION CF=   2,          0 ON DISK, (N-L)-COMBINATIONS     2  0   2  1
+ SLATER-STATES STORED IN         3=JA        14=JB, MAXST=        61; VCC STORED UP TO        19=MTGD, MAXDC=  80000000; MAXDF=   1; MOD=-1
+       2 SPECTROSCOPIC TERMS   (2S+1 L DP):    3  1  1    1  1  1
+
+
+ CONFIGURATION CF=   3,          0 ON DISK, (N-L)-COMBINATIONS     2  1   2  1
+ SLATER-STATES STORED IN        15=JA        29=JB, MAXST=        61; VCC STORED UP TO        43=MTGD, MAXDC=  80000000; MAXDF=   3; MOD=-1
+       3 SPECTROSCOPIC TERMS   (2S+1 L DP):    1  2  1    3  1  1    1  0  1
+
+
+       6=BUFFER   MAXCT=      10;            45=JBF MXST0=        61;                         64=MTGD, MAXDC=  80000000 BUFFER STORAGE USED
+
+
+    T 2S+1  L  (P-0/1 FOR EVEN/ODD)        CF    NT GR                    **** TERM TABLE ****
+                                                         GROUP=  1    2S+1= 1  L= 2   PI= 0    NC=     1
+
+
+                                                         GROUP=  2    2S+1= 3  L= 1   PI= 0    NC=     1
+
+
+                                                         GROUP=  3    2S+1= 3  L= 1   PI= 1    NC=     1
+
+
+                                                         GROUP=  4    2S+1= 1  L= 1   PI= 1    NC=     1
+
+
+                                                         GROUP=  5    2S+1= 1  L= 0   PI= 0    NC=     2
+
+
+
+                                                                         (     2)          2       MAXDI=         -1
+
+                                                                    (          8)          8       MAXUC=         -1
+
+                                                                                           0       MXAAI=         -1
+
+
+ SLATER COEFFICIENTS  F(A,...)  FOR CONSTRUCTING   ( T !  H  ! TP ) = SUM( F(A,...) * R(A,...) );   NCYC=0: COMMON DIAGONAL CORE TERM
+       -1 -1    -1    -1  2500000 9995 STORAGE RESTRICTIONS FOR (MAXAD,MAXSL,MAXTM,MAXTM,MAXRK,MAXRL), MXDFS= 325
+     NCYC GR     T    TP      MNF  MNR   I(R)  F(A,...)   I(R)  F(A,...)   I(R)  F(A,...)   I(R)  F(A,...)   I(R)  F(A,...)   I(R)  F(A,...)
+        7  5     6     6       29   10
+
+ SLATER STATE INTERACTION STORAGE (MXRKS,MXRLS)  2500000  9995          USED:       24     8
+
+                                                                                               0=MTGD, MAXDC=  80000000 BUFFER STORAGE USED
+
+ *** PRINTOUT OF COEFFICIENTS SUPPRESSED - MPRINT(MODULO 5)= 0
+
+  IOSC     T    TP    B   D      MNF
+    11     6     6    2   2       46
+
+ SLATER STATE INTERACTION STORAGE (MXRKS,MXRLS)  2500000  9995          USED:        6     3
+
+                                                                                               0=MTGD, MAXDC=  80000000 BUFFER STORAGE USED
+
+ *** PRINTOUT OF COEFFICIENTS SUPPRESSED - MPRINT(MODULO 5)= 0
+
+
+
+   LV  2S+1   L   2J   CF    T                                            **** LEVEL TABLE ****
+                                             JGROUP=  1    2J= 4   PARITY=  0    N0=     2
+
+
+                                             JGROUP=  2    2J= 4   PARITY=  1    N0=     1
+
+
+                                             JGROUP=  3    2J= 2   PARITY=  0    N0=     1
+
+
+                                             JGROUP=  4    2J= 2   PARITY=  1    N0=     2
+
+
+                                             JGROUP=  5    2J= 0   PARITY=  0    N0=     3
+
+
+                                             JGROUP=  6    2J= 0   PARITY=  1    N0=     1
+
+
+
+                                                                         (     3)          3       MAXDK=         -1
+
+                                                                    (         20)         20       MAXJU=         -1
+
+                                                                                           0       MXAAK=         -1
+
+ *** PRINTOUT OF COEFFICIENTS C, D AND E SUPPRESSED BY MPRINT .LE. 0
+
+
+  ALGEBRA OF THE SPIN-ORBIT INTERACTION     KUTSO = -1          ALGEBRA OF THE SPIN-SPIN (C), MUTUAL SPIN-ORBIT (A)
+                                                                   AND THE SPIN-OTHER-ORBIT (B) INTERACTIONS          KUTSS =  -1 
+    MXADJ MAXLV MAXLV    MXSOC MXSOI                           MXADJ MAXLV MAXLV    MXRSS MAXMI
+       -1    -1    -1 20000000 15000  STORAGE RESTRICTIONS        -1    -1    -1        0     0
+       NP    LV   LVP       CN   IND  I(Z)      C(A,B)            NP    LV   LVP       CN   IND   I(Y) X(A-D)   I(Y) X(A-D)   I(Y) X(A-D)
+       15    10    10        9     1
+                                                                  15    10    10        0     0
+
+ SLATER STATE INTERACTION STORAGE (MXS1C,MXS1I) 20000000 15000          USED:       12     1
+                                  (MXSTX)         400000                USED:       40
+
+                                                                                               0=MTGD, MAXDC=  80000000 BUFFER STORAGE USED
+
+
+ CPU TIME=    0.000 MIN     TOTAL CPU TIME=    0.000 MIN
+
+
+                                   ************************************************************
+
+
+
+
+ RADIAL FUNCTIONS:   PRECISION OF EIGENVALUE IS 1.00E-07      1792 POINTS (MSTEP=12);  ATOMIC NUMBER 26,   NUMBER OF ELECTRONS  4
+                       NL =  1  0   S.M.-POTENTIAL V(NL) WITH SCALE FACTOR   1.00000;  COULOMBIC BEYOND R(IEND=  314) =  0.275630
+       OVERLAP INTEGRAL      2 0 WITH 1 0 = -3.1262E-08
+
+
+ GAM ( N,  L,NION, Z,SIG/D/P)  EPSILON/RY      <1/R>  <Z/R-V>      <R>   <R**2>   <R**3>   (ADJUST, REND, 3 LAST P) IN     842 STEPS
+   1   1   0   4  26  1.41287   -604.52699  25.46037 35.57153  0.05917   0.0047   0.0005    1.0000  0.28  1.21E-20 1.04E-20 8.98E-21
+   2   2   0   4  26  2.37045   -139.58885   6.00871 14.25667  0.24766   0.0716   0.0233    1.0000  0.28 -5.26E-08-4.92E-08-4.60E-08
+   3   2   1   4  26  2.74094   -135.24599   5.94674 16.25134  0.21133   0.0538   0.0160    1.0000  0.28  4.88E-08 4.57E-08 4.28E-08
+                                                                                        R OF 3 LAST P(R):    2.110    2.116    2.122
+
+   I(R)   R(  A,  B,   C,  D, 2LBD ) = SLATER-INTEGRALS    (2LAMBDA=-1 DENOTES ONE-BODY INTEGRALS <A!-D**2/DR**2+L(L+1)/R**2-2Z/R!C>)
+      1       1   1    1   1     0    15.8674322
+      2       3   1    3   1     0     5.7949664
+      3       3   3    1   1     2     1.1080023
+      4       3   3    3   3     0     4.3005178
+      5       3   3    3   3     4     2.0683465
+      6       2   1    2   1     0     5.0915175
+      7       2   2    1   1     0     0.5085139
+      8       3   2    3   2     0     3.8954755
+      9       3   3    2   2     2     2.1815437
+     10       2   2    2   2     0     3.6441902
+
+   N(B)  NC B(A,  B,   C,  D, 2LBD)  = BORN-INTEGRALS
+      1    1  2   2    2   2     0     0.0084316
+      2    2  3   3    2   2     0     0.0070824
+      3    2  3   3    3   3     0     0.0060094
+      3    2  3   3    3   3     4     0.0005090
+
+ DIPOLE LENGTH INTEGRALS (K=1, FOR /L-L'/=1)  AND QUADRUPOLE (K=2) INTEGRALS  <NL! R**K !N'L'>; ('N**' STANDS FOR: NL NOT COMPUTED)
+        ABOVE THE DIAGONAL ARE VELOCITY INTEGRALS <NL! 2*D/DR+(L'(L'+1)-L(L+1))/R !N'L'>      
+   N  L   1  0    2  0    2  1
+   1  0   0.0000  0.0000  0.0000
+   2  0   0.0000  0.0000 -0.9534
+   2  1   0.0000 -0.2195  0.0538
+
+
+   T,2S+1L  P    H(1)/2RY   EIGEN-H/2RY   CF  NI  NO  CI-MATRIX <GSL!CASL>  AND  H(2)/2RY-TRIANGLE.  E(CORE)/2RY =   15.8674  -675.6701
+   1  1  2  0    -167.74868   -140.924227  3   1   1  1.0000 26.8244
+   2  3  1  0    -167.74868   -141.420630  3   2   1  1.0000 26.3280
+   3  3  1  1    -167.92543   -143.862017  2   1   1  1.0000 24.0634
+   4  1  1  1    -167.92543   -142.407655  2   2   1  1.0000 25.5178
+   5  1  0  0    -168.10219   -145.412131  1   1   1  0.9722 -0.2340 22.9932
+   6  1  0  0    -167.74868   -139.876445  3   3   2  0.2340  0.9722  1.2595 27.5691
+ CORE CONTRIB.    -675.6701  -659.80263
+
+
+     0 (IF .GT. 0: LOWEST STAT-WEIGHTED) TERMS ARE MINIMIZED;    SCALING PARAMETERS   1.00000  1.00000  1.00000
+         I         T        K*CM  2S+1 L   CF     WEIGHTS        (EI-E1)/RY     E1/RY =  -1610.429517
+         1         5           0.    1 0    1       0.000          0.000000
+         2         3      340211.   -3 1    2       0.000          3.100229
+         3         4      659406.   -1 1    2       0.000          6.008954
+         4         2      876033.    3 1    3       0.000          7.983003
+         5         1      984981.    1 2    3       0.000          8.975809
+         6         6     1214943.    1 0    3       0.000         11.071373
+
+
+ *** ATTN: BECAUSE BORN MULTIPOLES ARE BEING COMPUTED FOR NON-E1 TRANSITIONS, RADIATIVE DATA IS NOT COMPUTED FOR THOSE E3 TRANSITIONS
+           FOR WHICH E1 DATA ALREADY EXISTS (SO AS NOT TO OVERWRITE THE E1-LIMIT)
+
+  
+   E0-DATA  I  IP      A(EK)*SEC         S        10**5*  G*F       *F(ABS)   -F(EMI)    WAVEL/AE    *GF(VEL) *V(GFL*GFV)    *GF(ACC)   OMG(BORN)
+    1       6   1      0.000E+00     0.0000000        0.000000      0.00000   0.00000     82.3084      0.0000      0.0000      0.0000      0.0005
+  
+   E1-DATA  I  IP      A(EK)*SEC         S                G*F        F(ABS)   -F(EMI)    WAVEL/AE     GF(VEL)  V(GFL*GFV)     GF(ACC)  ALPHA(POL)
+    1       3   1      1.308E+10     0.0675475        0.135297      0.13530   0.04510    151.6515     -0.1237     -0.1293     86.0209      0.0150
+  
+   E2-DATA  I  IP      A(EK)*SEC         S        10**5*  G*F       *F(ABS)   -F(EMI)    WAVEL/AE    *GF(VEL) *V(GFL*GFV)    *GF(ACC)   OMG(BORN)
+    1       5   1     -5.266E+03    -0.0002536       -0.004069     -0.00407  -0.00081    101.5248      0.0000     -0.0000      0.0000      0.0018
+  
+ IBOMX=           2
+
+
+         INCLUD =    0         FUNCTIONAL F = 0.0000000E+00         FUNCTIONAL G = 0.000E+00 (   0 TRANSITIONS)         LS.JPRINT=-1
+
+
+
+
+     ZETA(   A    B ) = SPIN-ORBIT PARAMETERS                                     BLUME AND WATSON CLOSED SHELL CONTRIBUTION, IN 2RY
+                                 2*RY                 1/CM             Z**4/CM              DIRECT CONTRIBUTION    EXCHANGE CONTRIB.
+    1        3    3         0.3599590E+00      7.9001875E+04      1.7287970E-01                   -0.186182E-01        -0.200290E-01
+
+
+         ONE-BODY RELATIVISTIC CORRECTIONS TO INDIVIDUAL ORBITALS IN UNITS OF 2*RY                                   IC.JPRINT =  -1
+         GAM    N    L    E(NON.REL)        E(MASS)      E(DAR)       E(TOT)                       <P**2/RY>
+           1    1    0   -337.835030     -14.378627   11.624569   -2.7540573                        0.000000
+           2    2    0    -84.051093      -2.042235    1.291464   -0.7507713                        0.000000
+           3    2    1    -83.874338      -0.323363    0.000000   -0.3233629                        0.000000
+
+ ONE-BODY RELATIVISTIC INTEGRALS
+ I(R)  I(  A,  C ) =       MASS         DARWIN                        <P**2>
+
+
+   LV   T 2J 2S+1L  P      H(1)/2RY EIGEN-HBP/2RY CF  NO  CI-MATRIX <GJ!CASLJ>  AND  H(2)/2RY-TRIANGLE.  E(CORE)/2RY=   15.8674  -681.1782
+    1   1  4  1  2  0    -168.39540   -141.429471  3   1  0.8740  0.4858 26.8244
+    2   2  4  3  1  0    -168.39540   -142.028858  3   2 -0.4858  0.8740  0.2545 26.5080
+    3   3  4  3  1  1    -168.99957   -144.756172  2   1  1.0000 24.2434
+    4   2  2  3  1  0    -168.39540   -142.247335  3   1  1.0000 26.1481
+    5   3  2  3  1  1    -168.99957   -145.154853  2   1  0.9886  0.1504 23.8834
+    6   4  2  1  1  1    -168.99957   -143.443066  2   2 -0.1504  0.9886 -0.2545 25.5178
+    7   2  0  3  1  0    -168.39540   -142.549886  3   1  0.9697 -0.0724 -0.2335 25.9681
+    8   5  0  1  0  0    -169.60373   -146.875304  1   2  0.0235  0.9783 -0.2057  0.0000 22.9932
+    9   6  0  1  0  0    -168.39540   -140.438970  3   3  0.2433  0.1940  0.9504  0.5091  1.2595 27.5691
+   10   3  0  3  1  1    -168.99957   -145.296110  2   1  1.0000 23.7035
+ PLUS CORE CONTRIBUTION    -681.1782    -665.31074         RELATIVISTIC CORE CONTRIBUTION ALONE      -5.5081
+
+
+          K        LV         T        K*CM     2*S+1  L   2J   CF         (EK-E1)/RY     E1/RY = -1624.37209091               
+          1         8         5           0.      1    0    0    1         0.00000000
+          2        10         3      346593.     -3    1    0    2         3.15838678
+          3         5         3      377595.     -3    1    2    2         3.44090081
+          4         3         3      465096.     -3    1    4    2         4.23826392
+          5         6         4      753289.     -1    1    2    2         6.86447478
+          6         7         2      949319.      3    1    0    3         8.65083620
+          7         4         2     1015722.      3    1    2    3         9.25593714
+          8         2         2     1063672.      3    1    4    3         9.69289173
+          9         1         1     1195222.      1    2    4    3        10.89166603
+         10         9         6     1412612.      1    0    0    3        12.87266774
+
+ LIST OF TERMS WITH A WEIGHTED MEAN OVER THE FINE STRUCTURE
+         I         T        K*CM  2S+1 L   CF     WEIGHTS        (EI-E1)/RY     E1/RY = -1624.372091             
+         1         5           0.    1 0    1       0.000          0.000000
+         2         3      422762.   -3 1    2       0.000          3.852490
+         3         4      753289.   -1 1    2       0.000          6.864475
+         4         2     1034983.    3 1    3       0.000          9.431456
+         5         1     1195222.    1 2    3       0.000         10.891666
+         6         6     1412612.    1 0    3       0.000         12.872668
+
+
+*** ATTN: BECAUSE BORN MULTIPOLES ARE BEING COMPUTED FOR NON-E1 TRANSITIONS, RADIATIVE DATA IS NOT COMPUTED FOR THOSE E3/M2 ETC TRANSITIONS
+          FOR WHICH E1 DATA ALREADY EXISTS (SO AS NOT TO OVERWRITE THE E1-LIMIT)
+
+  
+       E0-DATA   K  KP           A(EK)*SEC           S               G*F   10**5* F(ABS)   -F(EMI)    WAVEL/AE      GF(VEL)       OMG(BORN)
+        1        6   1           0.000E+00       0.000000         0.000E+00      0.00000   0.00000     105.3386     0.00E+00      4.437E-05
+        2       10   1           0.000E+00       0.000000         0.000E+00      0.00000   0.00000      70.7909     0.00E+00      3.183E-04
+  
+      E 1-DATA   K  KP           A(EK)*SEC           S               G*F          F(ABS)   -F(EMI)    WAVEL/AE      GF(VEL)      ALPHA(POL)
+        1        3   1           4.704E+07       0.001294         1.484E-03      0.00148   0.00049     264.8339    -5.61E-03      5.013E-04
+        2        5   1           2.019E+10       0.069945         1.600E-01      0.16005   0.05335     132.7512    -1.03E-01      1.359E-02
+        3        7   2          -6.501E+09      -0.032130        -6.531E-02     -0.06531  -0.02177     149.4481     3.31E-02      7.026E-03
+  
+       E2-DATA   K  KP           A(EK)*SEC           S               G*F   10**5* F(ABS)   -F(EMI)    WAVEL/AE      GF(VEL)       OMG(BORN)
+        1        3   2           0.000E+00       0.000000         0.000E+00      0.00000   0.00000    3225.5641     0.00E+00      0.000E+00
+        2        4   2          -6.060E-01      -0.001158        -3.235E-10     -0.00003  -0.00001     843.8618    -4.66E-28      8.144E-03
+        3        5   2           0.000E+00       0.000000         0.000E+00      0.00000   0.00000     245.8838     0.00E+00      0.000E+00
+        4        7   1           0.000E+00       0.000000         0.000E+00      0.00000   0.00000      98.4522     0.00E+00      0.000E+00
+        5        8   1           1.716E+03       0.000056         1.137E-08      0.00114   0.00023      94.0140    -1.35E-28      3.958E-04
+        6        9   1          -7.665E+03      -0.000140        -4.022E-08     -0.00402  -0.00080      83.6665     6.47E-28      9.870E-04
+  
+ IBOMX=           3
+
+
+         INCLUD =    0         FUNCTIONAL F = 0.0000000E+00         IC.JPRINT=-1
+
+
+
+
+ CPU TIME=    0.000 MIN     TOTAL CPU TIME=    0.000 MIN
+
+
+
+ ----------------------------------------------------------------------------------------------------------------------------------------
+
+                                                  *** ELECTRON-IMPACT EXCITATION ***
+
+ ----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+    T 2S+1  L  (P-0/1 FOR EVEN/ODD)        CF    NT GR               **** TARGET TERMS ****               NMETA=   1
+    1   1   2   0                           3     4  1
+    2   3   1   0                           3     5  2
+    3   3   1   1                           2     2  3
+    4   1   1   1                           2     3  4
+    5   1   0   0                           1     1  5
+    6   1   0   0                           3     6  5
+
+
+   LV  2S+1   L   2J   CF    T                                       **** TARGET LEVELS ****              NMETAJ=    2
+    1    1    2    4    3    1
+    2    3    1    4    3    2
+    3    3    1    4    2    3
+    4    3    1    2    3    2
+    5    3    1    2    2    3
+    6    1    1    2    2    4
+    7    3    1    0    3    2
+    8    1    0    0    1    5
+    9    1    0    0    3    6
+   10    3    1    0    2    3
+
+
+
+ ----------------------------------------------------------------------------------------------------------------------------------------
+
+                                                    *** COLLISION ALGEBRA (LS) ***
+
+ ----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+ CONTINUUM ORBITAL INDEXING FOR TOTAL L:
+                                                             GAM  SMALL L
+                                                               4   L- 2
+                                                               5   L- 1
+                                                               6   L 
+                                                               7   L+ 1
+                                                               8   L+ 2
+
+
+ ----------------------------------------------------------------------------------------------------------------------------------------
+
+
+ *** PARTIAL WAVE SYMMETRY RESTRICTIONS:     MAXIMUM EXCHANGE L (MAXLX) =  6
+
+                                             MAX EXCHANGE LAMDA (MXLAMX)=  5
+
+                                             No. OF MULTIPOLES (NMULTX) =  7
+
+
+ MINST= 2   MAXST= 4     MINLT= 0   MAXLT= 31
+
+
+ ----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+ SY=  1     (2S+1) L P =  2   0  0
+             CH        T   SMALL L
+              1        1         2
+              2        3         1
+              3        4         1
+              4        5         0
+              5        6         0
+
+ SY=  2     (2S+1) L P =  2   0  1
+             CH        T   SMALL L
+              1        2         1
+
+ SY=  3     (2S+1) L P =  4   0  0
+             CH        T   SMALL L
+              1        3         1
+
+ SY=  4     (2S+1) L P =  4   0  1
+             CH        T   SMALL L
+              1        2         1
+
+ SY=  5     (2S+1) L P =  2   1  0
+             CH        T   SMALL L
+              1        1         2
+              2        2         0
+              3        2         2
+              4        3         1
+              5        4         1
+
+ SY=  6     (2S+1) L P =  2   1  1
+             CH        T   SMALL L
+              1        1         1
+              2        1         3
+              3        2         1
+              4        3         0
+              5        3         2
+              6        4         0
+              7        4         2
+              8        5         1
+              9        6         1
+
+ SY=  7     (2S+1) L P =  4   1  0
+             CH        T   SMALL L
+              1        2         0
+              2        2         2
+              3        3         1
+
+ SY=  8     (2S+1) L P =  4   1  1
+             CH        T   SMALL L
+              1        2         1
+              2        3         0
+              3        3         2
+
+ SY=  9     (2S+1) L P =  2   2  0
+             CH        T   SMALL L
+              1        1         0
+              2        1         2
+              3        1         4
+              4        2         2
+              5        3         1
+              6        3         3
+              7        4         1
+              8        4         3
+              9        5         2
+             10        6         2
+
+ SY= 10     (2S+1) L P =  2   2  1
+             CH        T   SMALL L
+              1        1         1
+              2        1         3
+              3        2         1
+              4        2         3
+              5        3         2
+              6        4         2
+
+ SY= 11     (2S+1) L P =  4   2  0
+             CH        T   SMALL L
+              1        2         2
+              2        3         1
+              3        3         3
+
+ SY= 12     (2S+1) L P =  4   2  1
+             CH        T   SMALL L
+              1        2         1
+              2        2         3
+              3        3         2
+
+ SY= 13     (2S+1) L P =  2   3  0
+             CH        T   SMALL L
+              1        1         2
+              2        1         4
+              3        2         2
+              4        2         4
+              5        3         3
+              6        4         3
+
+ SY= 14     (2S+1) L P =  2   3  1
+             CH        T   SMALL L
+              1        1         1
+              2        1         3
+              3        1         5
+              4        2         3
+              5        3         2
+              6        3         4
+              7        4         2
+              8        4         4
+              9        5         3
+             10        6         3
+
+ SY= 15     (2S+1) L P =  4   3  0
+             CH        T   SMALL L
+              1        2         2
+              2        2         4
+              3        3         3
+
+ SY= 16     (2S+1) L P =  4   3  1
+             CH        T   SMALL L
+              1        2         3
+              2        3         2
+              3        3         4
+
+ SY= 17     (2S+1) L P =  2   4  0
+             CH        T   SMALL L
+              1        1         2
+              2        1         4
+              3        1         6
+              4        2         4
+              5        3         3
+              6        3         5
+              7        4         3
+              8        4         5
+              9        5         4
+             10        6         4
+
+ SY= 18     (2S+1) L P =  2   4  1
+             CH        T   SMALL L
+              1        1         3
+              2        1         5
+              3        2         3
+              4        2         5
+              5        3         4
+              6        4         4
+
+ SY= 19     (2S+1) L P =  4   4  0
+             CH        T   SMALL L
+              1        2         4
+              2        3         3
+              3        3         5
+
+ SY= 20     (2S+1) L P =  4   4  1
+             CH        T   SMALL L
+              1        2         3
+              2        2         5
+              3        3         4
+
+ SY= 21     (2S+1) L P =  2   5  0
+             CH        T   SMALL L
+              1        1         4
+              2        1         6
+              3        2         4
+              4        2         6
+              5        3         5
+              6        4         5
+
+ SY= 22     (2S+1) L P =  2   5  1
+             CH        T   SMALL L
+              1        1         3
+              2        1         5
+              3        1         7
+              4        2         5
+              5        3         4
+              6        3         6
+              7        4         4
+              8        4         6
+              9        5         5
+             10        6         5
+
+ SY= 23     (2S+1) L P =  4   5  0
+             CH        T   SMALL L
+              1        2         4
+              2        2         6
+              3        3         5
+
+ SY= 24     (2S+1) L P =  4   5  1
+             CH        T   SMALL L
+              1        2         5
+              2        3         4
+              3        3         6
+
+ SY= 25     (2S+1) L P =  2   6  0
+             CH        T   SMALL L
+              1        1         4
+              2        1         6
+              3        1         8
+              4        2         6
+              5        3         5
+              6        3         7
+              7        4         5
+              8        4         7
+              9        5         6
+             10        6         6
+
+ SY= 26     (2S+1) L P =  2   6  1
+             CH        T   SMALL L
+              1        1         5
+              2        1         7
+              3        2         5
+              4        2         7
+              5        3         6
+              6        4         6
+
+ SY= 27     (2S+1) L P =  4   6  0
+             CH        T   SMALL L
+              1        2         6
+              2        3         5
+              3        3         7
+
+ SY= 28     (2S+1) L P =  4   6  1
+             CH        T   SMALL L
+              1        2         5
+              2        2         7
+              3        3         6
+
+ SY= 29     (2S+1) L P = -2   7  0
+             CH        T   SMALL L
+              1        1         6
+              2        1         8
+              3        4         7
+
+ SY= 30     (2S+1) L P = -2   7  1
+             CH        T   SMALL L
+              1        1         5
+              2        1         7
+              3        1         9
+              4        4         6
+              5        4         8
+              6        5         7
+              7        6         7
+
+ SY= 31     (2S+1) L P = -6   7  0
+             CH        T   SMALL L
+              1        2         6
+              2        2         8
+              3        3         7
+
+ SY= 32     (2S+1) L P = -6   7  1
+             CH        T   SMALL L
+              1        2         7
+              2        3         6
+              3        3         8
+
+ SY= 33     (2S+1) L P = -2   8  0
+             CH        T   SMALL L
+              1        1         6
+              2        1         8
+              3        1        10
+              4        4         7
+              5        4         9
+              6        5         8
+              7        6         8
+
+ SY= 34     (2S+1) L P = -2   8  1
+             CH        T   SMALL L
+              1        1         7
+              2        1         9
+              3        4         8
+
+ SY= 35     (2S+1) L P = -6   8  0
+             CH        T   SMALL L
+              1        2         8
+              2        3         7
+              3        3         9
+
+ SY= 36     (2S+1) L P = -6   8  1
+             CH        T   SMALL L
+              1        2         7
+              2        2         9
+              3        3         8
+
+ SY= 37     (2S+1) L P = -2   9  0
+             CH        T   SMALL L
+              1        1         8
+              2        1        10
+              3        4         9
+
+ SY= 38     (2S+1) L P = -2   9  1
+             CH        T   SMALL L
+              1        1         7
+              2        1         9
+              3        1        11
+              4        4         8
+              5        4        10
+              6        5         9
+              7        6         9
+
+ SY= 39     (2S+1) L P = -6   9  0
+             CH        T   SMALL L
+              1        2         8
+              2        2        10
+              3        3         9
+
+ SY= 40     (2S+1) L P = -6   9  1
+             CH        T   SMALL L
+              1        2         9
+              2        3         8
+              3        3        10
+
+ SY= 41     (2S+1) L P = -2  10  0
+             CH        T   SMALL L
+              1        1         8
+              2        1        10
+              3        1        12
+              4        4         9
+              5        4        11
+              6        5        10
+              7        6        10
+
+ SY= 42     (2S+1) L P = -2  10  1
+             CH        T   SMALL L
+              1        1         9
+              2        1        11
+              3        4        10
+
+ SY= 43     (2S+1) L P = -6  10  0
+             CH        T   SMALL L
+              1        2        10
+              2        3         9
+              3        3        11
+
+ SY= 44     (2S+1) L P = -6  10  1
+             CH        T   SMALL L
+              1        2         9
+              2        2        11
+              3        3        10
+
+ SY= 45     (2S+1) L P = -2  11  0
+             CH        T   SMALL L
+              1        1        10
+              2        1        12
+              3        4        11
+
+ SY= 46     (2S+1) L P = -2  11  1
+             CH        T   SMALL L
+              1        1         9
+              2        1        11
+              3        1        13
+              4        4        10
+              5        4        12
+              6        5        11
+              7        6        11
+
+ SY= 47     (2S+1) L P = -6  11  0
+             CH        T   SMALL L
+              1        2        10
+              2        2        12
+              3        3        11
+
+ SY= 48     (2S+1) L P = -6  11  1
+             CH        T   SMALL L
+              1        2        11
+              2        3        10
+              3        3        12
+
+ SY= 49     (2S+1) L P = -2  12  0
+             CH        T   SMALL L
+              1        1        10
+              2        1        12
+              3        1        14
+              4        4        11
+              5        4        13
+              6        5        12
+              7        6        12
+
+ SY= 50     (2S+1) L P = -2  12  1
+             CH        T   SMALL L
+              1        1        11
+              2        1        13
+              3        4        12
+
+ SY= 51     (2S+1) L P = -6  12  0
+             CH        T   SMALL L
+              1        2        12
+              2        3        11
+              3        3        13
+
+ SY= 52     (2S+1) L P = -6  12  1
+             CH        T   SMALL L
+              1        2        11
+              2        2        13
+              3        3        12
+
+ SY= 53     (2S+1) L P = -2  13  0
+             CH        T   SMALL L
+              1        1        12
+              2        1        14
+              3        4        13
+
+ SY= 54     (2S+1) L P = -2  13  1
+             CH        T   SMALL L
+              1        1        11
+              2        1        13
+              3        1        15
+              4        4        12
+              5        4        14
+              6        5        13
+              7        6        13
+
+ SY= 55     (2S+1) L P = -6  13  0
+             CH        T   SMALL L
+              1        2        12
+              2        2        14
+              3        3        13
+
+ SY= 56     (2S+1) L P = -6  13  1
+             CH        T   SMALL L
+              1        2        13
+              2        3        12
+              3        3        14
+
+ SY= 57     (2S+1) L P = -2  14  0
+             CH        T   SMALL L
+              1        1        12
+              2        1        14
+              3        1        16
+              4        4        13
+              5        4        15
+              6        5        14
+              7        6        14
+
+ SY= 58     (2S+1) L P = -2  14  1
+             CH        T   SMALL L
+              1        1        13
+              2        1        15
+              3        4        14
+
+ SY= 59     (2S+1) L P = -6  14  0
+             CH        T   SMALL L
+              1        2        14
+              2        3        13
+              3        3        15
+
+ SY= 60     (2S+1) L P = -6  14  1
+             CH        T   SMALL L
+              1        2        13
+              2        2        15
+              3        3        14
+
+ SY= 61     (2S+1) L P = -2  15  0
+             CH        T   SMALL L
+              1        1        14
+              2        1        16
+              3        4        15
+
+ SY= 62     (2S+1) L P = -2  15  1
+             CH        T   SMALL L
+              1        1        13
+              2        1        15
+              3        1        17
+              4        4        14
+              5        4        16
+              6        5        15
+              7        6        15
+
+ SY= 63     (2S+1) L P = -6  15  0
+             CH        T   SMALL L
+              1        2        14
+              2        2        16
+              3        3        15
+
+ SY= 64     (2S+1) L P = -6  15  1
+             CH        T   SMALL L
+              1        2        15
+              2        3        14
+              3        3        16
+
+ SY= 65     (2S+1) L P = -2  16  0
+             CH        T   SMALL L
+              1        1        14
+              2        1        16
+              3        1        18
+              4        4        15
+              5        4        17
+              6        5        16
+              7        6        16
+
+ SY= 66     (2S+1) L P = -2  16  1
+             CH        T   SMALL L
+              1        1        15
+              2        1        17
+              3        4        16
+
+ SY= 67     (2S+1) L P = -6  16  0
+             CH        T   SMALL L
+              1        2        16
+              2        3        15
+              3        3        17
+
+ SY= 68     (2S+1) L P = -6  16  1
+             CH        T   SMALL L
+              1        2        15
+              2        2        17
+              3        3        16
+
+ SY= 69     (2S+1) L P = -2  17  0
+             CH        T   SMALL L
+              1        1        16
+              2        1        18
+              3        4        17
+
+ SY= 70     (2S+1) L P = -2  17  1
+             CH        T   SMALL L
+              1        1        15
+              2        1        17
+              3        1        19
+              4        4        16
+              5        4        18
+              6        5        17
+              7        6        17
+
+ SY= 71     (2S+1) L P = -6  17  0
+             CH        T   SMALL L
+              1        2        16
+              2        2        18
+              3        3        17
+
+ SY= 72     (2S+1) L P = -6  17  1
+             CH        T   SMALL L
+              1        2        17
+              2        3        16
+              3        3        18
+
+ SY= 73     (2S+1) L P = -2  18  0
+             CH        T   SMALL L
+              1        1        16
+              2        1        18
+              3        1        20
+              4        4        17
+              5        4        19
+              6        5        18
+              7        6        18
+
+ SY= 74     (2S+1) L P = -2  18  1
+             CH        T   SMALL L
+              1        1        17
+              2        1        19
+              3        4        18
+
+ SY= 75     (2S+1) L P = -6  18  0
+             CH        T   SMALL L
+              1        2        18
+              2        3        17
+              3        3        19
+
+ SY= 76     (2S+1) L P = -6  18  1
+             CH        T   SMALL L
+              1        2        17
+              2        2        19
+              3        3        18
+
+ SY= 77     (2S+1) L P = -2  19  0
+             CH        T   SMALL L
+              1        1        18
+              2        1        20
+              3        4        19
+
+ SY= 78     (2S+1) L P = -2  19  1
+             CH        T   SMALL L
+              1        1        17
+              2        1        19
+              3        1        21
+              4        4        18
+              5        4        20
+              6        5        19
+              7        6        19
+
+ SY= 79     (2S+1) L P = -6  19  0
+             CH        T   SMALL L
+              1        2        18
+              2        2        20
+              3        3        19
+
+ SY= 80     (2S+1) L P = -6  19  1
+             CH        T   SMALL L
+              1        2        19
+              2        3        18
+              3        3        20
+
+ SY= 81     (2S+1) L P = -2  20  0
+             CH        T   SMALL L
+              1        1        18
+              2        1        20
+              3        1        22
+              4        4        19
+              5        4        21
+              6        5        20
+              7        6        20
+
+ SY= 82     (2S+1) L P = -2  20  1
+             CH        T   SMALL L
+              1        1        19
+              2        1        21
+              3        4        20
+
+ SY= 83     (2S+1) L P = -6  20  0
+             CH        T   SMALL L
+              1        2        20
+              2        3        19
+              3        3        21
+
+ SY= 84     (2S+1) L P = -6  20  1
+             CH        T   SMALL L
+              1        2        19
+              2        2        21
+              3        3        20
+
+ SY= 85     (2S+1) L P = -2  21  0
+             CH        T   SMALL L
+              1        1        20
+              2        1        22
+              3        4        21
+
+ SY= 86     (2S+1) L P = -2  21  1
+             CH        T   SMALL L
+              1        1        19
+              2        1        21
+              3        1        23
+              4        4        20
+              5        4        22
+              6        5        21
+              7        6        21
+
+ SY= 87     (2S+1) L P = -6  21  0
+             CH        T   SMALL L
+              1        2        20
+              2        2        22
+              3        3        21
+
+ SY= 88     (2S+1) L P = -6  21  1
+             CH        T   SMALL L
+              1        2        21
+              2        3        20
+              3        3        22
+
+ SY= 89     (2S+1) L P = -2  22  0
+             CH        T   SMALL L
+              1        1        20
+              2        1        22
+              3        1        24
+              4        4        21
+              5        4        23
+              6        5        22
+              7        6        22
+
+ SY= 90     (2S+1) L P = -2  22  1
+             CH        T   SMALL L
+              1        1        21
+              2        1        23
+              3        4        22
+
+ SY= 91     (2S+1) L P = -6  22  0
+             CH        T   SMALL L
+              1        2        22
+              2        3        21
+              3        3        23
+
+ SY= 92     (2S+1) L P = -6  22  1
+             CH        T   SMALL L
+              1        2        21
+              2        2        23
+              3        3        22
+
+ SY= 93     (2S+1) L P = -2  23  0
+             CH        T   SMALL L
+              1        1        22
+              2        1        24
+              3        4        23
+
+ SY= 94     (2S+1) L P = -2  23  1
+             CH        T   SMALL L
+              1        1        21
+              2        1        23
+              3        1        25
+              4        4        22
+              5        4        24
+              6        5        23
+              7        6        23
+
+ SY= 95     (2S+1) L P = -6  23  0
+             CH        T   SMALL L
+              1        2        22
+              2        2        24
+              3        3        23
+
+ SY= 96     (2S+1) L P = -6  23  1
+             CH        T   SMALL L
+              1        2        23
+              2        3        22
+              3        3        24
+
+ SY= 97     (2S+1) L P = -2  24  0
+             CH        T   SMALL L
+              1        1        22
+              2        1        24
+              3        1        26
+              4        4        23
+              5        4        25
+              6        5        24
+              7        6        24
+
+ SY= 98     (2S+1) L P = -2  24  1
+             CH        T   SMALL L
+              1        1        23
+              2        1        25
+              3        4        24
+
+ SY= 99     (2S+1) L P = -6  24  0
+             CH        T   SMALL L
+              1        2        24
+              2        3        23
+              3        3        25
+
+ SY=100     (2S+1) L P = -6  24  1
+             CH        T   SMALL L
+              1        2        23
+              2        2        25
+              3        3        24
+
+ SY=101     (2S+1) L P = -2  25  0
+             CH        T   SMALL L
+              1        1        24
+              2        1        26
+              3        4        25
+
+ SY=102     (2S+1) L P = -2  25  1
+             CH        T   SMALL L
+              1        1        23
+              2        1        25
+              3        1        27
+              4        4        24
+              5        4        26
+              6        5        25
+              7        6        25
+
+ SY=103     (2S+1) L P = -6  25  0
+             CH        T   SMALL L
+              1        2        24
+              2        2        26
+              3        3        25
+
+ SY=104     (2S+1) L P = -6  25  1
+             CH        T   SMALL L
+              1        2        25
+              2        3        24
+              3        3        26
+
+ SY=105     (2S+1) L P = -2  26  0
+             CH        T   SMALL L
+              1        1        24
+              2        1        26
+              3        1        28
+              4        4        25
+              5        4        27
+              6        5        26
+              7        6        26
+
+ SY=106     (2S+1) L P = -2  26  1
+             CH        T   SMALL L
+              1        1        25
+              2        1        27
+              3        4        26
+
+ SY=107     (2S+1) L P = -6  26  0
+             CH        T   SMALL L
+              1        2        26
+              2        3        25
+              3        3        27
+
+ SY=108     (2S+1) L P = -6  26  1
+             CH        T   SMALL L
+              1        2        25
+              2        2        27
+              3        3        26
+
+ SY=109     (2S+1) L P = -2  27  0
+             CH        T   SMALL L
+              1        1        26
+              2        1        28
+              3        4        27
+
+ SY=110     (2S+1) L P = -2  27  1
+             CH        T   SMALL L
+              1        1        25
+              2        1        27
+              3        1        29
+              4        4        26
+              5        4        28
+              6        5        27
+              7        6        27
+
+ SY=111     (2S+1) L P = -6  27  0
+             CH        T   SMALL L
+              1        2        26
+              2        2        28
+              3        3        27
+
+ SY=112     (2S+1) L P = -6  27  1
+             CH        T   SMALL L
+              1        2        27
+              2        3        26
+              3        3        28
+
+ SY=113     (2S+1) L P = -2  28  0
+             CH        T   SMALL L
+              1        1        26
+              2        1        28
+              3        1        30
+              4        4        27
+              5        4        29
+              6        5        28
+              7        6        28
+
+ SY=114     (2S+1) L P = -2  28  1
+             CH        T   SMALL L
+              1        1        27
+              2        1        29
+              3        4        28
+
+ SY=115     (2S+1) L P = -6  28  0
+             CH        T   SMALL L
+              1        2        28
+              2        3        27
+              3        3        29
+
+ SY=116     (2S+1) L P = -6  28  1
+             CH        T   SMALL L
+              1        2        27
+              2        2        29
+              3        3        28
+
+ SY=117     (2S+1) L P = -2  29  0
+             CH        T   SMALL L
+              1        1        28
+              2        1        30
+              3        4        29
+
+ SY=118     (2S+1) L P = -2  29  1
+             CH        T   SMALL L
+              1        1        27
+              2        1        29
+              3        1        31
+              4        4        28
+              5        4        30
+              6        5        29
+              7        6        29
+
+ SY=119     (2S+1) L P = -6  29  0
+             CH        T   SMALL L
+              1        2        28
+              2        2        30
+              3        3        29
+
+ SY=120     (2S+1) L P = -6  29  1
+             CH        T   SMALL L
+              1        2        29
+              2        3        28
+              3        3        30
+
+ SY=121     (2S+1) L P = -2  30  0
+             CH        T   SMALL L
+              1        1        28
+              2        1        30
+              3        1        32
+              4        4        29
+              5        4        31
+              6        5        30
+              7        6        30
+
+ SY=122     (2S+1) L P = -2  30  1
+             CH        T   SMALL L
+              1        1        29
+              2        1        31
+              3        4        30
+
+ SY=123     (2S+1) L P = -6  30  0
+             CH        T   SMALL L
+              1        2        30
+              2        3        29
+              3        3        31
+
+ SY=124     (2S+1) L P = -6  30  1
+             CH        T   SMALL L
+              1        2        29
+              2        2        31
+              3        3        30
+
+ SY=125     (2S+1) L P = -2  31  0
+             CH        T   SMALL L
+              1        1        30
+              2        1        32
+              3        4        31
+
+ SY=126     (2S+1) L P = -2  31  1
+             CH        T   SMALL L
+              1        1        29
+              2        1        31
+              3        1        33
+              4        4        30
+              5        4        32
+              6        5        31
+              7        6        31
+
+ SY=127     (2S+1) L P = -6  31  0
+             CH        T   SMALL L
+              1        2        30
+              2        2        32
+              3        3        31
+
+ SY=128     (2S+1) L P = -6  31  1
+             CH        T   SMALL L
+              1        2        31
+              2        3        30
+              3        3        32
+
+
+  SLATER COEFFICIENTS  F(A,...)  FOR CONSTRUCTING  ( CH !  H  ! CHP ) = SUM( F(A,...) * R(A,...) )
+      -1 -1   -1   -1 2500000 9995 STORAGE RESTRICTIONS FOR (MAXAD,MAXSL,MAXDI,MAXDI,MAXRK,MAXRL), MXDFS= -1
+    NCYC SY   CH  CHP     MNF  MNR   I(R)  F(A,...)   I(R)  F(A,...)   I(R)  F(A,...)   I(R)  F(A,...)   I(R)  F(A,...)   I(R)  F(A,...)
+    1034128   10   10    1883   38
+
+ SLATER STATE INTERACTION STORAGE (MXRKS,MXRLS)  2500000  9995          USED:      121     8
+                                  (MXSTX)         400000                USED:      130
+
+ *** PRINTOUT OF COEFFICIENTS SUPPRESSED - MPRINT(MODULO 5)= 0
+
+
+
+ ----------------------------------------------------------------------------------------------------------------------------------------
+
+
+ *** PARTIAL WAVE LEVEL SYMMETRY RESTRICTIONS:     MAX EXCHANGE LAMDA=  5
+
+
+ MINJT= 1   MAXJT= 59
+
+
+ ----------------------------------------------------------------------------------------------------------------------------------------
+
+
+  
+ SYJ=  1    2J P =  1  0    FORMED BY   SY= 4  (2S+1)  L  P 
+                                         1         2   0  0
+                                         5         2   1  0
+                                         7         4   1  0
+                                        11         4   2  0
+  
+ SYJ=  2    2J P =  1  1    FORMED BY   SY= 4  (2S+1)  L  P 
+                                         2         2   0  1
+                                         6         2   1  1
+                                         8         4   1  1
+                                        12         4   2  1
+  
+ SYJ=  3    2J P =  3  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                         3         4   0  0
+                                         5         2   1  0
+                                         7         4   1  0
+                                         9         2   2  0
+                                        11         4   2  0
+                                        15         4   3  0
+  
+ SYJ=  4    2J P =  3  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                         4         4   0  1
+                                         6         2   1  1
+                                         8         4   1  1
+                                        10         2   2  1
+                                        12         4   2  1
+                                        16         4   3  1
+  
+ SYJ=  5    2J P =  5  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                         7         4   1  0
+                                         9         2   2  0
+                                        11         4   2  0
+                                        13         2   3  0
+                                        15         4   3  0
+                                        19         4   4  0
+  
+ SYJ=  6    2J P =  5  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                         8         4   1  1
+                                        10         2   2  1
+                                        12         4   2  1
+                                        14         2   3  1
+                                        16         4   3  1
+                                        20         4   4  1
+  
+ SYJ=  7    2J P =  7  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        11         4   2  0
+                                        13         2   3  0
+                                        15         4   3  0
+                                        17         2   4  0
+                                        19         4   4  0
+                                        23         4   5  0
+  
+ SYJ=  8    2J P =  7  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        12         4   2  1
+                                        14         2   3  1
+                                        16         4   3  1
+                                        18         2   4  1
+                                        20         4   4  1
+                                        24         4   5  1
+  
+ SYJ=  9    2J P =  9  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        15         4   3  0
+                                        17         2   4  0
+                                        19         4   4  0
+                                        21         2   5  0
+                                        23         4   5  0
+                                        27         4   6  0
+  
+ SYJ= 10    2J P =  9  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        16         4   3  1
+                                        18         2   4  1
+                                        20         4   4  1
+                                        22         2   5  1
+                                        24         4   5  1
+                                        28         4   6  1
+  
+ SYJ= 11    2J P = 11  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        19         4   4  0
+                                        21         2   5  0
+                                        23         4   5  0
+                                        25         2   6  0
+                                        27         4   6  0
+                                        31        -6   7  0
+  
+ SYJ= 12    2J P = 11  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        20         4   4  1
+                                        22         2   5  1
+                                        24         4   5  1
+                                        26         2   6  1
+                                        28         4   6  1
+                                        32        -6   7  1
+  
+ SYJ= 13    2J P = 13  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        23         4   5  0
+                                        25         2   6  0
+                                        27         4   6  0
+                                        29        -2   7  0
+                                        31        -6   7  0
+                                        35        -6   8  0
+  
+ SYJ= 14    2J P = 13  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        24         4   5  1
+                                        26         2   6  1
+                                        28         4   6  1
+                                        30        -2   7  1
+                                        32        -6   7  1
+                                        36        -6   8  1
+  
+ SYJ= 15    2J P = 15  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        27         4   6  0
+                                        29        -2   7  0
+                                        31        -6   7  0
+                                        33        -2   8  0
+                                        35        -6   8  0
+                                        39        -6   9  0
+  
+ SYJ= 16    2J P = 15  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        28         4   6  1
+                                        30        -2   7  1
+                                        32        -6   7  1
+                                        34        -2   8  1
+                                        36        -6   8  1
+                                        40        -6   9  1
+  
+ SYJ= 17    2J P = 17  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        31        -6   7  0
+                                        33        -2   8  0
+                                        35        -6   8  0
+                                        37        -2   9  0
+                                        39        -6   9  0
+                                        43        -6  10  0
+  
+ SYJ= 18    2J P = 17  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        32        -6   7  1
+                                        34        -2   8  1
+                                        36        -6   8  1
+                                        38        -2   9  1
+                                        40        -6   9  1
+                                        44        -6  10  1
+  
+ SYJ= 19    2J P = 19  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        35        -6   8  0
+                                        37        -2   9  0
+                                        39        -6   9  0
+                                        41        -2  10  0
+                                        43        -6  10  0
+                                        47        -6  11  0
+  
+ SYJ= 20    2J P = 19  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        36        -6   8  1
+                                        38        -2   9  1
+                                        40        -6   9  1
+                                        42        -2  10  1
+                                        44        -6  10  1
+                                        48        -6  11  1
+  
+ SYJ= 21    2J P = 21  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        39        -6   9  0
+                                        41        -2  10  0
+                                        43        -6  10  0
+                                        45        -2  11  0
+                                        47        -6  11  0
+                                        51        -6  12  0
+  
+ SYJ= 22    2J P = 21  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        40        -6   9  1
+                                        42        -2  10  1
+                                        44        -6  10  1
+                                        46        -2  11  1
+                                        48        -6  11  1
+                                        52        -6  12  1
+  
+ SYJ= 23    2J P = 23  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        43        -6  10  0
+                                        45        -2  11  0
+                                        47        -6  11  0
+                                        49        -2  12  0
+                                        51        -6  12  0
+                                        55        -6  13  0
+  
+ SYJ= 24    2J P = 23  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        44        -6  10  1
+                                        46        -2  11  1
+                                        48        -6  11  1
+                                        50        -2  12  1
+                                        52        -6  12  1
+                                        56        -6  13  1
+  
+ SYJ= 25    2J P = 25  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        47        -6  11  0
+                                        49        -2  12  0
+                                        51        -6  12  0
+                                        53        -2  13  0
+                                        55        -6  13  0
+                                        59        -6  14  0
+  
+ SYJ= 26    2J P = 25  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        48        -6  11  1
+                                        50        -2  12  1
+                                        52        -6  12  1
+                                        54        -2  13  1
+                                        56        -6  13  1
+                                        60        -6  14  1
+  
+ SYJ= 27    2J P = 27  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        51        -6  12  0
+                                        53        -2  13  0
+                                        55        -6  13  0
+                                        57        -2  14  0
+                                        59        -6  14  0
+                                        63        -6  15  0
+  
+ SYJ= 28    2J P = 27  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        52        -6  12  1
+                                        54        -2  13  1
+                                        56        -6  13  1
+                                        58        -2  14  1
+                                        60        -6  14  1
+                                        64        -6  15  1
+  
+ SYJ= 29    2J P = 29  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        55        -6  13  0
+                                        57        -2  14  0
+                                        59        -6  14  0
+                                        61        -2  15  0
+                                        63        -6  15  0
+                                        67        -6  16  0
+  
+ SYJ= 30    2J P = 29  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        56        -6  13  1
+                                        58        -2  14  1
+                                        60        -6  14  1
+                                        62        -2  15  1
+                                        64        -6  15  1
+                                        68        -6  16  1
+  
+ SYJ= 31    2J P = 31  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        59        -6  14  0
+                                        61        -2  15  0
+                                        63        -6  15  0
+                                        65        -2  16  0
+                                        67        -6  16  0
+                                        71        -6  17  0
+  
+ SYJ= 32    2J P = 31  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        60        -6  14  1
+                                        62        -2  15  1
+                                        64        -6  15  1
+                                        66        -2  16  1
+                                        68        -6  16  1
+                                        72        -6  17  1
+  
+ SYJ= 33    2J P = 33  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        63        -6  15  0
+                                        65        -2  16  0
+                                        67        -6  16  0
+                                        69        -2  17  0
+                                        71        -6  17  0
+                                        75        -6  18  0
+  
+ SYJ= 34    2J P = 33  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        64        -6  15  1
+                                        66        -2  16  1
+                                        68        -6  16  1
+                                        70        -2  17  1
+                                        72        -6  17  1
+                                        76        -6  18  1
+  
+ SYJ= 35    2J P = 35  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        67        -6  16  0
+                                        69        -2  17  0
+                                        71        -6  17  0
+                                        73        -2  18  0
+                                        75        -6  18  0
+                                        79        -6  19  0
+  
+ SYJ= 36    2J P = 35  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        68        -6  16  1
+                                        70        -2  17  1
+                                        72        -6  17  1
+                                        74        -2  18  1
+                                        76        -6  18  1
+                                        80        -6  19  1
+  
+ SYJ= 37    2J P = 37  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        71        -6  17  0
+                                        73        -2  18  0
+                                        75        -6  18  0
+                                        77        -2  19  0
+                                        79        -6  19  0
+                                        83        -6  20  0
+  
+ SYJ= 38    2J P = 37  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        72        -6  17  1
+                                        74        -2  18  1
+                                        76        -6  18  1
+                                        78        -2  19  1
+                                        80        -6  19  1
+                                        84        -6  20  1
+  
+ SYJ= 39    2J P = 39  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        75        -6  18  0
+                                        77        -2  19  0
+                                        79        -6  19  0
+                                        81        -2  20  0
+                                        83        -6  20  0
+                                        87        -6  21  0
+  
+ SYJ= 40    2J P = 39  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        76        -6  18  1
+                                        78        -2  19  1
+                                        80        -6  19  1
+                                        82        -2  20  1
+                                        84        -6  20  1
+                                        88        -6  21  1
+  
+ SYJ= 41    2J P = 41  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        79        -6  19  0
+                                        81        -2  20  0
+                                        83        -6  20  0
+                                        85        -2  21  0
+                                        87        -6  21  0
+                                        91        -6  22  0
+  
+ SYJ= 42    2J P = 41  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        80        -6  19  1
+                                        82        -2  20  1
+                                        84        -6  20  1
+                                        86        -2  21  1
+                                        88        -6  21  1
+                                        92        -6  22  1
+  
+ SYJ= 43    2J P = 43  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        83        -6  20  0
+                                        85        -2  21  0
+                                        87        -6  21  0
+                                        89        -2  22  0
+                                        91        -6  22  0
+                                        95        -6  23  0
+  
+ SYJ= 44    2J P = 43  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        84        -6  20  1
+                                        86        -2  21  1
+                                        88        -6  21  1
+                                        90        -2  22  1
+                                        92        -6  22  1
+                                        96        -6  23  1
+  
+ SYJ= 45    2J P = 45  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        87        -6  21  0
+                                        89        -2  22  0
+                                        91        -6  22  0
+                                        93        -2  23  0
+                                        95        -6  23  0
+                                        99        -6  24  0
+  
+ SYJ= 46    2J P = 45  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        88        -6  21  1
+                                        90        -2  22  1
+                                        92        -6  22  1
+                                        94        -2  23  1
+                                        96        -6  23  1
+                                       100        -6  24  1
+  
+ SYJ= 47    2J P = 47  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        91        -6  22  0
+                                        93        -2  23  0
+                                        95        -6  23  0
+                                        97        -2  24  0
+                                        99        -6  24  0
+                                       103        -6  25  0
+  
+ SYJ= 48    2J P = 47  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        92        -6  22  1
+                                        94        -2  23  1
+                                        96        -6  23  1
+                                        98        -2  24  1
+                                       100        -6  24  1
+                                       104        -6  25  1
+  
+ SYJ= 49    2J P = 49  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        95        -6  23  0
+                                        97        -2  24  0
+                                        99        -6  24  0
+                                       101        -2  25  0
+                                       103        -6  25  0
+                                       107        -6  26  0
+  
+ SYJ= 50    2J P = 49  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        96        -6  23  1
+                                        98        -2  24  1
+                                       100        -6  24  1
+                                       102        -2  25  1
+                                       104        -6  25  1
+                                       108        -6  26  1
+  
+ SYJ= 51    2J P = 51  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                        99        -6  24  0
+                                       101        -2  25  0
+                                       103        -6  25  0
+                                       105        -2  26  0
+                                       107        -6  26  0
+                                       111        -6  27  0
+  
+ SYJ= 52    2J P = 51  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                       100        -6  24  1
+                                       102        -2  25  1
+                                       104        -6  25  1
+                                       106        -2  26  1
+                                       108        -6  26  1
+                                       112        -6  27  1
+  
+ SYJ= 53    2J P = 53  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                       103        -6  25  0
+                                       105        -2  26  0
+                                       107        -6  26  0
+                                       109        -2  27  0
+                                       111        -6  27  0
+                                       115        -6  28  0
+  
+ SYJ= 54    2J P = 53  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                       104        -6  25  1
+                                       106        -2  26  1
+                                       108        -6  26  1
+                                       110        -2  27  1
+                                       112        -6  27  1
+                                       116        -6  28  1
+  
+ SYJ= 55    2J P = 55  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                       107        -6  26  0
+                                       109        -2  27  0
+                                       111        -6  27  0
+                                       113        -2  28  0
+                                       115        -6  28  0
+                                       119        -6  29  0
+  
+ SYJ= 56    2J P = 55  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                       108        -6  26  1
+                                       110        -2  27  1
+                                       112        -6  27  1
+                                       114        -2  28  1
+                                       116        -6  28  1
+                                       120        -6  29  1
+  
+ SYJ= 57    2J P = 57  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                       111        -6  27  0
+                                       113        -2  28  0
+                                       115        -6  28  0
+                                       117        -2  29  0
+                                       119        -6  29  0
+                                       123        -6  30  0
+  
+ SYJ= 58    2J P = 57  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                       112        -6  27  1
+                                       114        -2  28  1
+                                       116        -6  28  1
+                                       118        -2  29  1
+                                       120        -6  29  1
+                                       124        -6  30  1
+  
+ SYJ= 59    2J P = 59  0    FORMED BY   SY= 6  (2S+1)  L  P 
+                                       115        -6  28  0
+                                       117        -2  29  0
+                                       119        -6  29  0
+                                       121        -2  30  0
+                                       123        -6  30  0
+                                       127        -6  31  0
+  
+ SYJ= 60    2J P = 59  1    FORMED BY   SY= 6  (2S+1)  L  P 
+                                       116        -6  28  1
+                                       118        -2  29  1
+                                       120        -6  29  1
+                                       122        -2  30  1
+                                       124        -6  30  1
+                                       128        -6  31  1
+
+ *** NO TWO-BODY FINE-STRUCTURE POSSIBLE: SET KUTSSX TO 1 OR -9 ETC.
+
+
+ CPU TIME=    0.000 MIN     TOTAL CPU TIME=    0.001 MIN
+
+
+
+ ----------------------------------------------------------------------------------------------------------------------------------------
+
+                                                  *** COLLISION HAMILTONIAN (BP) ***
+
+ ----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+ THE   4  INPUT SCATTERED CONTINUUM ENERGIES (RYD) ARE AS FOLLOWS:
+
+  1     0.000  2    46.530  3   139.589  4   418.767
+
+
+ THE   3  CHARACTERISTIC EXCITATION ENERGIES (RYD) ARE AS FOLLOWS:
+
+  0     0.000  1     2.725  2    12.873
+
+
+ THE  11  CONTINUUM INTERPOLATION ENERGIES (RYD) ARE AS FOLLOWS:
+
+  1     0.000  2     2.725  3    12.873  4    46.530  5    49.254  6    59.402  7   139.589  8   152.462  9   418.767 10   425.154
+ 11   431.639
+
+
+ THE SCATTERED ENERGIES ARE MAPPED TO THE INTERPOLATION ENERGIES AS FOLLOWS:
+
+   1  1   2  4   3  7   4  9
+
+ WHERE AN NLAG= 2-POINT LAGRANGE INTERPOLATION IS TO BE USED.
+
+ RESULTANT TOTAL NUMBER OF ENERGY INTEGRAL PAIRS:  30
+
+   1  1   2  1   3  1   4  1   5  1   1  2   1  3   1  4   4  4   5  4   6  4   7  4   8  4   1  5   4  5   4  6   4  7   7  7   8  7   9  7
+  10  7   4  8   7  8   7  9   9  9  10  9  11  9   7 10   9 10   9 11
+
+
+
+ CONTINUUM S.M.-POTENTIAL WITH SCALE FACTOR   1.30000;  COULOMBIC BEYOND R(IEND=  364) =  0.428971
+
+ REDUCING RADIAL EXTENT FROM  X(  842)=   2.122  TO  X(  777)=   1.723  FOR SCATTERING INTEGRALS
+
+
+
+
+ ----------------------------------------------------------------------------------------------------------------------------------------
+
+
+                                                 *** TARGET ENERGIES (IC) ***
+
+          K        LV         T                 2*S+1  L   2J   CF         (EK-E1)/RY               NMETAJ=    2
+          1         8         5                   1    0    0    1         0.00000000
+          2        10         3                  -3    1    0    2         3.15838678
+          3         5         3                  -3    1    2    2         3.44090081
+          4         3         3                  -3    1    4    2         4.23826392
+          5         6         4                  -1    1    2    2         6.86447478
+          6         7         2                   3    1    0    3         8.65083620
+          7         4         2                   3    1    2    3         9.25593714
+          8         2         2                   3    1    4    3         9.69289173
+          9         1         1                   1    2    4    3        10.89166603
+         10         9         6                   1    0    0    3        12.87266774
+
+
+ ----------------------------------------------------------------------------------------------------------------------------------------
+
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT=  0
+ ------------------------------------------
+
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT=  1
+ ------------------------------------------
+
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT=  2
+ ------------------------------------------
+
+
+
+ SYJ=  1     2J P =   1  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           2       0
+          2         2         2           2       0
+          3         5         3           1       0
+          4         6         4           1       0
+          5         7         2           0       0
+          6         8         5           0       0
+          7         9         6           0       0
+          8         1         1           2       2
+          9         2         2           2       2
+         10         3         3           1       2
+         11         3         3           3       2
+         12         4         2           0       2
+         13         4         2           2       2
+         14         5         3           1       2
+         15         6         4           1       2
+         16        10         3           1       2
+
+
+ SYJ=  2     2J P =   1  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         3         3           2       0
+          2         4         2           1       0
+          3        10         3           0       0
+          4         1         1           1       2
+          5         2         2           1       2
+          6         1         1           3       2
+          7         2         2           3       2
+          8         3         3           2       2
+          9         4         2           1       2
+         10         5         3           0       2
+         11         6         4           0       2
+         12         5         3           2       2
+         13         6         4           2       2
+         14         7         2           1       2
+         15         8         5           1       2
+         16         9         6           1       2
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT=  3
+ ------------------------------------------
+
+
+
+ SYJ=  3     2J P =   3  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           2       2
+          2         2         2           2       2
+          3         3         3           1       2
+          4         3         3           3       2
+          5         4         2           0       2
+          6         4         2           2       2
+          7         5         3           1       2
+          8         6         4           1       2
+          9        10         3           1       2
+         10         1         1           0       4
+         11         2         2           0       4
+         12         1         1           2       4
+         13         2         2           2       4
+         14         1         1           4       4
+         15         2         2           4       4
+         16         3         3           1       4
+         17         3         3           3       4
+         18         4         2           2       4
+         19         5         3           1       4
+         20         6         4           1       4
+         21         5         3           3       4
+         22         6         4           3       4
+         23         7         2           2       4
+         24         8         5           2       4
+         25         9         6           2       4
+
+
+ SYJ=  4     2J P =   3  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           1       2
+          2         2         2           1       2
+          3         1         1           3       2
+          4         2         2           3       2
+          5         3         3           2       2
+          6         4         2           1       2
+          7         5         3           0       2
+          8         6         4           0       2
+          9         5         3           2       2
+         10         6         4           2       2
+         11         7         2           1       2
+         12         8         5           1       2
+         13         9         6           1       2
+         14         1         1           1       4
+         15         2         2           1       4
+         16         1         1           3       4
+         17         2         2           3       4
+         18         3         3           0       4
+         19         3         3           2       4
+         20         3         3           4       4
+         21         4         2           1       4
+         22         4         2           3       4
+         23         5         3           2       4
+         24         6         4           2       4
+         25        10         3           2       4
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT=  4
+ ------------------------------------------
+
+
+
+ SYJ=  5     2J P =   5  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           0       4
+          2         2         2           0       4
+          3         1         1           2       4
+          4         2         2           2       4
+          5         1         1           4       4
+          6         2         2           4       4
+          7         3         3           1       4
+          8         3         3           3       4
+          9         4         2           2       4
+         10         5         3           1       4
+         11         6         4           1       4
+         12         5         3           3       4
+         13         6         4           3       4
+         14         7         2           2       4
+         15         8         5           2       4
+         16         9         6           2       4
+         17         1         1           2       6
+         18         2         2           2       6
+         19         1         1           4       6
+         20         2         2           4       6
+         21         3         3           1       6
+         22         3         3           3       6
+         23         3         3           5       6
+         24         4         2           2       6
+         25         4         2           4       6
+         26         5         3           3       6
+         27         6         4           3       6
+         28        10         3           3       6
+
+
+ SYJ=  6     2J P =   5  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           1       4
+          2         2         2           1       4
+          3         1         1           3       4
+          4         2         2           3       4
+          5         3         3           0       4
+          6         3         3           2       4
+          7         3         3           4       4
+          8         4         2           1       4
+          9         4         2           3       4
+         10         5         3           2       4
+         11         6         4           2       4
+         12        10         3           2       4
+         13         1         1           1       6
+         14         2         2           1       6
+         15         1         1           3       6
+         16         2         2           3       6
+         17         1         1           5       6
+         18         2         2           5       6
+         19         3         3           2       6
+         20         3         3           4       6
+         21         4         2           3       6
+         22         5         3           2       6
+         23         6         4           2       6
+         24         5         3           4       6
+         25         6         4           4       6
+         26         7         2           3       6
+         27         8         5           3       6
+         28         9         6           3       6
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT=  5
+ ------------------------------------------
+
+
+
+ SYJ=  7     2J P =   7  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           2       6
+          2         2         2           2       6
+          3         1         1           4       6
+          4         2         2           4       6
+          5         3         3           1       6
+          6         3         3           3       6
+          7         3         3           5       6
+          8         4         2           2       6
+          9         4         2           4       6
+         10         5         3           3       6
+         11         6         4           3       6
+         12        10         3           3       6
+         13         1         1           2       8
+         14         2         2           2       8
+         15         1         1           4       8
+         16         2         2           4       8
+         17         1         1           6       8
+         18         2         2           6       8
+         19         3         3           3       8
+         20         3         3           5       8
+         21         4         2           4       8
+         22         5         3           3       8
+         23         6         4           3       8
+         24         5         3           5       8
+         25         6         4           5       8
+         26         7         2           4       8
+         27         8         5           4       8
+         28         9         6           4       8
+
+
+ SYJ=  8     2J P =   7  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           1       6
+          2         2         2           1       6
+          3         1         1           3       6
+          4         2         2           3       6
+          5         1         1           5       6
+          6         2         2           5       6
+          7         3         3           2       6
+          8         3         3           4       6
+          9         4         2           3       6
+         10         5         3           2       6
+         11         6         4           2       6
+         12         5         3           4       6
+         13         6         4           4       6
+         14         7         2           3       6
+         15         8         5           3       6
+         16         9         6           3       6
+         17         1         1           3       8
+         18         2         2           3       8
+         19         1         1           5       8
+         20         2         2           5       8
+         21         3         3           2       8
+         22         3         3           4       8
+         23         3         3           6       8
+         24         4         2           3       8
+         25         4         2           5       8
+         26         5         3           4       8
+         27         6         4           4       8
+         28        10         3           4       8
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT=  6
+ ------------------------------------------
+
+
+
+ SYJ=  9     2J P =   9  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           2       8
+          2         2         2           2       8
+          3         1         1           4       8
+          4         2         2           4       8
+          5         1         1           6       8
+          6         2         2           6       8
+          7         3         3           3       8
+          8         3         3           5       8
+          9         4         2           4       8
+         10         5         3           3       8
+         11         6         4           3       8
+         12         5         3           5       8
+         13         6         4           5       8
+         14         7         2           4       8
+         15         8         5           4       8
+         16         9         6           4       8
+         17         1         1           4      10
+         18         2         2           4      10
+         19         1         1           6      10
+         20         2         2           6      10
+         21         3         3           3      10
+         22         3         3           5      10
+         23         3         3           7      10
+         24         4         2           4      10
+         25         4         2           6      10
+         26         5         3           5      10
+         27         6         4           5      10
+         28        10         3           5      10
+
+
+ SYJ= 10     2J P =   9  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           3       8
+          2         2         2           3       8
+          3         1         1           5       8
+          4         2         2           5       8
+          5         3         3           2       8
+          6         3         3           4       8
+          7         3         3           6       8
+          8         4         2           3       8
+          9         4         2           5       8
+         10         5         3           4       8
+         11         6         4           4       8
+         12        10         3           4       8
+         13         1         1           3      10
+         14         2         2           3      10
+         15         1         1           5      10
+         16         2         2           5      10
+         17         1         1           7      10
+         18         2         2           7      10
+         19         3         3           4      10
+         20         3         3           6      10
+         21         4         2           5      10
+         22         5         3           4      10
+         23         6         4           4      10
+         24         5         3           6      10
+         25         6         4           6      10
+         26         7         2           5      10
+         27         8         5           5      10
+         28         9         6           5      10
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT=  7
+ ------------------------------------------
+
+
+
+ SYJ= 11     2J P =  11  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           4      10
+          2         2         2           4      10
+          3         1         1           6      10
+          4         2         2           6      10
+          5         3         3           3      10
+          6         3         3           5      10
+          7         3         3           7      10
+          8         4         2           4      10
+          9         4         2           6      10
+         10         5         3           5      10
+         11         6         4           5      10
+         12        10         3           5      10
+         13         1         1           4      12
+         14         2         2           4      12
+         15         1         1           6      12
+         16         2         2           6      12
+         17         1         1           8      12
+         18         2         2           8      12
+         19         3         3           5      12
+         20         3         3           7      12
+         21         4         2           6      12
+         22         5         3           5      12
+         23         6         4           5      12
+         24         5         3           7      12
+         25         6         4           7      12
+         26         7         2           6      12
+         27         8         5           6      12
+         28         9         6           6      12
+
+
+ SYJ= 12     2J P =  11  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           3      10
+          2         2         2           3      10
+          3         1         1           5      10
+          4         2         2           5      10
+          5         1         1           7      10
+          6         2         2           7      10
+          7         3         3           4      10
+          8         3         3           6      10
+          9         4         2           5      10
+         10         5         3           4      10
+         11         6         4           4      10
+         12         5         3           6      10
+         13         6         4           6      10
+         14         7         2           5      10
+         15         8         5           5      10
+         16         9         6           5      10
+         17         1         1           5      12
+         18         2         2           5      12
+         19         1         1           7      12
+         20         2         2           7      12
+         21         3         3           4      12
+         22         3         3           6      12
+         23         3         3           8      12
+         24         4         2           5      12
+         25         4         2           7      12
+         26         5         3           6      12
+         27         6         4           6      12
+         28        10         3           6      12
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT=  8
+ ------------------------------------------
+
+
+
+ SYJ= 13     2J P =  13  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           4      12
+          2         2         2           4      12
+          3         1         1           6      12
+          4         2         2           6      12
+          5         1         1           8      12
+          6         2         2           8      12
+          7         3         3           5      12
+          8         3         3           7      12
+          9         4         2           6      12
+         10         5         3           5      12
+         11         6         4           5      12
+         12         5         3           7      12
+         13         6         4           7      12
+         14         7         2           6      12
+         15         8         5           6      12
+         16         9         6           6      12
+         17         1         1           6      14
+         18         2         2           6      14
+         19         1         1           8      14
+         20         2         2           8      14
+         21         3         3           5      14
+         22         3         3           7      14
+         23         3         3           9      14
+         24         4         2           6      14
+         25         4         2           8      14
+         26         5         3           7      14
+         27         6         4           7      14
+         28        10         3           7      14
+
+
+ SYJ= 14     2J P =  13  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           5      12
+          2         2         2           5      12
+          3         1         1           7      12
+          4         2         2           7      12
+          5         3         3           4      12
+          6         3         3           6      12
+          7         3         3           8      12
+          8         4         2           5      12
+          9         4         2           7      12
+         10         5         3           6      12
+         11         6         4           6      12
+         12        10         3           6      12
+         13         1         1           5      14
+         14         2         2           5      14
+         15         1         1           7      14
+         16         2         2           7      14
+         17         1         1           9      14
+         18         2         2           9      14
+         19         3         3           6      14
+         20         3         3           8      14
+         21         4         2           7      14
+         22         5         3           6      14
+         23         6         4           6      14
+         24         5         3           8      14
+         25         6         4           8      14
+         26         7         2           7      14
+         27         8         5           7      14
+         28         9         6           7      14
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT=  9
+ ------------------------------------------
+
+
+
+ SYJ= 15     2J P =  15  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           6      14
+          2         2         2           6      14
+          3         1         1           8      14
+          4         2         2           8      14
+          5         3         3           5      14
+          6         3         3           7      14
+          7         3         3           9      14
+          8         4         2           6      14
+          9         4         2           8      14
+         10         5         3           7      14
+         11         6         4           7      14
+         12        10         3           7      14
+         13         1         1           6      16
+         14         2         2           6      16
+         15         1         1           8      16
+         16         2         2           8      16
+         17         1         1          10      16
+         18         2         2          10      16
+         19         3         3           7      16
+         20         3         3           9      16
+         21         4         2           8      16
+         22         5         3           7      16
+         23         6         4           7      16
+         24         5         3           9      16
+         25         6         4           9      16
+         26         7         2           8      16
+         27         8         5           8      16
+         28         9         6           8      16
+
+
+ SYJ= 16     2J P =  15  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           5      14
+          2         2         2           5      14
+          3         1         1           7      14
+          4         2         2           7      14
+          5         1         1           9      14
+          6         2         2           9      14
+          7         3         3           6      14
+          8         3         3           8      14
+          9         4         2           7      14
+         10         5         3           6      14
+         11         6         4           6      14
+         12         5         3           8      14
+         13         6         4           8      14
+         14         7         2           7      14
+         15         8         5           7      14
+         16         9         6           7      14
+         17         1         1           7      16
+         18         2         2           7      16
+         19         1         1           9      16
+         20         2         2           9      16
+         21         3         3           6      16
+         22         3         3           8      16
+         23         3         3          10      16
+         24         4         2           7      16
+         25         4         2           9      16
+         26         5         3           8      16
+         27         6         4           8      16
+         28        10         3           8      16
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 10
+ ------------------------------------------
+
+
+
+ SYJ= 17     2J P =  17  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           6      16
+          2         2         2           6      16
+          3         1         1           8      16
+          4         2         2           8      16
+          5         1         1          10      16
+          6         2         2          10      16
+          7         3         3           7      16
+          8         3         3           9      16
+          9         4         2           8      16
+         10         5         3           7      16
+         11         6         4           7      16
+         12         5         3           9      16
+         13         6         4           9      16
+         14         7         2           8      16
+         15         8         5           8      16
+         16         9         6           8      16
+         17         1         1           8      18
+         18         2         2           8      18
+         19         1         1          10      18
+         20         2         2          10      18
+         21         3         3           7      18
+         22         3         3           9      18
+         23         3         3          11      18
+         24         4         2           8      18
+         25         4         2          10      18
+         26         5         3           9      18
+         27         6         4           9      18
+         28        10         3           9      18
+
+
+ SYJ= 18     2J P =  17  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           7      16
+          2         2         2           7      16
+          3         1         1           9      16
+          4         2         2           9      16
+          5         3         3           6      16
+          6         3         3           8      16
+          7         3         3          10      16
+          8         4         2           7      16
+          9         4         2           9      16
+         10         5         3           8      16
+         11         6         4           8      16
+         12        10         3           8      16
+         13         1         1           7      18
+         14         2         2           7      18
+         15         1         1           9      18
+         16         2         2           9      18
+         17         1         1          11      18
+         18         2         2          11      18
+         19         3         3           8      18
+         20         3         3          10      18
+         21         4         2           9      18
+         22         5         3           8      18
+         23         6         4           8      18
+         24         5         3          10      18
+         25         6         4          10      18
+         26         7         2           9      18
+         27         8         5           9      18
+         28         9         6           9      18
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 11
+ ------------------------------------------
+
+
+
+ SYJ= 19     2J P =  19  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           8      18
+          2         2         2           8      18
+          3         1         1          10      18
+          4         2         2          10      18
+          5         3         3           7      18
+          6         3         3           9      18
+          7         3         3          11      18
+          8         4         2           8      18
+          9         4         2          10      18
+         10         5         3           9      18
+         11         6         4           9      18
+         12        10         3           9      18
+         13         1         1           8      20
+         14         2         2           8      20
+         15         1         1          10      20
+         16         2         2          10      20
+         17         1         1          12      20
+         18         2         2          12      20
+         19         3         3           9      20
+         20         3         3          11      20
+         21         4         2          10      20
+         22         5         3           9      20
+         23         6         4           9      20
+         24         5         3          11      20
+         25         6         4          11      20
+         26         7         2          10      20
+         27         8         5          10      20
+         28         9         6          10      20
+
+
+ SYJ= 20     2J P =  19  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           7      18
+          2         2         2           7      18
+          3         1         1           9      18
+          4         2         2           9      18
+          5         1         1          11      18
+          6         2         2          11      18
+          7         3         3           8      18
+          8         3         3          10      18
+          9         4         2           9      18
+         10         5         3           8      18
+         11         6         4           8      18
+         12         5         3          10      18
+         13         6         4          10      18
+         14         7         2           9      18
+         15         8         5           9      18
+         16         9         6           9      18
+         17         1         1           9      20
+         18         2         2           9      20
+         19         1         1          11      20
+         20         2         2          11      20
+         21         3         3           8      20
+         22         3         3          10      20
+         23         3         3          12      20
+         24         4         2           9      20
+         25         4         2          11      20
+         26         5         3          10      20
+         27         6         4          10      20
+         28        10         3          10      20
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 12
+ ------------------------------------------
+
+
+
+ SYJ= 21     2J P =  21  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           8      20
+          2         2         2           8      20
+          3         1         1          10      20
+          4         2         2          10      20
+          5         1         1          12      20
+          6         2         2          12      20
+          7         3         3           9      20
+          8         3         3          11      20
+          9         4         2          10      20
+         10         5         3           9      20
+         11         6         4           9      20
+         12         5         3          11      20
+         13         6         4          11      20
+         14         7         2          10      20
+         15         8         5          10      20
+         16         9         6          10      20
+         17         1         1          10      22
+         18         2         2          10      22
+         19         1         1          12      22
+         20         2         2          12      22
+         21         3         3           9      22
+         22         3         3          11      22
+         23         3         3          13      22
+         24         4         2          10      22
+         25         4         2          12      22
+         26         5         3          11      22
+         27         6         4          11      22
+         28        10         3          11      22
+
+
+ SYJ= 22     2J P =  21  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           9      20
+          2         2         2           9      20
+          3         1         1          11      20
+          4         2         2          11      20
+          5         3         3           8      20
+          6         3         3          10      20
+          7         3         3          12      20
+          8         4         2           9      20
+          9         4         2          11      20
+         10         5         3          10      20
+         11         6         4          10      20
+         12        10         3          10      20
+         13         1         1           9      22
+         14         2         2           9      22
+         15         1         1          11      22
+         16         2         2          11      22
+         17         1         1          13      22
+         18         2         2          13      22
+         19         3         3          10      22
+         20         3         3          12      22
+         21         4         2          11      22
+         22         5         3          10      22
+         23         6         4          10      22
+         24         5         3          12      22
+         25         6         4          12      22
+         26         7         2          11      22
+         27         8         5          11      22
+         28         9         6          11      22
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 13
+ ------------------------------------------
+
+
+
+ SYJ= 23     2J P =  23  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          10      22
+          2         2         2          10      22
+          3         1         1          12      22
+          4         2         2          12      22
+          5         3         3           9      22
+          6         3         3          11      22
+          7         3         3          13      22
+          8         4         2          10      22
+          9         4         2          12      22
+         10         5         3          11      22
+         11         6         4          11      22
+         12        10         3          11      22
+         13         1         1          10      24
+         14         2         2          10      24
+         15         1         1          12      24
+         16         2         2          12      24
+         17         1         1          14      24
+         18         2         2          14      24
+         19         3         3          11      24
+         20         3         3          13      24
+         21         4         2          12      24
+         22         5         3          11      24
+         23         6         4          11      24
+         24         5         3          13      24
+         25         6         4          13      24
+         26         7         2          12      24
+         27         8         5          12      24
+         28         9         6          12      24
+
+
+ SYJ= 24     2J P =  23  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1           9      22
+          2         2         2           9      22
+          3         1         1          11      22
+          4         2         2          11      22
+          5         1         1          13      22
+          6         2         2          13      22
+          7         3         3          10      22
+          8         3         3          12      22
+          9         4         2          11      22
+         10         5         3          10      22
+         11         6         4          10      22
+         12         5         3          12      22
+         13         6         4          12      22
+         14         7         2          11      22
+         15         8         5          11      22
+         16         9         6          11      22
+         17         1         1          11      24
+         18         2         2          11      24
+         19         1         1          13      24
+         20         2         2          13      24
+         21         3         3          10      24
+         22         3         3          12      24
+         23         3         3          14      24
+         24         4         2          11      24
+         25         4         2          13      24
+         26         5         3          12      24
+         27         6         4          12      24
+         28        10         3          12      24
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 14
+ ------------------------------------------
+
+
+
+ SYJ= 25     2J P =  25  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          10      24
+          2         2         2          10      24
+          3         1         1          12      24
+          4         2         2          12      24
+          5         1         1          14      24
+          6         2         2          14      24
+          7         3         3          11      24
+          8         3         3          13      24
+          9         4         2          12      24
+         10         5         3          11      24
+         11         6         4          11      24
+         12         5         3          13      24
+         13         6         4          13      24
+         14         7         2          12      24
+         15         8         5          12      24
+         16         9         6          12      24
+         17         1         1          12      26
+         18         2         2          12      26
+         19         1         1          14      26
+         20         2         2          14      26
+         21         3         3          11      26
+         22         3         3          13      26
+         23         3         3          15      26
+         24         4         2          12      26
+         25         4         2          14      26
+         26         5         3          13      26
+         27         6         4          13      26
+         28        10         3          13      26
+
+
+ SYJ= 26     2J P =  25  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          11      24
+          2         2         2          11      24
+          3         1         1          13      24
+          4         2         2          13      24
+          5         3         3          10      24
+          6         3         3          12      24
+          7         3         3          14      24
+          8         4         2          11      24
+          9         4         2          13      24
+         10         5         3          12      24
+         11         6         4          12      24
+         12        10         3          12      24
+         13         1         1          11      26
+         14         2         2          11      26
+         15         1         1          13      26
+         16         2         2          13      26
+         17         1         1          15      26
+         18         2         2          15      26
+         19         3         3          12      26
+         20         3         3          14      26
+         21         4         2          13      26
+         22         5         3          12      26
+         23         6         4          12      26
+         24         5         3          14      26
+         25         6         4          14      26
+         26         7         2          13      26
+         27         8         5          13      26
+         28         9         6          13      26
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 15
+ ------------------------------------------
+
+
+
+ SYJ= 27     2J P =  27  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          12      26
+          2         2         2          12      26
+          3         1         1          14      26
+          4         2         2          14      26
+          5         3         3          11      26
+          6         3         3          13      26
+          7         3         3          15      26
+          8         4         2          12      26
+          9         4         2          14      26
+         10         5         3          13      26
+         11         6         4          13      26
+         12        10         3          13      26
+         13         1         1          12      28
+         14         2         2          12      28
+         15         1         1          14      28
+         16         2         2          14      28
+         17         1         1          16      28
+         18         2         2          16      28
+         19         3         3          13      28
+         20         3         3          15      28
+         21         4         2          14      28
+         22         5         3          13      28
+         23         6         4          13      28
+         24         5         3          15      28
+         25         6         4          15      28
+         26         7         2          14      28
+         27         8         5          14      28
+         28         9         6          14      28
+
+
+ SYJ= 28     2J P =  27  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          11      26
+          2         2         2          11      26
+          3         1         1          13      26
+          4         2         2          13      26
+          5         1         1          15      26
+          6         2         2          15      26
+          7         3         3          12      26
+          8         3         3          14      26
+          9         4         2          13      26
+         10         5         3          12      26
+         11         6         4          12      26
+         12         5         3          14      26
+         13         6         4          14      26
+         14         7         2          13      26
+         15         8         5          13      26
+         16         9         6          13      26
+         17         1         1          13      28
+         18         2         2          13      28
+         19         1         1          15      28
+         20         2         2          15      28
+         21         3         3          12      28
+         22         3         3          14      28
+         23         3         3          16      28
+         24         4         2          13      28
+         25         4         2          15      28
+         26         5         3          14      28
+         27         6         4          14      28
+         28        10         3          14      28
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 16
+ ------------------------------------------
+
+
+
+ SYJ= 29     2J P =  29  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          12      28
+          2         2         2          12      28
+          3         1         1          14      28
+          4         2         2          14      28
+          5         1         1          16      28
+          6         2         2          16      28
+          7         3         3          13      28
+          8         3         3          15      28
+          9         4         2          14      28
+         10         5         3          13      28
+         11         6         4          13      28
+         12         5         3          15      28
+         13         6         4          15      28
+         14         7         2          14      28
+         15         8         5          14      28
+         16         9         6          14      28
+         17         1         1          14      30
+         18         2         2          14      30
+         19         1         1          16      30
+         20         2         2          16      30
+         21         3         3          13      30
+         22         3         3          15      30
+         23         3         3          17      30
+         24         4         2          14      30
+         25         4         2          16      30
+         26         5         3          15      30
+         27         6         4          15      30
+         28        10         3          15      30
+
+
+ SYJ= 30     2J P =  29  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          13      28
+          2         2         2          13      28
+          3         1         1          15      28
+          4         2         2          15      28
+          5         3         3          12      28
+          6         3         3          14      28
+          7         3         3          16      28
+          8         4         2          13      28
+          9         4         2          15      28
+         10         5         3          14      28
+         11         6         4          14      28
+         12        10         3          14      28
+         13         1         1          13      30
+         14         2         2          13      30
+         15         1         1          15      30
+         16         2         2          15      30
+         17         1         1          17      30
+         18         2         2          17      30
+         19         3         3          14      30
+         20         3         3          16      30
+         21         4         2          15      30
+         22         5         3          14      30
+         23         6         4          14      30
+         24         5         3          16      30
+         25         6         4          16      30
+         26         7         2          15      30
+         27         8         5          15      30
+         28         9         6          15      30
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 17
+ ------------------------------------------
+
+
+
+ SYJ= 31     2J P =  31  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          14      30
+          2         2         2          14      30
+          3         1         1          16      30
+          4         2         2          16      30
+          5         3         3          13      30
+          6         3         3          15      30
+          7         3         3          17      30
+          8         4         2          14      30
+          9         4         2          16      30
+         10         5         3          15      30
+         11         6         4          15      30
+         12        10         3          15      30
+         13         1         1          14      32
+         14         2         2          14      32
+         15         1         1          16      32
+         16         2         2          16      32
+         17         1         1          18      32
+         18         2         2          18      32
+         19         3         3          15      32
+         20         3         3          17      32
+         21         4         2          16      32
+         22         5         3          15      32
+         23         6         4          15      32
+         24         5         3          17      32
+         25         6         4          17      32
+         26         7         2          16      32
+         27         8         5          16      32
+         28         9         6          16      32
+
+
+ SYJ= 32     2J P =  31  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          13      30
+          2         2         2          13      30
+          3         1         1          15      30
+          4         2         2          15      30
+          5         1         1          17      30
+          6         2         2          17      30
+          7         3         3          14      30
+          8         3         3          16      30
+          9         4         2          15      30
+         10         5         3          14      30
+         11         6         4          14      30
+         12         5         3          16      30
+         13         6         4          16      30
+         14         7         2          15      30
+         15         8         5          15      30
+         16         9         6          15      30
+         17         1         1          15      32
+         18         2         2          15      32
+         19         1         1          17      32
+         20         2         2          17      32
+         21         3         3          14      32
+         22         3         3          16      32
+         23         3         3          18      32
+         24         4         2          15      32
+         25         4         2          17      32
+         26         5         3          16      32
+         27         6         4          16      32
+         28        10         3          16      32
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 18
+ ------------------------------------------
+
+
+
+ SYJ= 33     2J P =  33  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          14      32
+          2         2         2          14      32
+          3         1         1          16      32
+          4         2         2          16      32
+          5         1         1          18      32
+          6         2         2          18      32
+          7         3         3          15      32
+          8         3         3          17      32
+          9         4         2          16      32
+         10         5         3          15      32
+         11         6         4          15      32
+         12         5         3          17      32
+         13         6         4          17      32
+         14         7         2          16      32
+         15         8         5          16      32
+         16         9         6          16      32
+         17         1         1          16      34
+         18         2         2          16      34
+         19         1         1          18      34
+         20         2         2          18      34
+         21         3         3          15      34
+         22         3         3          17      34
+         23         3         3          19      34
+         24         4         2          16      34
+         25         4         2          18      34
+         26         5         3          17      34
+         27         6         4          17      34
+         28        10         3          17      34
+
+
+ SYJ= 34     2J P =  33  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          15      32
+          2         2         2          15      32
+          3         1         1          17      32
+          4         2         2          17      32
+          5         3         3          14      32
+          6         3         3          16      32
+          7         3         3          18      32
+          8         4         2          15      32
+          9         4         2          17      32
+         10         5         3          16      32
+         11         6         4          16      32
+         12        10         3          16      32
+         13         1         1          15      34
+         14         2         2          15      34
+         15         1         1          17      34
+         16         2         2          17      34
+         17         1         1          19      34
+         18         2         2          19      34
+         19         3         3          16      34
+         20         3         3          18      34
+         21         4         2          17      34
+         22         5         3          16      34
+         23         6         4          16      34
+         24         5         3          18      34
+         25         6         4          18      34
+         26         7         2          17      34
+         27         8         5          17      34
+         28         9         6          17      34
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 19
+ ------------------------------------------
+
+
+
+ SYJ= 35     2J P =  35  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          16      34
+          2         2         2          16      34
+          3         1         1          18      34
+          4         2         2          18      34
+          5         3         3          15      34
+          6         3         3          17      34
+          7         3         3          19      34
+          8         4         2          16      34
+          9         4         2          18      34
+         10         5         3          17      34
+         11         6         4          17      34
+         12        10         3          17      34
+         13         1         1          16      36
+         14         2         2          16      36
+         15         1         1          18      36
+         16         2         2          18      36
+         17         1         1          20      36
+         18         2         2          20      36
+         19         3         3          17      36
+         20         3         3          19      36
+         21         4         2          18      36
+         22         5         3          17      36
+         23         6         4          17      36
+         24         5         3          19      36
+         25         6         4          19      36
+         26         7         2          18      36
+         27         8         5          18      36
+         28         9         6          18      36
+
+
+ SYJ= 36     2J P =  35  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          15      34
+          2         2         2          15      34
+          3         1         1          17      34
+          4         2         2          17      34
+          5         1         1          19      34
+          6         2         2          19      34
+          7         3         3          16      34
+          8         3         3          18      34
+          9         4         2          17      34
+         10         5         3          16      34
+         11         6         4          16      34
+         12         5         3          18      34
+         13         6         4          18      34
+         14         7         2          17      34
+         15         8         5          17      34
+         16         9         6          17      34
+         17         1         1          17      36
+         18         2         2          17      36
+         19         1         1          19      36
+         20         2         2          19      36
+         21         3         3          16      36
+         22         3         3          18      36
+         23         3         3          20      36
+         24         4         2          17      36
+         25         4         2          19      36
+         26         5         3          18      36
+         27         6         4          18      36
+         28        10         3          18      36
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 20
+ ------------------------------------------
+
+
+
+ SYJ= 37     2J P =  37  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          16      36
+          2         2         2          16      36
+          3         1         1          18      36
+          4         2         2          18      36
+          5         1         1          20      36
+          6         2         2          20      36
+          7         3         3          17      36
+          8         3         3          19      36
+          9         4         2          18      36
+         10         5         3          17      36
+         11         6         4          17      36
+         12         5         3          19      36
+         13         6         4          19      36
+         14         7         2          18      36
+         15         8         5          18      36
+         16         9         6          18      36
+         17         1         1          18      38
+         18         2         2          18      38
+         19         1         1          20      38
+         20         2         2          20      38
+         21         3         3          17      38
+         22         3         3          19      38
+         23         3         3          21      38
+         24         4         2          18      38
+         25         4         2          20      38
+         26         5         3          19      38
+         27         6         4          19      38
+         28        10         3          19      38
+
+
+ SYJ= 38     2J P =  37  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          17      36
+          2         2         2          17      36
+          3         1         1          19      36
+          4         2         2          19      36
+          5         3         3          16      36
+          6         3         3          18      36
+          7         3         3          20      36
+          8         4         2          17      36
+          9         4         2          19      36
+         10         5         3          18      36
+         11         6         4          18      36
+         12        10         3          18      36
+         13         1         1          17      38
+         14         2         2          17      38
+         15         1         1          19      38
+         16         2         2          19      38
+         17         1         1          21      38
+         18         2         2          21      38
+         19         3         3          18      38
+         20         3         3          20      38
+         21         4         2          19      38
+         22         5         3          18      38
+         23         6         4          18      38
+         24         5         3          20      38
+         25         6         4          20      38
+         26         7         2          19      38
+         27         8         5          19      38
+         28         9         6          19      38
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 21
+ ------------------------------------------
+
+
+
+ SYJ= 39     2J P =  39  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          18      38
+          2         2         2          18      38
+          3         1         1          20      38
+          4         2         2          20      38
+          5         3         3          17      38
+          6         3         3          19      38
+          7         3         3          21      38
+          8         4         2          18      38
+          9         4         2          20      38
+         10         5         3          19      38
+         11         6         4          19      38
+         12        10         3          19      38
+         13         1         1          18      40
+         14         2         2          18      40
+         15         1         1          20      40
+         16         2         2          20      40
+         17         1         1          22      40
+         18         2         2          22      40
+         19         3         3          19      40
+         20         3         3          21      40
+         21         4         2          20      40
+         22         5         3          19      40
+         23         6         4          19      40
+         24         5         3          21      40
+         25         6         4          21      40
+         26         7         2          20      40
+         27         8         5          20      40
+         28         9         6          20      40
+
+
+ SYJ= 40     2J P =  39  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          17      38
+          2         2         2          17      38
+          3         1         1          19      38
+          4         2         2          19      38
+          5         1         1          21      38
+          6         2         2          21      38
+          7         3         3          18      38
+          8         3         3          20      38
+          9         4         2          19      38
+         10         5         3          18      38
+         11         6         4          18      38
+         12         5         3          20      38
+         13         6         4          20      38
+         14         7         2          19      38
+         15         8         5          19      38
+         16         9         6          19      38
+         17         1         1          19      40
+         18         2         2          19      40
+         19         1         1          21      40
+         20         2         2          21      40
+         21         3         3          18      40
+         22         3         3          20      40
+         23         3         3          22      40
+         24         4         2          19      40
+         25         4         2          21      40
+         26         5         3          20      40
+         27         6         4          20      40
+         28        10         3          20      40
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 22
+ ------------------------------------------
+
+
+
+ SYJ= 41     2J P =  41  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          18      40
+          2         2         2          18      40
+          3         1         1          20      40
+          4         2         2          20      40
+          5         1         1          22      40
+          6         2         2          22      40
+          7         3         3          19      40
+          8         3         3          21      40
+          9         4         2          20      40
+         10         5         3          19      40
+         11         6         4          19      40
+         12         5         3          21      40
+         13         6         4          21      40
+         14         7         2          20      40
+         15         8         5          20      40
+         16         9         6          20      40
+         17         1         1          20      42
+         18         2         2          20      42
+         19         1         1          22      42
+         20         2         2          22      42
+         21         3         3          19      42
+         22         3         3          21      42
+         23         3         3          23      42
+         24         4         2          20      42
+         25         4         2          22      42
+         26         5         3          21      42
+         27         6         4          21      42
+         28        10         3          21      42
+
+
+ SYJ= 42     2J P =  41  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          19      40
+          2         2         2          19      40
+          3         1         1          21      40
+          4         2         2          21      40
+          5         3         3          18      40
+          6         3         3          20      40
+          7         3         3          22      40
+          8         4         2          19      40
+          9         4         2          21      40
+         10         5         3          20      40
+         11         6         4          20      40
+         12        10         3          20      40
+         13         1         1          19      42
+         14         2         2          19      42
+         15         1         1          21      42
+         16         2         2          21      42
+         17         1         1          23      42
+         18         2         2          23      42
+         19         3         3          20      42
+         20         3         3          22      42
+         21         4         2          21      42
+         22         5         3          20      42
+         23         6         4          20      42
+         24         5         3          22      42
+         25         6         4          22      42
+         26         7         2          21      42
+         27         8         5          21      42
+         28         9         6          21      42
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 23
+ ------------------------------------------
+
+
+
+ SYJ= 43     2J P =  43  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          20      42
+          2         2         2          20      42
+          3         1         1          22      42
+          4         2         2          22      42
+          5         3         3          19      42
+          6         3         3          21      42
+          7         3         3          23      42
+          8         4         2          20      42
+          9         4         2          22      42
+         10         5         3          21      42
+         11         6         4          21      42
+         12        10         3          21      42
+         13         1         1          20      44
+         14         2         2          20      44
+         15         1         1          22      44
+         16         2         2          22      44
+         17         1         1          24      44
+         18         2         2          24      44
+         19         3         3          21      44
+         20         3         3          23      44
+         21         4         2          22      44
+         22         5         3          21      44
+         23         6         4          21      44
+         24         5         3          23      44
+         25         6         4          23      44
+         26         7         2          22      44
+         27         8         5          22      44
+         28         9         6          22      44
+
+
+ SYJ= 44     2J P =  43  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          19      42
+          2         2         2          19      42
+          3         1         1          21      42
+          4         2         2          21      42
+          5         1         1          23      42
+          6         2         2          23      42
+          7         3         3          20      42
+          8         3         3          22      42
+          9         4         2          21      42
+         10         5         3          20      42
+         11         6         4          20      42
+         12         5         3          22      42
+         13         6         4          22      42
+         14         7         2          21      42
+         15         8         5          21      42
+         16         9         6          21      42
+         17         1         1          21      44
+         18         2         2          21      44
+         19         1         1          23      44
+         20         2         2          23      44
+         21         3         3          20      44
+         22         3         3          22      44
+         23         3         3          24      44
+         24         4         2          21      44
+         25         4         2          23      44
+         26         5         3          22      44
+         27         6         4          22      44
+         28        10         3          22      44
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 24
+ ------------------------------------------
+
+
+
+ SYJ= 45     2J P =  45  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          20      44
+          2         2         2          20      44
+          3         1         1          22      44
+          4         2         2          22      44
+          5         1         1          24      44
+          6         2         2          24      44
+          7         3         3          21      44
+          8         3         3          23      44
+          9         4         2          22      44
+         10         5         3          21      44
+         11         6         4          21      44
+         12         5         3          23      44
+         13         6         4          23      44
+         14         7         2          22      44
+         15         8         5          22      44
+         16         9         6          22      44
+         17         1         1          22      46
+         18         2         2          22      46
+         19         1         1          24      46
+         20         2         2          24      46
+         21         3         3          21      46
+         22         3         3          23      46
+         23         3         3          25      46
+         24         4         2          22      46
+         25         4         2          24      46
+         26         5         3          23      46
+         27         6         4          23      46
+         28        10         3          23      46
+
+
+ SYJ= 46     2J P =  45  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          21      44
+          2         2         2          21      44
+          3         1         1          23      44
+          4         2         2          23      44
+          5         3         3          20      44
+          6         3         3          22      44
+          7         3         3          24      44
+          8         4         2          21      44
+          9         4         2          23      44
+         10         5         3          22      44
+         11         6         4          22      44
+         12        10         3          22      44
+         13         1         1          21      46
+         14         2         2          21      46
+         15         1         1          23      46
+         16         2         2          23      46
+         17         1         1          25      46
+         18         2         2          25      46
+         19         3         3          22      46
+         20         3         3          24      46
+         21         4         2          23      46
+         22         5         3          22      46
+         23         6         4          22      46
+         24         5         3          24      46
+         25         6         4          24      46
+         26         7         2          23      46
+         27         8         5          23      46
+         28         9         6          23      46
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 25
+ ------------------------------------------
+
+
+
+ SYJ= 47     2J P =  47  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          22      46
+          2         2         2          22      46
+          3         1         1          24      46
+          4         2         2          24      46
+          5         3         3          21      46
+          6         3         3          23      46
+          7         3         3          25      46
+          8         4         2          22      46
+          9         4         2          24      46
+         10         5         3          23      46
+         11         6         4          23      46
+         12        10         3          23      46
+         13         1         1          22      48
+         14         2         2          22      48
+         15         1         1          24      48
+         16         2         2          24      48
+         17         1         1          26      48
+         18         2         2          26      48
+         19         3         3          23      48
+         20         3         3          25      48
+         21         4         2          24      48
+         22         5         3          23      48
+         23         6         4          23      48
+         24         5         3          25      48
+         25         6         4          25      48
+         26         7         2          24      48
+         27         8         5          24      48
+         28         9         6          24      48
+
+
+ SYJ= 48     2J P =  47  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          21      46
+          2         2         2          21      46
+          3         1         1          23      46
+          4         2         2          23      46
+          5         1         1          25      46
+          6         2         2          25      46
+          7         3         3          22      46
+          8         3         3          24      46
+          9         4         2          23      46
+         10         5         3          22      46
+         11         6         4          22      46
+         12         5         3          24      46
+         13         6         4          24      46
+         14         7         2          23      46
+         15         8         5          23      46
+         16         9         6          23      46
+         17         1         1          23      48
+         18         2         2          23      48
+         19         1         1          25      48
+         20         2         2          25      48
+         21         3         3          22      48
+         22         3         3          24      48
+         23         3         3          26      48
+         24         4         2          23      48
+         25         4         2          25      48
+         26         5         3          24      48
+         27         6         4          24      48
+         28        10         3          24      48
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 26
+ ------------------------------------------
+
+
+
+ SYJ= 49     2J P =  49  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          22      48
+          2         2         2          22      48
+          3         1         1          24      48
+          4         2         2          24      48
+          5         1         1          26      48
+          6         2         2          26      48
+          7         3         3          23      48
+          8         3         3          25      48
+          9         4         2          24      48
+         10         5         3          23      48
+         11         6         4          23      48
+         12         5         3          25      48
+         13         6         4          25      48
+         14         7         2          24      48
+         15         8         5          24      48
+         16         9         6          24      48
+         17         1         1          24      50
+         18         2         2          24      50
+         19         1         1          26      50
+         20         2         2          26      50
+         21         3         3          23      50
+         22         3         3          25      50
+         23         3         3          27      50
+         24         4         2          24      50
+         25         4         2          26      50
+         26         5         3          25      50
+         27         6         4          25      50
+         28        10         3          25      50
+
+
+ SYJ= 50     2J P =  49  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          23      48
+          2         2         2          23      48
+          3         1         1          25      48
+          4         2         2          25      48
+          5         3         3          22      48
+          6         3         3          24      48
+          7         3         3          26      48
+          8         4         2          23      48
+          9         4         2          25      48
+         10         5         3          24      48
+         11         6         4          24      48
+         12        10         3          24      48
+         13         1         1          23      50
+         14         2         2          23      50
+         15         1         1          25      50
+         16         2         2          25      50
+         17         1         1          27      50
+         18         2         2          27      50
+         19         3         3          24      50
+         20         3         3          26      50
+         21         4         2          25      50
+         22         5         3          24      50
+         23         6         4          24      50
+         24         5         3          26      50
+         25         6         4          26      50
+         26         7         2          25      50
+         27         8         5          25      50
+         28         9         6          25      50
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 27
+ ------------------------------------------
+
+
+
+ SYJ= 51     2J P =  51  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          24      50
+          2         2         2          24      50
+          3         1         1          26      50
+          4         2         2          26      50
+          5         3         3          23      50
+          6         3         3          25      50
+          7         3         3          27      50
+          8         4         2          24      50
+          9         4         2          26      50
+         10         5         3          25      50
+         11         6         4          25      50
+         12        10         3          25      50
+         13         1         1          24      52
+         14         2         2          24      52
+         15         1         1          26      52
+         16         2         2          26      52
+         17         1         1          28      52
+         18         2         2          28      52
+         19         3         3          25      52
+         20         3         3          27      52
+         21         4         2          26      52
+         22         5         3          25      52
+         23         6         4          25      52
+         24         5         3          27      52
+         25         6         4          27      52
+         26         7         2          26      52
+         27         8         5          26      52
+         28         9         6          26      52
+
+
+ SYJ= 52     2J P =  51  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          23      50
+          2         2         2          23      50
+          3         1         1          25      50
+          4         2         2          25      50
+          5         1         1          27      50
+          6         2         2          27      50
+          7         3         3          24      50
+          8         3         3          26      50
+          9         4         2          25      50
+         10         5         3          24      50
+         11         6         4          24      50
+         12         5         3          26      50
+         13         6         4          26      50
+         14         7         2          25      50
+         15         8         5          25      50
+         16         9         6          25      50
+         17         1         1          25      52
+         18         2         2          25      52
+         19         1         1          27      52
+         20         2         2          27      52
+         21         3         3          24      52
+         22         3         3          26      52
+         23         3         3          28      52
+         24         4         2          25      52
+         25         4         2          27      52
+         26         5         3          26      52
+         27         6         4          26      52
+         28        10         3          26      52
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 28
+ ------------------------------------------
+
+
+
+ SYJ= 53     2J P =  53  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          24      52
+          2         2         2          24      52
+          3         1         1          26      52
+          4         2         2          26      52
+          5         1         1          28      52
+          6         2         2          28      52
+          7         3         3          25      52
+          8         3         3          27      52
+          9         4         2          26      52
+         10         5         3          25      52
+         11         6         4          25      52
+         12         5         3          27      52
+         13         6         4          27      52
+         14         7         2          26      52
+         15         8         5          26      52
+         16         9         6          26      52
+         17         1         1          26      54
+         18         2         2          26      54
+         19         1         1          28      54
+         20         2         2          28      54
+         21         3         3          25      54
+         22         3         3          27      54
+         23         3         3          29      54
+         24         4         2          26      54
+         25         4         2          28      54
+         26         5         3          27      54
+         27         6         4          27      54
+         28        10         3          27      54
+
+
+ SYJ= 54     2J P =  53  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          25      52
+          2         2         2          25      52
+          3         1         1          27      52
+          4         2         2          27      52
+          5         3         3          24      52
+          6         3         3          26      52
+          7         3         3          28      52
+          8         4         2          25      52
+          9         4         2          27      52
+         10         5         3          26      52
+         11         6         4          26      52
+         12        10         3          26      52
+         13         1         1          25      54
+         14         2         2          25      54
+         15         1         1          27      54
+         16         2         2          27      54
+         17         1         1          29      54
+         18         2         2          29      54
+         19         3         3          26      54
+         20         3         3          28      54
+         21         4         2          27      54
+         22         5         3          26      54
+         23         6         4          26      54
+         24         5         3          28      54
+         25         6         4          28      54
+         26         7         2          27      54
+         27         8         5          27      54
+         28         9         6          27      54
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 29
+ ------------------------------------------
+
+
+
+ SYJ= 55     2J P =  55  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          26      54
+          2         2         2          26      54
+          3         1         1          28      54
+          4         2         2          28      54
+          5         3         3          25      54
+          6         3         3          27      54
+          7         3         3          29      54
+          8         4         2          26      54
+          9         4         2          28      54
+         10         5         3          27      54
+         11         6         4          27      54
+         12        10         3          27      54
+         13         1         1          26      56
+         14         2         2          26      56
+         15         1         1          28      56
+         16         2         2          28      56
+         17         1         1          30      56
+         18         2         2          30      56
+         19         3         3          27      56
+         20         3         3          29      56
+         21         4         2          28      56
+         22         5         3          27      56
+         23         6         4          27      56
+         24         5         3          29      56
+         25         6         4          29      56
+         26         7         2          28      56
+         27         8         5          28      56
+         28         9         6          28      56
+
+
+ SYJ= 56     2J P =  55  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          25      54
+          2         2         2          25      54
+          3         1         1          27      54
+          4         2         2          27      54
+          5         1         1          29      54
+          6         2         2          29      54
+          7         3         3          26      54
+          8         3         3          28      54
+          9         4         2          27      54
+         10         5         3          26      54
+         11         6         4          26      54
+         12         5         3          28      54
+         13         6         4          28      54
+         14         7         2          27      54
+         15         8         5          27      54
+         16         9         6          27      54
+         17         1         1          27      56
+         18         2         2          27      56
+         19         1         1          29      56
+         20         2         2          29      56
+         21         3         3          26      56
+         22         3         3          28      56
+         23         3         3          30      56
+         24         4         2          27      56
+         25         4         2          29      56
+         26         5         3          28      56
+         27         6         4          28      56
+         28        10         3          28      56
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 30
+ ------------------------------------------
+
+
+
+ SYJ= 57     2J P =  57  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          26      56
+          2         2         2          26      56
+          3         1         1          28      56
+          4         2         2          28      56
+          5         1         1          30      56
+          6         2         2          30      56
+          7         3         3          27      56
+          8         3         3          29      56
+          9         4         2          28      56
+         10         5         3          27      56
+         11         6         4          27      56
+         12         5         3          29      56
+         13         6         4          29      56
+         14         7         2          28      56
+         15         8         5          28      56
+         16         9         6          28      56
+         17         1         1          28      58
+         18         2         2          28      58
+         19         1         1          30      58
+         20         2         2          30      58
+         21         3         3          27      58
+         22         3         3          29      58
+         23         3         3          31      58
+         24         4         2          28      58
+         25         4         2          30      58
+         26         5         3          29      58
+         27         6         4          29      58
+         28        10         3          29      58
+
+
+ SYJ= 58     2J P =  57  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          27      56
+          2         2         2          27      56
+          3         1         1          29      56
+          4         2         2          29      56
+          5         3         3          26      56
+          6         3         3          28      56
+          7         3         3          30      56
+          8         4         2          27      56
+          9         4         2          29      56
+         10         5         3          28      56
+         11         6         4          28      56
+         12        10         3          28      56
+         13         1         1          27      58
+         14         2         2          27      58
+         15         1         1          29      58
+         16         2         2          29      58
+         17         1         1          31      58
+         18         2         2          31      58
+         19         3         3          28      58
+         20         3         3          30      58
+         21         4         2          29      58
+         22         5         3          28      58
+         23         6         4          28      58
+         24         5         3          30      58
+         25         6         4          30      58
+         26         7         2          29      58
+         27         8         5          29      58
+         28         9         6          29      58
+
+ *** UPDATING SLATER INTEGRALS FOR LTOT= 31
+ ------------------------------------------
+
+
+
+ SYJ= 59     2J P =  59  0
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          28      58
+          2         2         2          28      58
+          3         1         1          30      58
+          4         2         2          30      58
+          5         3         3          27      58
+          6         3         3          29      58
+          7         3         3          31      58
+          8         4         2          28      58
+          9         4         2          30      58
+         10         5         3          29      58
+         11         6         4          29      58
+         12        10         3          29      58
+         13         1         1          28      60
+         14         2         2          28      60
+         15         1         1          30      60
+         16         2         2          30      60
+         17         1         1          32      60
+         18         2         2          32      60
+         19         3         3          29      60
+         20         3         3          31      60
+         21         4         2          30      60
+         22         5         3          29      60
+         23         6         4          29      60
+         24         5         3          31      60
+         25         6         4          31      60
+         26         7         2          30      60
+         27         8         5          30      60
+         28         9         6          30      60
+
+
+ SYJ= 60     2J P =  59  1
+ -------------------------
+
+         CH        LV         T     SMALL L      2K
+          1         1         1          27      58
+          2         2         2          27      58
+          3         1         1          29      58
+          4         2         2          29      58
+          5         1         1          31      58
+          6         2         2          31      58
+          7         3         3          28      58
+          8         3         3          30      58
+          9         4         2          29      58
+         10         5         3          28      58
+         11         6         4          28      58
+         12         5         3          30      58
+         13         6         4          30      58
+         14         7         2          29      58
+         15         8         5          29      58
+         16         9         6          29      58
+         17         1         1          29      60
+         18         2         2          29      60
+         19         1         1          31      60
+         20         2         2          31      60
+         21         3         3          28      60
+         22         3         3          30      60
+         23         3         3          32      60
+         24         4         2          29      60
+         25         4         2          31      60
+         26         5         3          30      60
+         27         6         4          30      60
+         28        10         3          30      60
+
+
+ *** TOP-UP HAS BEEN APPLIED: LRGLAM=   59
+
+
+
+
+
+ ----------------------------------------------------------------------------------------------------------------------------------------
+
+                                                   *** TOTAL COLLISION STRENGTHS (BP) ***
+
+ ----------------------------------------------------------------------------------------------------------------------------------------
+
+
+                                                                          OMEGA(K-KP)
+                                                                          -----------
+  *FINAL* ENERGY(RYD)      1-    2    1-    3    1-    4    1-    5    1-    6    1-    7    1-    8    1-    9    1-   10    2-    3
+                           2-    4    2-    5    2-    6    2-    7    2-    8    2-    9    2-   10
+                0.000    1.451E-03  1.066E-02  6.950E-03  2.958E-01  1.173E-04  1.838E-04  4.395E-04  6.212E-04  3.917E-04  1.603E-02
+                         1.041E-02  3.749E-03  9.710E-04  1.410E-01  2.528E-03  5.815E-04  8.831E-05
+               46.530    9.618E-04  1.157E-02  4.601E-03  3.771E-01  8.523E-05  9.901E-05  3.852E-04  7.064E-04  3.708E-04  9.426E-03
+                         8.748E-03  2.172E-03  6.341E-04  1.801E-01  1.662E-03  3.823E-04  5.413E-05
+              139.589    4.866E-04  1.269E-02  2.327E-03  4.872E-01  6.239E-05  3.966E-05  3.658E-04  8.125E-04  3.524E-04  4.416E-03
+                         7.997E-03  9.778E-04  3.166E-04  2.330E-01  8.339E-04  1.921E-04  2.530E-05
+              418.767    1.245E-04  1.423E-02  5.965E-04  6.198E-01  4.957E-05  8.478E-06  3.881E-04  9.469E-04  3.352E-04  1.106E-03
+                         8.142E-03  2.359E-04  8.174E-05  2.949E-01  2.079E-04  4.819E-05  6.775E-06
+
+
+ CPU TIME=    0.015 MIN     TOTAL CPU TIME=    0.015 MIN
+
+
+
+ -----------------------------------------------------------------------------------------------------------------------------------
+
+
+ SUMMARY OF STORAGE USED-
+
+
+    NAME      VALUE              NAME      VALUE              NAME      VALUE              NAME      VALUE
+
+   MXAAI          0             MXAAK          0             MAXAD          7             MXADJ         15
+   MXAJS          0             MAXB1       1792             MAXB2       1792             MXBIF          3
+   MXBLM          2             MXCAS          0             MAXCF          3             MXCHG          5
+   MAXCL          2             MAXCT          6             MAXDC         64             MAXDF          3
+   MXDFS         68             MAXDI          2             MAXDK          3             MXEL0          3
+   MXENG         11             MXEST         90             MXFSL          0             MXFSS          0
+   MXFOO          0             MAXGR          3             MXGRB          2             MAXJG         60
+   MAXJU         20             MAXLL          7             MAXLV         10             MAXMI          0
+   MXNOR          0             MXPOT          0             MAXRK       1883             MXRKO          0
+   MXRKS        121             MAXRL         38             MXRLO          0             MXRLS          8
+   MXROS          0             MXRSS          0             MAXSL        128             MXSOC          9
+   MXSOI          1             MXST0         45             MXSTX        130             MXSYJ          6
+   MXS1C         12             MXS1I          1             MXS2C          0             MXS2I          0
+   MAXTM          6             MAXTR          0             MAXUC          8             MXVAR          3
+
+
+ *** THIS INCLUDES BUFFER REQUIREMENTS, THE NUMBER OF ACTUAL PHYSICAL QUANTITIES MAYBE LESS ***
+
+-------------------------------------------------------------------------------------------------------------

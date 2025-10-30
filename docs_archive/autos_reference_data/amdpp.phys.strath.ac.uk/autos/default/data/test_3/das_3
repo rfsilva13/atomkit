@@ -1,0 +1,9 @@
+A.S. Be-like C structure
+ &SALGEB CUP='LS' MXVORB=3 MXCONF=3  &END
+ 1 0  2 0  2 1
+  2    2    0
+  2    1    1
+  2    0    2
+ &SMINIM NZION=6 INCLUD=6 NLAM=3 NVAR=2  &END
+  1.0 1.0 1.0
+       2   3

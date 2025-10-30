@@ -1,0 +1,11 @@
+A.S. KLL Li-like -> He-like + e-
+ &SALGEB CUP='IC' RAD='  '  MXVORB=3 MXCONF=1 MXCCF=3 &END
+ 1 0  2 0  2 1
+  2    0    0
+
+  1    2    0
+  1    1    1
+  1    0    2
+ &SMINIM NZION=26 &END
+ &SRADCON MENG=4 &END
+ 300 320 340 360

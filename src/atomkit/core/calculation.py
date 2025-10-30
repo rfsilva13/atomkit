@@ -187,7 +187,7 @@ class AtomicCalculation:
 
     # Physical specifications (code-agnostic)
     coupling: CouplingType | None = (
-        None  # Optional: defaults per backend (ICR for AS, N/A for FAC)
+        None  # Optional: defaults per backend (LS for AS, N/A for FAC)
     )
     relativistic: RelativisticType = "none"
     qed_corrections: bool = False
@@ -252,7 +252,7 @@ class AtomicCalculation:
         # Set default coupling per backend if not specified
         if self.coupling is None:
             if self.code == "autostructure":
-                self.coupling = "ICR"  # Default for AUTOSTRUCTURE
+                self.coupling = "LS"  # Default for AUTOSTRUCTURE (pure LS-coupling)
             # FAC doesn't use coupling - leave as None
 
         # Coupling scheme warnings (only for AUTOSTRUCTURE)

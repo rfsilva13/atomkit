@@ -37,8 +37,12 @@ class CouplingScheme:
     LSR: Literal["LSR"] = "LSR"  # LS-coupling, relativistic
     ICR: Literal["ICR"] = "ICR"  # Intermediate coupling, relativistic
 
+    # Fully relativistic schemes (primarily for FAC)
+    JJ: Literal["jj"] = "jj"  # Pure jj-coupling (FAC default)
+    LSJ: Literal["LSJ"] = "LSJ"  # LS to jj transformation
+
     # Backend translations:
-    # AUTOSTRUCTURE: Maps directly to CUP parameter
+    # AUTOSTRUCTURE: Maps directly to CUP parameter (CA/LS/IC variants)
     # FAC: Always jj-based/fully-relativistic, issues warnings for LS requests
 
 
@@ -63,6 +67,7 @@ class RelativisticTreatment:
     FULL_RETARDATION: Literal["retardation"] = (
         "retardation"  # Full retardation (IRTARD=1)
     )
+    DIRAC: Literal["Dirac"] = "Dirac"  # Full Dirac equation (FAC default)
 
     # Backend translations:
     # AUTOSTRUCTURE: IBREIT, IRTARD, QED, IREL parameters
@@ -132,8 +137,10 @@ class SpecialModes:
 
 
 # Type aliases for convenience
-CouplingType = Literal["CA", "LS", "LSM", "MVD", "IC", "ICM", "CAR", "LSR", "ICR"]
-RelativisticType = Literal["none", "Breit", "Breit_full", "QED", "retardation"]
+CouplingType = Literal[
+    "CA", "LS", "LSM", "MVD", "IC", "ICM", "CAR", "LSR", "ICR", "jj", "LSJ"
+]
+RelativisticType = Literal["none", "Breit", "Breit_full", "QED", "retardation", "Dirac"]
 OptimizationType = Literal["energy", "potential", "lambda"] | None
 CalculationTypeStr = Literal[
     "structure",

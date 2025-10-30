@@ -1,0 +1,18 @@
+A.S. Inner-shell DR of Li-like C.
+ &SALGEB RUN='DR' CUP='LS' MXVORB=4 MXCONF=6 MXCCF=3 &END
+ 1 0  2 0  2 1 80 1
+  2    1    0    0
+  2    0    1    0
+  1    2    0    0
+  1    1    1    0
+  1    0    2    0
+
+  2    0    0    1
+
+  2    2    0    0
+  2    1    1    0
+  2    0    2    0
+
+ &DRR  NMIN=3 NMAX=10 JND=0 LMIN=0 LMAX=5 &END
+ &SMINIM  NZION=6 &END
+ &SRADCON MENG=-15  EMIN=0 EMAX=25 &END

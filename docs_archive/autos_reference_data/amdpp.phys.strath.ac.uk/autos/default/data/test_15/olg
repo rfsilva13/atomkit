@@ -1,0 +1,544 @@
+
+
+
+************************************************************************************************************************************
+************************************************************************************************************************************
+
+
+                                AAAAAAAA      UU      UU     TTTTTTTTTT      OOOOOOOO
+                               AAAAAAAAAA     UU      UU     TTTTTTTTTT     OOOOOOOOOO
+                               AA      AA     UU      UU         TT         OO      OO
+                               AA      AA     UU      UU         TT         OO      OO
+                               AA      AA     UU      UU         TT         OO      OO
+                               AA      AA     UU      UU         TT         OO      OO
+                               AAAAAAAAAA     UU      UU         TT         OO      OO
+                               AAAAAAAAAA     UU      UU         TT         OO      OO
+                               AA      AA     UU      UU         TT         OO      OO
+                               AA      AA     UU      UU         TT         OO      OO
+                               AA      AA     UUUUUUUUUU         TT         OOOOOOOOOO
+                               AA      AA      UUUUUUUU          TT          OOOOOOOO
+
+
+  SSSSSSSS      TTTTTTTTTT     RRRRRRRRR      UU      UU      CCCCCCCC      TTTTTTTTTT     UU      UU     RRRRRRRRR      EEEEEEEEEE
+ SSSSSSSSSS     TTTTTTTTTT     RRRRRRRRRR     UU      UU     CCCCCCCCCC     TTTTTTTTTT     UU      UU     RRRRRRRRRR     EEEEEEEEEE
+ SS                 TT         RR      RR     UU      UU     CC      CC         TT         UU      UU     RR      RR     EE
+ SS                 TT         RR      RR     UU      UU     CC                 TT         UU      UU     RR      RR     EE
+ SS                 TT         RR     RR      UU      UU     CC                 TT         UU      UU     RR     RR      EE
+ SSSSSSSSS          TT         RRRRRRRR       UU      UU     CC                 TT         UU      UU     RRRRRRRR       EEEEEEEEE
+  SSSSSSSSS         TT         RRRRRR         UU      UU     CC                 TT         UU      UU     RRRRRR         EEEEEEEEE
+         SS         TT         RR   RR        UU      UU     CC                 TT         UU      UU     RR   RR        EE
+         SS         TT         RR    RR       UU      UU     CC                 TT         UU      UU     RR    RR       EE
+         SS         TT         RR     RR      UU      UU     CC     CC          TT         UU      UU     RR     RR      EE
+ SSSSSSSSSS         TT         RR      RR     UUUUUUUUUU     CCCCCCCCC          TT         UUUUUUUUUU     RR      RR     EEEEEEEEEE
+  SSSSSSSS          TT         RR       RR     UUUUUUUU       CCCCCCC           TT          UUUUUUUU      RR       RR    EEEEEEEEEE
+
+
+************************************************************************************************************************************
+************************************************************************************************************************************
+
+
+
+
+
+ WORD INFO-
+
+            LOGICAL BYTE LENGTH=  1
+
+      SHORT INTEGER BYTE LENGTH=  2     RANGE=    4
+    DEFAULT INTEGER BYTE LENGTH=  4     RANGE=    9
+   EXTENDED INTEGER BYTE LENGTH=  8     RANGE=   18
+
+      SHORT    REAL BYTE LENGTH=  4     RANGE=   37     PRECISION= 6
+    DEFAULT    REAL BYTE LENGTH=  8     RANGE=  307     PRECISION=15
+
+
+
+
+
+ THIS VERSION OF AUTOSTRUCTURE (30.19) IS COMPILED WITH THE FOLLOWING ALLOCATABLE STORAGE PARAMETERS-
+
+
+    NAME      VALUE              NAME      VALUE              NAME      VALUE              NAME      VALUE
+
+   MXAAI         -1             MXAAK         -1             MAXAD         -1             MXADJ         -1
+   MXAJS         -1             MAXB1         -1             MAXB2         -1             MXBIF         -1
+   MXBLM         -1             MXCAS         -1             MAXCF         -1             MXCHG         -1
+   MAXCL         -1             MAXCT         -1             MAXDC   80000000             MAXDF         -1
+   MXDFS         -1             MAXDI         -1             MAXDK         -1             MXEL0         -1
+   MXENG         -1             MXEST         -1             MXFSL         -1             MXFSS         -1
+   MXFOO         -1             MAXGR         -1             MXGRB         -1             MAXJG         -1
+   MAXJU         -1             MAXLL         -1             MAXLV         -1             MAXMI     100000
+   MXNOR         -1             MXPOT         -1             MAXRK    2500000             MXRKO         -1
+   MXRKS    2500000             MAXRL       9995             MXRLO         -1             MXRLS       9995
+   MXROS         -1             MXRSS   25000000             MAXSL         -1             MXSOC   20000000
+   MXSOI      15000             MXST0     400050             MXSTX     400000             MXSYJ         -1
+   MXS1C   20000000             MXS1I      15000             MXS2C   25000000             MXS2I     100000
+   MAXTM         -1             MAXTR         -1             MAXUC         -1             MXVAR         -1
+
+
+
+
+ ---------------------------------------------------------------------------------------------------------
+
+ A.S. Produce support files for an R-matrix stgicf calculation: OMGINF, adf04.   
+
+ ---------------------------------------------------------------------------------------------------------
+
+
+
+      OPTION CHOSEN, NOPTN=    3 FOR ORBITALS MXORB=   3
+ BASIC CONFIGURATION    1                                    2  2  0
+ BASIC CONFIGURATION    2                                    2  1  1
+ BASIC CONFIGURATION    3                                    2  0  2
+
+    3    3
+  1 0  2 0  2 1
+   1: 2 2 0
+   2: 2 1 1
+   3: 2 0 2
+
+
+ ------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+ ATOM WITH   4 ELECTRONS IN   3 CONFIGURATIONS
+
+
+ ATTENTION: SOME OF THE INTERNAL ORBITALS MAY HAVE BEEN REDEFINED, AND MAY NOT BE THE STANDARD CODE (K=1,2,3... FOR  1S,2S,2P...)
+    K       1      2      3      4      5      6      7      8      9     10     11     12     13     14     15
+   N L    1  0   2  0   2  1
+
+
+ CONFIGURATION CF=   1,          0 ON DISK, (N-L)-COMBINATIONS     1  0   1  0   2  0   2  0
+ SLATER-STATES STORED IN         2=JA         2=JB, MAXST=        52; VCC STORED UP TO         1=MTGD, MAXDC=  80000000; MAXDF=   1; MOD=-1
+       1 SPECTROSCOPIC TERMS   (2S+1 L DP):    1  0  1
+
+
+ CONFIGURATION CF=   2,          0 ON DISK, (N-L)-COMBINATIONS     1  0   1  0   2  0   2  1
+ SLATER-STATES STORED IN         3=JA        10=JB, MAXST=        52; VCC STORED UP TO        13=MTGD, MAXDC=  80000000; MAXDF=   1; MOD=-1
+       2 SPECTROSCOPIC TERMS   (2S+1 L DP):    3  1  1    1  1  1
+
+
+ CONFIGURATION CF=   3,          0 ON DISK, (N-L)-COMBINATIONS     1  0   1  0   2  1   2  1
+ SLATER-STATES STORED IN        11=JA        20=JB, MAXST=        52; VCC STORED UP TO        30=MTGD, MAXDC=  80000000; MAXDF=   3; MOD=-1
+       3 SPECTROSCOPIC TERMS   (2S+1 L DP):    1  2  1    3  1  1    1  0  1
+
+
+      10=BUFFER   MAXCT=      10;            42=JBF MXST0=        52;                         76=MTGD, MAXDC=  80000000 BUFFER STORAGE USED
+
+
+    T 2S+1  L  (P-0/1 FOR EVEN/ODD)        CF    NT GR                    **** TERM TABLE ****
+    1   1   2   0                           3     4  1
+                                                         GROUP=  1    2S+1= 1  L= 2   PI= 0    NC=     1
+
+
+    2   3   1   0                           3     5  2
+                                                         GROUP=  2    2S+1= 3  L= 1   PI= 0    NC=     1
+
+
+    3   3   1   1                           2     2  3
+                                                         GROUP=  3    2S+1= 3  L= 1   PI= 1    NC=     1
+
+
+    4   1   1   1                           2     3  4
+                                                         GROUP=  4    2S+1= 1  L= 1   PI= 1    NC=     1
+
+
+    5   1   0   0                           1     1  5
+    6   1   0   0                           3     6  5
+                                                         GROUP=  5    2S+1= 1  L= 0   PI= 0    NC=     2
+
+
+
+                                                                         (     2)          2       MAXDI=         -1
+
+                                                                    (          8)          8       MAXUC=         -1
+
+                                                                                           0       MXAAI=         -1
+
+
+ SLATER COEFFICIENTS  F(A,...)  FOR CONSTRUCTING   ( T !  H  ! TP ) = SUM( F(A,...) * R(A,...) );   NCYC=0: COMMON DIAGONAL CORE TERM
+       -1 -1    -1    -1  2500000 9995 STORAGE RESTRICTIONS FOR (MAXAD,MAXSL,MAXTM,MAXTM,MAXRK,MAXRL), MXDFS= 325
+     NCYC GR     T    TP      MNF  MNR   I(R)  F(A,...)   I(R)  F(A,...)   I(R)  F(A,...)   I(R)  F(A,...)   I(R)  F(A,...)   I(R)  F(A,...)
+        7  5     6     6       34   10
+
+ SLATER STATE INTERACTION STORAGE (MXRKS,MXRLS)  2500000  9995          USED:       32     9
+
+                                                                                               0=MTGD, MAXDC=  80000000 BUFFER STORAGE USED
+
+ *** PRINTOUT OF COEFFICIENTS SUPPRESSED - MPRINT(MODULO 5)= 0
+
+  IOSC     T    TP    B   D      MNF
+    11     6     6    4   4       57
+
+ SLATER STATE INTERACTION STORAGE (MXRKS,MXRLS)  2500000  9995          USED:        8     4
+
+                                                                                               0=MTGD, MAXDC=  80000000 BUFFER STORAGE USED
+
+ *** PRINTOUT OF COEFFICIENTS SUPPRESSED - MPRINT(MODULO 5)= 0
+
+
+
+   LV  2S+1   L   2J   CF    T                                            **** LEVEL TABLE ****
+    1    1    2    4    3    1
+    2    3    1    4    3    2
+                                             JGROUP=  1    2J= 4   PARITY=  0    N0=     2
+
+
+    3    3    1    4    2    3
+                                             JGROUP=  2    2J= 4   PARITY=  1    N0=     1
+
+
+    4    3    1    2    3    2
+                                             JGROUP=  3    2J= 2   PARITY=  0    N0=     1
+
+
+    5    3    1    2    2    3
+    6    1    1    2    2    4
+                                             JGROUP=  4    2J= 2   PARITY=  1    N0=     2
+
+
+    7    3    1    0    3    2
+    8    1    0    0    1    5
+    9    1    0    0    3    6
+                                             JGROUP=  5    2J= 0   PARITY=  0    N0=     3
+
+
+   10    3    1    0    2    3
+                                             JGROUP=  6    2J= 0   PARITY=  1    N0=     1
+
+
+
+                                                                         (     3)          3       MAXDK=         -1
+
+                                                                    (         20)         20       MAXJU=         -1
+
+                                                                                           0       MXAAK=         -1
+
+ *** PRINTOUT OF COEFFICIENTS C, D AND E SUPPRESSED BY MPRINT .LE. 0
+
+
+  ALGEBRA OF THE SPIN-ORBIT INTERACTION     KUTSO =  0          ALGEBRA OF THE SPIN-SPIN (C), MUTUAL SPIN-ORBIT (A)
+                                                                   AND THE SPIN-OTHER-ORBIT (B) INTERACTIONS          KUTSS =  -1 
+    MXADJ MAXLV MAXLV    MXSOC MXSOI                           MXADJ MAXLV MAXLV    MXRSS MAXMI
+       -1    -1    -1 20000000 15000  STORAGE RESTRICTIONS        -1    -1    -1 25000000100000
+       NP    LV   LVP       CN   IND  I(Z)      C(A,B)            NP    LV   LVP       CN   IND   I(Y) X(A-D)   I(Y) X(A-D)   I(Y) X(A-D)
+        3     2     2        2     1                                                    0     0
+        4     3     3        3     1                                                    0     0
+        5     4     4        4     1                                                    0     0
+        6     5     5        5     1                                                    0     0
+        9     7     7        7     1                                                    0     0
+       15    10    10        9     1                                                    0     0
+       15    10    10        9     1
+                                                                  15    10    10        0     0
+
+ SLATER STATE INTERACTION STORAGE (MXS1C,MXS1I) 20000000 15000          USED:       12     1
+                                  (MXSTX)         400000                USED:       28
+
+                                                                                               0=MTGD, MAXDC=  80000000 BUFFER STORAGE USED
+
+       CN    LV   LVP,    B   D,  IND      1-BODY    REL.RAD.ALGEBRA        2-BODY FOR M1: CONFIGURATIONS INCLUDED UP TO  CF =  3( )
+      162    10     6    -2  -2    17                                   10     6      405    56
+
+ SLATER STATE INTERACTION STORAGE (MXS1C,MXS1I) 20000000 15000          USED:       73    19
+
+ SLATER STATE INTERACTION STORAGE (MXS2C,MXS2I) 25000000100000          USED:      206    51
+
+                                                                                               0=MTGD, MAXDC=  80000000 BUFFER STORAGE USED
+
+
+ CPU TIME=    0.000 MIN     TOTAL CPU TIME=    0.000 MIN
+
+
+                                   ************************************************************
+
+
+
+
+ RADIAL FUNCTIONS:   PRECISION OF EIGENVALUE IS 1.00E-07       768 POINTS (MSTEP=11);  ATOMIC NUMBER  6,   NUMBER OF ELECTRONS  4
+                       NL =  1  0   S.M.-POTENTIAL V(NL) WITH SCALE FACTOR   1.00000;  COULOMBIC BEYOND R(IEND=  266) =  1.628114
+       OVERLAP INTEGRAL      2 0 WITH 1 0 = -2.3233E-08
+
+
+ GAM ( N,  L,NION, Z,SIG/D/P)  EPSILON/RY      <1/R>  <Z/R-V>      <R>   <R**2>   <R**3>   (ADJUST, REND, 3 LAST P) IN     563 STEPS
+   1   1   0   4   6  1.36261    -21.50541   5.49108  7.10156  0.27843   0.1050   0.0502    1.0000  1.63  2.92E-25 2.44E-25 2.04E-25
+   2   2   0   4   6  2.45740     -3.13751   0.99405  2.45263  1.44815   2.4734   4.8372    1.0000  1.63 -4.74E-08-4.45E-08-4.17E-08
+   3   2   1   4   6  2.81781     -2.53158   0.90510  2.51448  1.42921   2.5079   5.2141    1.0000  1.63  3.93E-07 3.72E-07 3.51E-07
+                                                                                        R OF 3 LAST P(R):   13.098   13.137   13.176
+
+   I(R)   R(  A,  B,   C,  D, 2LBD ) = SLATER-INTEGRALS    (2LAMBDA=-1 DENOTES ONE-BODY INTEGRALS <A!-D**2/DR**2+L(L+1)/R**2-2Z/R!C>)
+      1       1   1    1   1     0     3.3900465
+      2       3   1    3   1     0     0.8928706
+      3       3   3    1   1     2     0.0995263
+      4       3   3    3   3     0     0.6384872
+      5       3   3    3   3     4     0.2978113
+      6       2   1    2   1     0     0.8772519
+      7       2   2    1   1     0     0.0680695
+      8       3   2    3   2     0     0.6290687
+      9       3   3    2   2     2     0.3886029
+     10       2   2    2   2     0     0.6246726
+
+   N(B)  NC B(A,  B,   C,  D, 2LBD)  = BORN-INTEGRALS
+      1    1  1   1    1   1     0     0.0099844
+      2    3  2   2    1   1     0     0.0344040
+      3    3  2   2    2   2     0     0.2860917
+      4    4  3   3    1   1     0     0.0339015
+      5    4  3   3    2   2     0     0.2792725
+      6    4  3   3    3   3     0     0.2727619
+      6    4  3   3    3   3     4     0.0229661
+
+ DIPOLE LENGTH INTEGRALS (K=1, FOR /L-L'/=1)  AND QUADRUPOLE (K=2) INTEGRALS  <NL! R**K !N'L'>; ('N**' STANDS FOR: NL NOT COMPUTED)
+        ABOVE THE DIAGONAL ARE VELOCITY INTEGRALS <NL! 2*D/DR+(L'(L'+1)-L(L+1))/R !N'L'>      
+   N  L   1  0    2  0    2  1
+   1  0   0.0000  0.0000  0.0000
+   2  0   0.0000  0.0000 -0.8602
+   2  1   0.0000 -1.4196  2.5079
+
+
+   T,2S+1L  P    H(1)/2RY   EIGEN-H/2RY   CF  NI  NO  CI-MATRIX <GSL!CASL>  AND  H(2)/2RY-TRIANGLE.  E(CORE)/2RY =    0.0000     0.0000
+   1  1  2  0     -43.26905    -35.723474  3   1   1  1.0000  7.5456
+   2  3  1  0     -43.26905    -35.794949  3   2   1  1.0000  7.4741
+   3  3  1  1     -43.51017    -36.181589  2   1   1  1.0000  7.3286
+   4  1  1  1     -43.51017    -35.922521  2   2   1  1.0000  7.5876
+   5  1  0  0     -43.75129    -36.425876  1   1   1  0.9637 -0.2671  7.3876
+   6  1  0  0     -43.26905    -35.554087  3   3   2  0.2671  0.9637  0.2244  7.6528
+ CORE CONTRIB.       0.0000     0.00000
+
+
+     0 (IF .GT. 0: LOWEST STAT-WEIGHTED) TERMS ARE MINIMIZED;    SCALING PARAMETERS   1.00000  1.00000  1.00000
+         I         T        K*CM  2S+1 L   CF     WEIGHTS        (EI-E1)/RY     E1/RY =    -72.851751
+         1         5           0.    1 0    1       0.000          0.000000
+         2         3       53615.   -3 1    2       0.000          0.488573
+         3         4      110474.   -1 1    2 COR   0.000          1.006710
+         4         2      138472.    3 1    3       0.000          1.261854
+         5         1      154159.    1 2    3 COR   0.000          1.404803
+         6         6      191335.    1 0    3 COR   0.000          1.743577
+
+
+ *** ATTN: BECAUSE BORN MULTIPOLES ARE BEING COMPUTED FOR NON-E1 TRANSITIONS, RADIATIVE DATA IS NOT COMPUTED FOR THOSE E3 TRANSITIONS
+           FOR WHICH E1 DATA ALREADY EXISTS (SO AS NOT TO OVERWRITE THE E1-LIMIT)
+
+  
+   E0-DATA  I  IP      A(EK)*SEC         S        10**5*  G*F       *F(ABS)   -F(EMI)    WAVEL/AE    *GF(VEL) *V(GFL*GFV)    *GF(ACC)   OMG(BORN)
+  
+   E1-DATA  I  IP      A(EK)*SEC         S                G*F        F(ABS)   -F(EMI)    WAVEL/AE     GF(VEL)  V(GFL*GFV)     GF(ACC)  ALPHA(POL)
+    1       4   2     -1.663E+09   -12.0922598       -3.116905     -0.34632  -0.34632   1178.4423      1.9138     -2.4424   -205.8013      2.3167
+  
+   E2-DATA  I  IP      A(EK)*SEC         S        10**5*  G*F       *F(ABS)   -F(EMI)    WAVEL/AE    *GF(VEL) *V(GFL*GFV)    *GF(ACC)   OMG(BORN)
+  
+   E3-DATA  I  IP      A(EK)*SEC         S        10**5*  G*F       *F(ABS)   -F(EMI)    WAVEL/AE    *GF(VEL) *V(GFL*GFV)    *GF(ACC)   OMG(BORN)
+  
+   E4-DATA  I  IP      A(EK)*SEC         S        10**5*  G*F       *F(ABS)   -F(EMI)    WAVEL/AE    *GF(VEL) *V(GFL*GFV)    *GF(ACC)   OMG(BORN)
+  
+ IBOMX=           0
+
+
+         INCLUD =    0         FUNCTIONAL F = 0.0000000E+00         FUNCTIONAL G = 0.000E+00 (   0 TRANSITIONS)         LS.JPRINT=-1
+
+
+
+
+     ZETA(   A    B ) = SPIN-ORBIT PARAMETERS                                     BLUME AND WATSON CLOSED SHELL CONTRIBUTION, IN 2RY
+                                 2*RY                 1/CM             Z**4/CM              DIRECT CONTRIBUTION    EXCHANGE CONTRIB.
+    1        3    3         0.3759281E-03      8.2506686E+01      6.3662566E-02                    0.000000E+00         0.000000E+00
+                                               NOW FOLLOWING ARE RADIATIVE INTEGRALS
+    2        3    3         0.2507942E+01      8
+    3        3    3         0.1529755E-04      1
+    4        3    3         0.7648774E-05      2
+    5        3    3        -0.7648774E-05      3
+    6        3    3         0.1334607E-04      4
+    7        3    3         0.6677566E-04      5
+    8        3    3         0.2409889E-04      7
+    9        3    3         0.2507942E+01      9
+   10        3    3         0.6656419E-05      6
+   11        3    2        -0.3826260E-05      1
+   12        3    2        -0.1419640E+01      9
+   13        2    2         0.5173183E-04      4
+   14        2    2         0.6585475E-04      5
+   15        2    2         0.6656419E-05      6
+   16        2    2         0.2646732E-04      7
+   17        2    2         0.2473355E+01      8
+
+
+         ONE-BODY RELATIVISTIC CORRECTIONS TO INDIVIDUAL ORBITALS IN UNITS OF 2*RY                                   IC.JPRINT =  -1
+         GAM    N    L    E(NON.REL)        E(MASS)      E(DAR)       E(TOT)                       <P**2/RY>
+           1    1    0    -17.854260      -0.034109    0.028483   -0.0056262                       30.184475
+           2    2    0     -4.021385      -0.002624    0.001806   -0.0008172                        3.885861
+           3    2    1     -3.780266      -0.000221    0.000000   -0.0002214                        3.300661
+
+ ONE-BODY RELATIVISTIC INTEGRALS
+ I(R)  I(  A,  C ) =       MASS         DARWIN                        <P**2>
+
+
+     N&V(   A   B    C   D  2LBD') = MAGNETIC INTEGRALS
+    1       1   3    1   3   402    0.00000235
+    2       3   1    3   1   604    0.00000147
+    3       1   3    1   3   600    0.00000042
+    4       3   1    1   3   304   -0.00000070
+    5       3   1    1   3   404    0.00000253
+    6       1   3    3   1   706   -0.00000099
+    7       1   3    3   1   606    0.00000036
+    8       3   1    1   3   504    0.00000010
+    9       3   1    1   3   602    0.00000066
+   10       1   3    3   1   702   -0.00000194
+   11       3   1    1   3   300   -0.00000286
+   12       3   1    1   3   400    0.00000643
+   13       1   3    3   1   304    0.00000196
+   14       3   1    1   3   706   -0.00000004
+   15       1   3    3   1   504   -0.00000136
+   16       3   1    1   3   702   -0.00000011
+   17       1   3    3   1   300    0.00000494
+   18       3   3    3   3   402    0.00001022
+   19       3   3    3   3   604    0.00000198
+   20       3   3    3   3   600    0.00000425
+   21       3   1    3   1   600    0.00001146
+   22       1   3    3   1   602    0.00000066
+   23       3   1    3   1     0    0.00001189
+   24       1   3    3   1     2    0.00000132
+   25       1   3    1   3     0    0.00001189
+   26       3   3    3   3     4    0.00000396
+   27       3   3    3   3     0    0.00000850
+   28       2   1    2   1   600    0.00001057
+   29       2   1    2   1     0    0.00001168
+   30       1   2    2   1   600    0.00000045
+   31       1   2    2   1     0    0.00000091
+   32       2   1    1   2   600    0.00000045
+   33       1   2    1   2   600    0.00000110
+   34       1   2    1   2     0    0.00001168
+   35       3   2    3   2   600    0.00000390
+   36       2   3    2   3   402   -0.00000975
+   37       3   2    3   2   604    0.00000189
+   38       2   3    2   3   600    0.00000447
+   39       3   2    3   2     0    0.00000837
+   40       3   2    2   3   304    0.00000258
+   41       3   2    2   3   404    0.00000628
+   42       2   3    3   2   706   -0.00000233
+   43       2   3    3   2   606    0.00000153
+   44       3   2    2   3   504   -0.00000270
+   45       3   2    2   3   602    0.00000259
+   46       2   3    3   2   702   -0.00000445
+   47       2   3    3   2   602    0.00000259
+   48       3   2    2   3   300    0.00000288
+   49       3   2    2   3   400    0.00001349
+   50       2   3    3   2     2    0.00000517
+   51       2   3    3   2   304    0.00000213
+   52       3   2    2   3   706   -0.00000238
+   53       2   3    3   2   504   -0.00000140
+   54       3   2    2   3   702   -0.00000438
+   55       2   3    3   2   300    0.00000236
+   56       2   3    2   3     0    0.00000837
+
+
+   LV   T 2J 2S+1L  P      H(1)/2RY EIGEN-HBP/2RY CF  NO  CI-MATRIX <GJ!CASLJ>  AND  H(2)/2RY-TRIANGLE.  E(CORE)/2RY=    0.0000     0.0000
+    1   1  4  1  2  0     -43.28075    -35.735168  3   1  1.0000  0.0037  7.5456
+    2   2  4  3  1  0     -43.28075    -35.806457  3   2 -0.0037  1.0000  0.0003  7.4743
+    3   3  4  3  1  1     -43.52246    -36.193692  2   1  1.0000  7.3288
+    4   2  2  3  1  0     -43.28075    -35.806832  3   1  1.0000  7.4739
+    5   3  2  3  1  1     -43.52246    -36.194069  2   1  1.0000  0.0010  7.3284
+    6   4  2  1  1  1     -43.52246    -35.934812  2   2 -0.0010  1.0000 -0.0003  7.5876
+    7   2  0  3  1  0     -43.28075    -35.807021  3   1  1.0000 -0.0008 -0.0020  7.4737
+    8   5  0  1  0  0     -43.76418    -36.438678  1   2  0.0002  0.9638 -0.2667  0.0000  7.3876
+    9   6  0  1  0  0     -43.28075    -35.565866  3   3  0.0021  0.2667  0.9638  0.0005  0.2244  7.6528
+   10   3  0  3  1  1     -43.52246    -36.194256  2   1  1.0000  7.3282
+ PLUS CORE CONTRIBUTION       0.0000       0.00000         RELATIVISTIC CORE CONTRIBUTION ALONE       0.0000
+
+
+          K        LV         T        K*CM     2*S+1  L   2J   CF         (EK-E1)/RY     E1/RY =   -72.87735554               
+          1         8         5           0.      1    0    0    1         0.00000000
+          2        10         3       53644.     -3    1    0    2         0.48884296
+          3         5         3       53686.     -3    1    2    2         0.48921835
+          4         3         3       53768.     -3    1    4    2         0.48997075
+          5         6         4      110586.     -1    1    2    2 COR     1.00773254
+          6         7         2      138633.      3    1    0    3         1.26331361
+          7         4         2      138674.      3    1    2    3         1.26369165
+          8         2         2      138756.      3    1    4    3         1.26444153
+          9         1         1      154402.      1    2    4    3 COR     1.40701899
+         10         9         6      191560.      1    0    0    3 COR     1.74562273
+
+ LIST OF TERMS WITH A WEIGHTED MEAN OVER THE FINE STRUCTURE
+         I         T        K*CM  2S+1 L   CF     WEIGHTS        (EI-E1)/RY     E1/RY =   -72.877356             
+         1         5           0.    1 0    1       0.000          0.000000
+         2         3       53727.   -3 1    2       0.000          0.489595
+         3         4      110586.   -1 1    2 COR   0.000          1.007733
+         4         2      138715.    3 1    3       0.000          1.264066
+         5         1      154402.    1 2    3 COR   0.000          1.407019
+         6         6      191560.    1 0    3 COR   0.000          1.745623
+
+
+*** ATTN: BECAUSE BORN MULTIPOLES ARE BEING COMPUTED FOR NON-E1 TRANSITIONS, RADIATIVE DATA IS NOT COMPUTED FOR THOSE E3/M2 ETC TRANSITIONS
+          FOR WHICH E1 DATA ALREADY EXISTS (SO AS NOT TO OVERWRITE THE E1-LIMIT)
+
+  
+       E0-DATA   K  KP           A(EK)*SEC           S               G*F   10**5* F(ABS)   -F(EMI)    WAVEL/AE      GF(VEL)       OMG(BORN)
+        1        6   1           0.000E+00       0.000000         0.000E+00      0.00000   0.00000     721.3309     0.00E+00      5.625E-09
+  
+      E 1-DATA   K  KP           A(EK)*SEC           S               G*F          F(ABS)   -F(EMI)    WAVEL/AE      GF(VEL)      ALPHA(POL)
+        1        3   1           2.068E+02       0.000002         3.227E-07      0.00000   0.00000    1862.7002    -1.43E-06      5.393E-06
+        2        6   3           1.669E+09       1.343586         3.467E-01      0.11556   0.34669    1177.2028    -2.12E-01      7.714E-01
+        3        7   2          -5.579E+08      -1.343584        -3.470E-01     -0.34702  -0.11567    1176.0581     2.12E-01      2.312E+00
+        4        7   3          -4.178E+08      -1.007687        -2.601E-01     -0.08671  -0.08671    1176.6282     1.59E-01      5.783E-01
+        5        7   4           6.943E+08       1.679481         4.331E-01      0.08663   0.14438    1177.7724    -2.66E-01      5.788E-01
+        6        8   3          -4.190E+08      -1.679481        -4.340E-01     -0.14466  -0.08680    1175.4900     2.65E-01      9.629E-01
+        7        8   4          -1.253E+09      -5.038372        -1.301E+00     -0.26014  -0.26014    1176.6320     7.96E-01      1.735E+00
+  
+    E2/M1-DATA   K  KP           A(EK)*SEC      A(MK)*SEC+BP2       SE           SM           SM0            G*F      WAVEL/AE    OMG(BORN)
+        1        3   2           0.000E+00      1.257E-06        0.000E+00   -2.000E+00   -2.000E+00      0.000E+00 2427566.00    0.000E+00
+        2        4   2          -1.636E-12      0.000E+00       -2.516E+00    0.000E+00    0.000E+00     -8.007E-16  808015.33    3.675E-01
+        3        4   3          -4.865E-13      7.590E-06       -5.661E+00   -2.500E+00   -2.500E+00     -5.350E-16 1211144.89    8.268E-01
+        4        7   1           0.000E+00      2.294E-03        0.000E+00   -9.566E-08   -1.008E-07      0.000E+00     721.12    0.000E+00
+        5        7   6           0.000E+00      1.284E-06        0.000E+00   -2.000E+00   -2.000E+00      0.000E+00 2410492.81    0.000E+00
+        6        8   1           1.420E-02      0.000E+00        1.233E-05    0.000E+00    0.000E+00      5.530E-12     720.69    1.800E-06
+        7        8   6           1.637E-12      0.000E+00        2.516E+00    0.000E+00    0.000E+00      8.010E-16  807921.29    3.675E-01
+        8        8   7           4.784E-13      7.514E-06        5.661E+00   -2.500E+00   -2.500E+00      5.296E-16 1215227.17    8.268E-01
+  
+    E3/M2-DATA   K  KP           A(EK)*SEC      A(MK)*SEC           SE           SM           SM0            G*F      WAVEL/AE    OMG(BORN)
+        1        4   1           0.000E+00      6.747E-03        0.000E+00   -5.035E+01    0.000E+00      0.000E+00    1859.84    0.000E+00
+        2        6   4           0.000E+00      4.401E-02        0.000E+00    6.706E+00    0.000E+00      0.000E+00    1178.35    0.000E+00
+        3        8   2           0.000E+00      9.042E-03        0.000E+00    6.789E+00    0.000E+00      0.000E+00    1174.92    0.000E+00
+  
+    E4/M3-DATA   K  KP           A(EK)*SEC      A(MK)*SEC           SE           SM           SM0            G*F      WAVEL/AE    OMG(BORN)
+        1        4   3           0.000E+00      1.741E-29        0.000E+00    7.948E+01    0.000E+00      0.000E+00 1211144.89    0.000E+00
+        2        8   7           0.000E+00      1.713E-29        0.000E+00   -8.009E+01    0.000E+00      0.000E+00 1215227.17    0.000E+00
+  
+ IBOMX=           3
+
+
+         INCLUD =    0         FUNCTIONAL F = 0.0000000E+00         IC.JPRINT=-1
+
+
+
+
+ CPU TIME=    0.000 MIN     TOTAL CPU TIME=    0.001 MIN
+
+
+
+ -----------------------------------------------------------------------------------------------------------------------------------
+
+
+ SUMMARY OF STORAGE USED-
+
+
+    NAME      VALUE              NAME      VALUE              NAME      VALUE              NAME      VALUE
+
+   MXAAI          0             MXAAK          0             MAXAD          7             MXADJ         15
+   MXAJS          0             MAXB1        768             MAXB2        768             MXBIF          3
+   MXBLM          4             MXCAS          0             MAXCF          3             MXCHG          0
+   MAXCL          0             MAXCT         10             MAXDC         76             MAXDF          3
+   MXDFS         10             MAXDI          2             MAXDK          3             MXEL0          4
+   MXENG          0             MXEST        168             MXFSL          0             MXFSS          0
+   MXFOO          0             MAXGR          3             MXGRB          3             MAXJG          6
+   MAXJU         20             MAXLL          2             MAXLV         10             MAXMI         56
+   MXNOR          0             MXPOT          0             MAXRK         57             MXRKO          0
+   MXRKS         32             MAXRL         10             MXRLO          0             MXRLS          9
+   MXROS          0             MXRSS        405             MAXSL          5             MXSOC        162
+   MXSOI         17             MXST0         42             MXSTX         28             MXSYJ          0
+   MXS1C         73             MXS1I         19             MXS2C        206             MXS2I         51
+   MAXTM          6             MAXTR          0             MAXUC          8             MXVAR          3
+
+
+ *** THIS INCLUDES BUFFER REQUIREMENTS, THE NUMBER OF ACTUAL PHYSICAL QUANTITIES MAYBE LESS ***
+
+-------------------------------------------------------------------------------------------------------------

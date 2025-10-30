@@ -1,0 +1,32 @@
+A.S. Use of Simplified ReLaXed orbital basis.
+ &SALGEB RUN='DR' CUP='IC' MXVORB=3 MXCONF=2 MXCCF=1 BASIS='SRLX' &END
+1 0 2 0 2 1 
+
+1 1      !group number followed by number of configs
+2 0 0
+
+2 2      !if ICFG was specified in SALGEB then min and max occ. nos follow
+1 1 0
+1 0 1
+
+3 2
+2 1 0
+2 0 1
+
+ &DRR     NMIN=3 NMAX=15  LMIN=0 LMAX=0 &END                   
+ &SMINIM  NZION=6 PRINT='FORM' NLAM=3 &END
+1 5
+1.110 1.120 1.121 1.130 1.131
+
+2 5
+1.210 1.220 1.221 1.230 1.231
+
+3 3
+1.310 1.320 1.321
+
+&SRADCON EMIN=0 EMAX=25 &END
+
+The scaling parameters are illustrative only (not optimized).
+Note that any Rydberg lamda follows the last global (MXVORB) bound one.
+And any continuum one follows the Rydberg, or bound if RUN='  '.
+

@@ -1,0 +1,11 @@
+A.S. Be-like Fe DW (BP)
+ &SALGEB RUN='DE' CUP='IC' NMETAJ=2 
+         MXVORB=2 MXCONF=3 KCOR1=1 KCOR2=1 &END
+2 0 2 1
+ 2   0
+ 1   1
+ 0   2
+ &SMINIM NZION=26 MAXE=500 &END
+ &SRADCON &END
+
+Note the minimal user input, and the default output.

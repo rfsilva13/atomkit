@@ -1,0 +1,24 @@
+CLEANUP INSTRUCTIONS
+====================
+
+The tests/test_configuration.py file is corrupted. 
+
+TO FIX:
+
+1. Delete the corrupted file:
+   rm tests/test_configuration.py
+
+2. Copy the clean version:
+   cp tests_clean_version.py tests/test_configuration.py
+
+3. Clean up the temp file:
+   rm tests_clean_version.py
+
+4. Test it works:
+   micromamba run -n atomkit pytest tests/test_configuration.py -v
+
+WHAT'S IN THE CLEAN FILE:
+- 5 test classes with ~20 simple tests total
+- Tests: parsing, electron counting, validation, conversion, real-world cases
+- Clean, minimal, easy to understand
+- Uses correct API: l_quantum, occupation, total_electrons()

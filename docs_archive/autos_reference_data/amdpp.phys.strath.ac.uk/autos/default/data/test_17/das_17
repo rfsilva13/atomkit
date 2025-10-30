@@ -1,0 +1,12 @@
+A.S. Be-like C structure in self-consistent Kohn-Sham (KS) plasma potential
+ &SALGEB RAD='YES'  MXCONF=3 MXVORB=3 &END
+ 1 0  2 0  2 1
+  2    2    0
+  2    1    1
+  2    0    2
+ &SMINIM NZION=6 NLAM=3 PPOT='KS' NDEN=1 &END
+1.0  1.23224   1.16141
+1.e24 -1.e6       !NDEN electron density/temp pairs: N(cm/3) / T(>0 Ryd or <0 K)
+
+Use PPOT='DH' for Debye-Huckel
+USe PPOT='IS' for Ion-Sphere
