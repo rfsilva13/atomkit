@@ -1,6 +1,18 @@
 # AtomKit Examples
 
-This directory contains working examples demonstrating the key features of AtomKit.
+# AtomKit Examples
+
+This directory contains examples demonstrating the key features and capabilities of AtomKit.
+
+## 🎤 Presentation Examples (NEW!)
+
+Perfect for talks, demonstrations, and teaching:
+
+- **`presentation_input_comparison.py`** - Side-by-side comparison of FAC, AUTOSTRUCTURE, and AtomKit input formats (simple 2-config example)
+- **`presentation_advanced_configs.py`** - Showcases AtomKit's powerful configuration generation with 25+ configs (requires atomkit installed)
+- **`PRESENTATION_EXAMPLES_GUIDE.md`** - Complete guide for using examples in presentations with demo scripts and talking points
+
+## 📚 Core Examples
 
 ## Examples Overview
 
