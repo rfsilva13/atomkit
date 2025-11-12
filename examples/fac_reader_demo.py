@@ -20,7 +20,8 @@ The example shows:
 
 import numpy as np
 import pandas as pd
-from atomkit.readers import read_fac, read_fac_transitions, read_fac_autoionization
+
+from atomkit.readers import read_fac, read_fac_autoionization, read_fac_transitions
 
 
 def main():
@@ -140,8 +141,8 @@ def main():
     print("-" * 60)
 
     for i, (_, trans) in enumerate(strongest.iterrows(), 1):
-        lower = trans['level_index_lower']
-        upper = trans['level_index_upper']
+        lower = trans["level_index_lower"]
+        upper = trans["level_index_upper"]
         print(
             f"{i:2d}   | {lower:3.0f}→{upper:3.0f}    | {trans['lambda']:8.1f}    | {trans['gf']:.2e} | {trans['A']:.2e} | {trans['type']}"
         )
@@ -160,11 +161,9 @@ def main():
     print("-" * 35)
 
     for i, (_, ai) in enumerate(fastest_ai.iterrows(), 1):
-        upper = ai['level_index_upper']
-        lower = ai['level_index_lower']
-        print(
-            f"{i:2d}   | {upper:3.0f}→{lower:3.0f}   | {ai['ai_rate']:.2e}"
-        )
+        upper = ai["level_index_upper"]
+        lower = ai["level_index_lower"]
+        print(f"{i:2d}   | {upper:3.0f}→{lower:3.0f}   | {ai['ai_rate']:.2e}")
     print()
 
     # ============================================================================
