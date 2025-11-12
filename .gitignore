@@ -114,6 +114,7 @@ cython_debug/
 *.swp
 *.swo
 *~
+.markdownlint.json
 
 # OS files
 .DS_Store
@@ -142,14 +143,17 @@ CODE_ANALYSIS.md
 DEV_GUIDE.md
 FINAL_CLEANUP_PLAN.md
 FINAL_REPORT.md
+DEVELOPMENT_SUMMARY.md
 # Development and temporary files
 scripts_to_rfsilva_dulycommented/
 scripts_to_rfsilva_dulycommented.zip
 docs/archive/
+docs_archive/
 docs/PRODUCTION_READY.md
 INTEGRATION_PROGRESS.md
 FINAL_REPORT.md
 *_configurations.txt
+test_unified_interface.py
 
 # Jupyter notebooks (temporary/testing)
 *.ipynb

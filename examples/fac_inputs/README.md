@@ -79,13 +79,18 @@ These `.sf` files can be safely committed to git:
 
 ## Output Files
 
-When executed, FAC will generate:
-- `.lev.b` - Binary energy level files
-- `.lev.asc` - ASCII energy level files
-- `.tr.b` - Binary transition files
-- `.tr.asc` - ASCII transition files
-- `.ai.b` / `.ai.asc` - Autoionization rate files
-- `.rr.b` / `.rr.asc` - Radiative recombination files
+When executed, FAC will generate output files in the `../fac_outputs/` directory:
+
+- `.lev.asc` - ASCII energy level files (readable by `read_fac()`)
+- `.tr.asc` - ASCII transition files (readable by `read_fac_transitions()`)
+- `.ai.asc` - Autoionization rate files (readable by `read_fac_autoionization()`)
+- `.b` files - Binary FAC data files (used internally)
+
+**Test the readers:**
+
+```bash
+python ../test_fac_readers.py
+```
 
 ## Further Reading
 

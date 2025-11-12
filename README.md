@@ -17,20 +17,24 @@ AtomKit's design philosophy is **"Physics First, Code Second."** It abstracts th
 ### Core Features
 
 #### ⚛️ Physics-First Abstraction
+
 * **Define Calculations Physically:** Structure your problem using high-level physical terms (e.g., coupling schemes, transition types, configurations) instead of code-specific syntax.
 * **Agnostic Workflow:** Automatically translate your physics definitions into the specific input formats for various supported codes (e.g., AUTOSTRUCTURE, FAC, GRASP).
 * **Interchangeable Codes:** Seamlessly switch between different atomic codes without needing to rewrite your entire workflow.
 
 #### 📊 Unified Analysis & Visualization
+
 * **Agnostic Parsing:** Ingest and parse the outputs from different codes into a single, consistent, and easy-to-use data structure.
 * **Comparative Analysis:** Directly compare results (e.g., energy levels, transition probabilities) from multiple codes in one environment.
 * **Data Visualization:** Generate a wide range of analysis plots and publication-ready tables directly from the unified data objects.
 
 #### 🧩 Modular & Extensible
+
 * **Modular Design:** Built with a modular structure, making it straightforward to extend with new atomic codes, analysis routines, or export formats.
 * **Easy Integration:** Designed for interoperability, allowing components to be easily imported and used within other scientific programs and research workflows.
 
 #### 🎯 Versatile Data Export
+
 * **Standardized Output:** Export your processed and analyzed data into common formats.
 * **Cross-Platform Integration:** Create outputs ready for use in other scientific platforms, including radiative transfer codes, plasma modeling suites, and spectroscopic databases.
 

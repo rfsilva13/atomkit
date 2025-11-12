@@ -61,7 +61,7 @@ print("  • Binary output files (.lev.b, .tr.b)")
 print("  • Must learn: SetAtom, Config, Structure, TransitionTable, etc.")
 
 # ==============================================================================
-# TRADITIONAL AUTOSTRUCTURE INPUT  
+# TRADITIONAL AUTOSTRUCTURE INPUT
 # ==============================================================================
 print("\n" + "=" * 80)
 print("2. TRADITIONAL AUTOSTRUCTURE INPUT (das file)")
@@ -167,7 +167,8 @@ print("\n" + "=" * 80)
 print("THE ATOMKIT ADVANTAGE")
 print("=" * 80)
 
-print("""
+print(
+    """
 ✨ ONE PHYSICS DEFINITION → MULTIPLE CODES ✨
 
 Traditional Workflow (Want to compare AUTOS vs FAC?):
@@ -205,7 +206,8 @@ KEY BENEFITS:
 ✅ Reproducible across codes
 ✅ Publication-ready output (CHIANTI, ADAS, LaTeX)
 ✅ Focus on physics, not syntax!
-""")
+"""
+)
 
 print("\n" + "=" * 80)
 print("PERFECT FOR PRESENTATIONS!")

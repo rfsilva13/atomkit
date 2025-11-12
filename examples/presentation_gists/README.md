@@ -16,6 +16,7 @@ Perfect for side-by-side display in presentations!
 ## 📁 Files
 
 ### 1. `01_fac_traditional.py`
+
 **Traditional FAC Input (Manual)**
 
 ```python
@@ -38,6 +39,7 @@ Config('1s2 2s2 2p5 3d1', group='n3_single')
 ---
 
 ### 2. `02_autostructure_traditional.das`
+
 **Traditional AUTOSTRUCTURE Input (Cryptic)**
 
 ```
@@ -58,6 +60,7 @@ Fe XVII complex CI with Breit+QED
 ---
 
 ### 3. `03_atomkit_fac.py`
+
 **AtomKit → FAC (Automated)**
 
 ```python
@@ -104,6 +107,7 @@ fac_file = calc.write_input()  # ✅ Done!
 ---
 
 ### 4. `04_atomkit_autostructure.py`
+
 **AtomKit → AUTOSTRUCTURE (Automated)**
 
 ```python
@@ -131,6 +135,7 @@ as_file = calc.write_input()  # ✅ Generates AUTOSTRUCTURE input!
 ## 🎯 Key Messages for Presentation
 
 ### Slide 1: Traditional FAC
+
 Show `01_fac_traditional.py`
 
 **Message:** "Manual listing of 25+ configurations. Tedious, error-prone, 60+ lines."
@@ -138,6 +143,7 @@ Show `01_fac_traditional.py`
 ---
 
 ### Slide 2: Traditional AUTOSTRUCTURE  
+
 Show `02_autostructure_traditional.das`
 
 **Message:** "Cryptic occupation numbers. What does '2 1 5 1 1 0 0 0 0 0' mean? Nearly impossible to verify!"
@@ -145,6 +151,7 @@ Show `02_autostructure_traditional.das`
 ---
 
 ### Slide 3: AtomKit → FAC
+
 Show `03_atomkit_fac.py`
 
 **Message:** "Automatic generation! Clear physics notation. 30 lines instead of 60+."
@@ -152,6 +159,7 @@ Show `03_atomkit_fac.py`
 ---
 
 ### Slide 4: AtomKit → AUTOSTRUCTURE
+
 Show `04_atomkit_autostructure.py`
 
 **Message:** "SAME CODE as FAC! Just change code='autostructure'. Write once, run anywhere!"
@@ -180,7 +188,9 @@ PRODUCTIVITY GAIN: 10-30x faster with AtomKit! 🚀
 ## 🎤 Usage in Presentations
 
 ### Option 1: Side-by-Side Display
+
 Open all 4 files in separate windows/panes and show simultaneously:
+
 ```
 ┌──────────────────────┬──────────────────────┐
 │ 01_fac_traditional   │ 02_autostructure_... │
@@ -190,6 +200,7 @@ Open all 4 files in separate windows/panes and show simultaneously:
 ```
 
 ### Option 2: Sequential Reveal
+
 1. Show traditional FAC (manual pain)
 2. Show traditional AUTOSTRUCTURE (cryptic pain)
 3. Show AtomKit → FAC (automatic, clear!)
@@ -197,7 +208,9 @@ Open all 4 files in separate windows/panes and show simultaneously:
 5. **Boom!** 🎆 Mind = Blown
 
 ### Option 3: GitHub Gist
+
 Upload these files to GitHub Gists and share links:
+
 - Easy to display in browsers
 - Syntax highlighting
 - Shareable links
@@ -208,6 +221,7 @@ Upload these files to GitHub Gists and share links:
 ## 📊 Statistics to Highlight
 
 ### Configuration Count
+
 - **Ground:** 1 config
 - **Single excitations:** 7 configs (2p → 3s,3p,3d,4s,4p,4d,4f)
 - **Core excitations:** 12+ configs (2s,2p → 3s,3p,3d doubles)
@@ -215,6 +229,7 @@ Upload these files to GitHub Gists and share links:
 - **TOTAL:** 26 configurations
 
 ### Time Comparison
+
 | Task | Traditional | AtomKit | Speedup |
 |------|-------------|---------|---------|
 | FAC input | 30-60 min | 2-5 min | **10-20x** |
@@ -222,6 +237,7 @@ Upload these files to GitHub Gists and share links:
 | Both codes | 75-150 min | 2-5 min | **30-70x** |
 
 ### Error Reduction
+
 - **Traditional:** High error rate (typos, missing configs, counting errors)
 - **AtomKit:** Low error rate (automatic validation catches errors early)
 
@@ -230,6 +246,7 @@ Upload these files to GitHub Gists and share links:
 ## 💡 Key Talking Points
 
 ### 1. Traditional Approach Problems
+
 - ❌ Manual configuration listing
 - ❌ Different syntax for each code
 - ❌ Cryptic formats (AUTOSTRUCTURE occupation numbers)
@@ -237,6 +254,7 @@ Upload these files to GitHub Gists and share links:
 - ❌ Time-consuming and error-prone
 
 ### 2. AtomKit Solution
+
 - ✅ Automatic configuration generation
 - ✅ Same Python code for all codes
 - ✅ Human-readable notation
@@ -244,7 +262,9 @@ Upload these files to GitHub Gists and share links:
 - ✅ 10-30x faster!
 
 ### 3. The "Aha!" Moment
+
 **Files 3 and 4 are IDENTICAL except for one parameter:**
+
 ```python
 code="fac"           # File 3
 code="autostructure" # File 4

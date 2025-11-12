@@ -16,8 +16,14 @@ def run_tests():
     print("RUNNING UNIT TESTS FOR CONFIGURATION CLASS")
     print("=" * 80)
 
-    # Change to the atomkit directory
-    os.chdir("/home/rfsilva/EIEres/atomkit")
+    # Get the directory where this script is located
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(script_dir)
+
+    # Add src directory to PYTHONPATH
+    src_path = os.path.join(script_dir, "src")
+    env = os.environ.copy()
+    env["PYTHONPATH"] = src_path
 
     # Run pytest with verbose output
     result = subprocess.run(
@@ -31,6 +37,7 @@ def run_tests():
         ],
         capture_output=True,
         text=True,
+        env=env,
     )
 
     print(result.stdout)

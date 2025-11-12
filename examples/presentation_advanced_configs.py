@@ -429,7 +429,8 @@ print("\n" + "=" * 80)
 print("KEY TAKEAWAYS FOR PRESENTATION")
 print("=" * 80)
 
-print("""
+print(
+    """
 🎯 ATOMKIT'S CONFIGURATION POWER:
 
 1. AUTOMATED GENERATION
@@ -477,7 +478,8 @@ PERFECT FOR:
 ✓ Teaching (clear notation, automatic validation)
 
 🚀 "Define physics, generate automatically, run anywhere!"
-""")
+"""
+)
 
 print("\n" + "=" * 80)
 print("END OF ADVANCED PRESENTATION EXAMPLE")

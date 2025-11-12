@@ -2,40 +2,44 @@
 
 ## Created Files for Your Presentation
 
-### 1. **`examples/presentation_input_comparison.py`** 
+### 1. **`examples/presentation_input_comparison.py`**
+
    **Focus: Basic Input Format Comparison**
 
    Shows the SAME simple physics problem (Fe XVII: 2 configurations) in three formats:
-   - ✅ Traditional FAC input (.sf file)
-   - ✅ Traditional AUTOSTRUCTURE input (das file) 
-   - ✅ AtomKit unified Python API
+
+- ✅ Traditional FAC input (.sf file)
+- ✅ Traditional AUTOSTRUCTURE input (das file)
+- ✅ AtomKit unified Python API
 
    **Perfect for:**
-   - Quick overview slides
-   - Showing syntax differences
-   - Demonstrating code-agnostic concept
-   - 5-minute intro talks
+- Quick overview slides
+- Showing syntax differences
+- Demonstrating code-agnostic concept
+- 5-minute intro talks
 
    **Key Message:** "Same physics, three different syntaxes - AtomKit unifies them!"
 
 ---
 
 ### 2. **`examples/presentation_advanced_configs.py`**
+
    **Focus: Complex Configuration Generation**
 
    Shows a REALISTIC complex calculation (Fe XVII: ~25 configurations) featuring:
-   - ✅ Single excitations (2p⁶ → 2p⁵ nl)
-   - ✅ Core excitations (2s² → 2s¹ 2p⁵ nl)
-   - ✅ Correlation configurations (2p⁶ → 2p⁴ nl²)
-   - ✅ Automatic validation
-   - ✅ Configuration generation capabilities
+
+- ✅ Single excitations (2p⁶ → 2p⁵ nl)
+- ✅ Core excitations (2s² → 2s¹ 2p⁵ nl)
+- ✅ Correlation configurations (2p⁶ → 2p⁴ nl²)
+- ✅ Automatic validation
+- ✅ Configuration generation capabilities
 
    **Perfect for:**
-   - Detailed technical talks
-   - Showing AtomKit's real power
-   - CI calculation examples
-   - Research group presentations
-   - Papers/posters
+- Detailed technical talks
+- Showing AtomKit's real power
+- CI calculation examples
+- Research group presentations
+- Papers/posters
 
    **Key Message:** "AtomKit generates 25+ configs automatically - saves hours of tedious manual work!"
 
@@ -60,7 +64,9 @@
 ## Usage in Presentations
 
 ### Slide 1: The Problem
+
 Show traditional FAC input (manual Config() lines)
+
 ```python
 Config('1s2 2s2 2p5 3s1', group='excited')
 Config('1s2 2s2 2p5 3p1', group='excited')
@@ -69,13 +75,16 @@ Config('1s2 2s2 2p5 3d1', group='excited')
 ```
 
 ### Slide 2: The AUTOSTRUCTURE Problem  
+
 Show cryptic occupation numbers
+
 ```
 2    2    5    1    0    0    0    0    0    0     ! What does this mean?!
 2    2    5    0    1    0    0    0    0    0     ! Hard to verify!
 ```
 
 ### Slide 3: The AtomKit Solution
+
 ```python
 ground = Configuration.from_string("1s2 2s2 2p6")
 excited = ground.generate_excitations(
@@ -87,13 +96,16 @@ excited = ground.generate_excitations(
 ```
 
 ### Slide 4: The Numbers
+
 **Traditional Approach:**
+
 - ❌ 100+ lines of manual input
 - ❌ 30-60 minutes of tedious work
 - ❌ High error rate (typos, counting mistakes)
 - ❌ Must rewrite for each code
 
 **AtomKit Approach:**
+
 - ✅ 30 lines of clear Python
 - ✅ 2-5 minutes
 - ✅ Low error rate (automatic validation)
@@ -105,13 +117,15 @@ excited = ground.generate_excitations(
 
 ## Key Talking Points
 
-### From Simple Example:
+### From Simple Example
+
 1. "Here's the same Fe XVII calculation in three different formats"
 2. "FAC uses function calls, AUTOSTRUCTURE uses cryptic numbers"
 3. "AtomKit uses clear physics notation - define once, run anywhere"
 4. "Switch codes by changing ONE parameter: `calc.code = 'fac'`"
 
-### From Advanced Example:
+### From Advanced Example
+
 1. "Real research needs 25+ configurations for accurate results"
 2. "Traditional codes: manually type every single one (error-prone!)"
 3. "AtomKit: `generate_excitations()` creates them automatically"
@@ -205,7 +219,8 @@ From the output, you can capture:
 
 ## Key Visual Messages
 
-### For Simple Example:
+### For Simple Example
+
 ```
 SAME PHYSICS
      ↓
@@ -216,7 +231,8 @@ FAC       AUTOS    AtomKit
 Different syntax → UNIFIED
 ```
 
-### For Advanced Example:
+### For Advanced Example
+
 ```
 TRADITIONAL: Write 25+ configs manually (30-60 min)
      ❌ Error-prone
@@ -236,8 +252,8 @@ RESULT: 10-30x PRODUCTIVITY GAIN! 🚀
 ## Perfect Quote for Slides
 
 > "AtomKit lets you write the physics once in clear Python,
->  then automatically generates input for any atomic code.
->  Define once, run anywhere, analyze consistently!"
+> then automatically generates input for any atomic code.
+> Define once, run anywhere, analyze consistently!"
 
 ---
 
@@ -248,6 +264,7 @@ RESULT: 10-30x PRODUCTIVITY GAIN! 🚀
 3. This summary document
 
 Both examples are **presentation-ready** with:
+
 - ✅ Clear visual output
 - ✅ Comparison tables
 - ✅ Real-world examples

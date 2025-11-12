@@ -458,9 +458,13 @@ class FacTransitionReader(_BaseFacReader):
             # Use header value if available, otherwise try parsing the 'multipole' column
             if multipole_header_value is not None:
                 # Determine type based on sign and value from header
-                transitions["type"] = (
-                    f"{'M' if multipole_header_value > 0 else 'E'}{abs(multipole_header_value)}"
-                )
+                # MULTIP=0 means sum over all multipoles, not E0
+                if multipole_header_value == 0:
+                    transitions["type"] = "ALL"  # Sum of all multipoles
+                else:
+                    transitions["type"] = (
+                        f"{'M' if multipole_header_value > 0 else 'E'}{abs(multipole_header_value)}"
+                    )
             else:
                 # Try to infer from the 'multipole' column if it looks like an integer +/- value
                 def infer_type(mp_val):

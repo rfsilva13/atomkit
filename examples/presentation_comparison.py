@@ -23,7 +23,7 @@ print("=" * 80)
 print("TRADITIONAL FAC INPUT (.sf file)")
 print("=" * 80)
 
-traditional_fac_input = '''
+traditional_fac_input = """
 # Fe XVII calculation using FAC
 # Different syntax, different concepts, different workflow
 
@@ -43,7 +43,7 @@ MemENTable('fe17.lev.b')
 TransitionTable('fe17.tr.b', ['ground'], ['excited'])
 PrintTable('fe17.lev.b', 'fe17.lev', 1)
 PrintTable('fe17.tr.b', 'fe17.tr', 1)
-'''
+"""
 
 print(traditional_fac_input)
 print("\n⚠️  FAC-specific syntax and concepts")
@@ -57,14 +57,14 @@ print("\n" + "=" * 80)
 print("TRADITIONAL AUTOSTRUCTURE INPUT (das file)")
 print("=" * 80)
 
-traditional_as_input = '''
+traditional_as_input = """
 Fe XVII radiative calculation
  &SALGEB CUP='IC' RAD='E1' MXVORB=4 MXCONF=2 &END
  1 0  2 0  2 1  3 0  3 1
   2    2    6    0    0
   2    2    5    1    0
  &SMINIM NZION=26 &END
-'''
+"""
 
 print(traditional_as_input)
 print("\n⚠️  AUTOSTRUCTURE-specific format")
@@ -87,22 +87,19 @@ from atomkit import Configuration
 # Define physics ONCE in clear, physical terms
 calc = AtomicCalculation(
     element="Fe",
-    charge=16,                          # Fe XVII (Ne-like)
-    
+    charge=16,  # Fe XVII (Ne-like)
     # Physics definition (code-agnostic!)
-    calculation_type="radiative",       # What we want to compute
-    coupling="IC",                       # Intermediate coupling
-    relativistic="Breit",                # Breit-Pauli Hamiltonian
-    radiation_types=["E1"],              # Electric dipole transitions
-    
+    calculation_type="radiative",  # What we want to compute
+    coupling="IC",  # Intermediate coupling
+    relativistic="Breit",  # Breit-Pauli Hamiltonian
+    radiation_types=["E1"],  # Electric dipole transitions
     # Configurations in standard notation
     configurations=[
-        Configuration.from_string("1s2 2s2 2p6"),        # Ground
-        Configuration.from_string("1s2 2s2 2p5 3s1"),    # Excited
+        Configuration.from_string("1s2 2s2 2p6"),  # Ground
+        Configuration.from_string("1s2 2s2 2p5 3s1"),  # Excited
     ],
-    
     # Code selection (ONLY code-specific choice!)
-    code="autostructure"  # or "fac" - just change this!
+    code="autostructure",  # or "fac" - just change this!
 )
 
 print("\n# STEP 1: Define physics once (code-agnostic)")
@@ -144,7 +141,8 @@ print("\n" + "=" * 80)
 print("THE ATOMKIT ADVANTAGE")
 print("=" * 80)
 
-print("""
+print(
+    """
 ✨ DEFINE PHYSICS ONCE, RUN ANYWHERE ✨
 
 Traditional Approach:
@@ -174,7 +172,8 @@ PRODUCTIVITY MULTIPLIER:
 
 REAL-WORLD WORKFLOW:
 ───────────────────
-""")
+"""
+)
 
 # Show complete workflow
 print("# Complete atomkit workflow example:")
@@ -271,7 +270,8 @@ print("\n" + "=" * 80)
 print("VISUAL WORKFLOW (for slides)")
 print("=" * 80)
 
-print("""
+print(
+    """
 TRADITIONAL WORKFLOW:
 ═════════════════════
 
@@ -357,7 +357,8 @@ ATOMKIT WORKFLOW:
                     └───────────────────────────────┘
 
 RESULT: 10x more productive, 100% reproducible!
-""")
+"""
+)
 
 print("\n" + "=" * 80)
 print("END OF PRESENTATION EXAMPLE")

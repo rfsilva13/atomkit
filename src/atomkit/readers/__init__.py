@@ -5,7 +5,17 @@ Initializes the readers sub-package and makes public functions available.
 """
 
 from .autoionization import read_fac_autoionization
-from .autostructure import read_as_levels, read_as_transitions, read_as_lambdas
+from .autostructure import (
+    read_as_levels,
+    read_as_transitions,
+    read_as_lambdas,
+    read_as_terms,
+    detect_file_format,
+    get_levels,
+    get_transitions,
+    get_terms,
+    get_autoionization,
+)
 from .labeling import add_level_info_to_transitions
 from .levels import read_fac
 from .transitions import read_fac_transitions
@@ -20,4 +30,10 @@ __all__ = [
     "read_as_levels",
     "read_as_transitions",
     "read_as_lambdas",
+    "read_as_terms",
+    "detect_file_format",
+    "get_levels",
+    "get_transitions",
+    "get_terms",
+    "get_autoionization",
 ]
