@@ -1,9 +1,0 @@
-A.S. PI of Li-like -> He-like + e-
- &SALGEB RUN='PI' CUP='LS' RAD='  '  MXVORB=3 MXCONF=1 MXCCF=2 &END
- 1 0  2 0  2 1
-  2    0    0
-
-  2    1    0
-  2    0    1
- &SMINIM NZION=26  &END
- &SRADCON MENG=-15  EMIN=0. EMAX=1500. &END

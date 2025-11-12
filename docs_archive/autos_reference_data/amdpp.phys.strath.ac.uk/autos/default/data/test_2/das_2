@@ -1,7 +1,0 @@
-A.S. Be-like C structure - energies + radiative rates
- &SALGEB CUP='IC' RAD='E1' MXCONF=3 MXVORB=3  &END
- 1 0  2 0  2 1
-  2    2    0
-  2    1    1
-  2    0    2
- &SMINIM NZION=6  &END

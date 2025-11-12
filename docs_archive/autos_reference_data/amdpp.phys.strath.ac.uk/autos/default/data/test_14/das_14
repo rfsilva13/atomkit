@@ -1,9 +1,0 @@
-A.S. Generate a B-like Laguerre pseudo-state expansion to 10d
- &SALGEB CUP='LS' KCOR1=1 KCOR2=1 MXVORB=2 NXTRA=10 LXTRA=2 MXCONF=2 ICFG=1 &END
- 2 0 2 1
- 0 0               !minimum occupation nos
- 2 2               !maximum occupation nos
- 2 1  1            !base config and no. of promotions
- 1 2  1            !base config and no. of promotions
- &SMINIM NZION=6 NLAM=4 ORTHOG='LPS' RADOUT='YES' &END
-1. 1. 1. -1.       !1s,2s,2p spect. 3s upwards Laguerre.
