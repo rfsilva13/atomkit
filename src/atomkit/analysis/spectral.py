@@ -190,12 +190,14 @@ def calculate_diagram_intensities(
     transitions: pd.DataFrame,
     levels: pd.DataFrame,
     auger_transitions: pd.DataFrame,
-    hole_shell: str = "1s1"
+    hole_shell: str = "1s1",
+    shake_off_probability: float | None = None
 ) -> pd.DataFrame:
     """
     Calculate diagram line intensities: I = w * rate * branching_ratio
     
     Diagram lines come from SINGLE-HOLE states (e.g., just "1s+1(1)1").
+    Final intensity includes shake-off correction: I_final = I * (1 - total_shake_off)
     
     Parameters
     ----------
@@ -207,11 +209,15 @@ def calculate_diagram_intensities(
         Auger transitions for fluorescence yield
     hole_shell : str
         Shell defining the hole state (default: K-shell "1s1")
+    shake_off_probability : float, optional
+        Total shake-off probability (sum of all Q values).
+        If None, no shake-off correction is applied.
         
     Returns
     -------
     pd.DataFrame
-        Transitions with added 'intensity', 'fluorescence_yield', 'branching_ratio' columns
+        Transitions with added 'intensity', 'intensity_final', 'fluorescence_yield', 
+        'branching_ratio' columns
     """
     # Label hole states
     levels = label_hole_states(levels, hole_shell)
@@ -249,12 +255,20 @@ def calculate_diagram_intensities(
     total_rates = diagram_transitions.groupby('upper_level')['rate'].transform('sum')
     diagram_transitions['branching_ratio'] = diagram_transitions['rate'] / total_rates
     
-    # Calculate intensity
+    # Calculate raw intensity (before shake-off correction)
     diagram_transitions['intensity'] = (
         diagram_transitions['fluorescence_yield'] *
         diagram_transitions['rate'] *
         diagram_transitions['branching_ratio']
     )
+    
+    # Apply shake-off correction if provided
+    if shake_off_probability is not None:
+        diagram_transitions['intensity_final'] = (
+            diagram_transitions['intensity'] * (1 - shake_off_probability)
+        )
+    else:
+        diagram_transitions['intensity_final'] = diagram_transitions['intensity']
     
     return diagram_transitions
 
@@ -263,13 +277,14 @@ def calculate_satellite_intensities(
     transitions: pd.DataFrame,
     levels: pd.DataFrame,
     auger_transitions: pd.DataFrame,
-    creation_rate: float,
+    shake_off_data: pd.DataFrame,
     hole_shell: str = "1s1"
 ) -> pd.DataFrame:
     """
     Calculate satellite line intensities from spectator-hole states.
     
     Satellite lines come from MULTI-HOLE states (e.g., "1s+1(1)1.4d+5(5)6").
+    Intensity is weighted by shell-specific shake-off probability.
     
     Parameters
     ----------
@@ -279,15 +294,16 @@ def calculate_satellite_intensities(
         Level data with configurations
     auger_transitions : pd.DataFrame
         Auger transitions
-    creation_rate : float
-        Rate of creating spectator-hole states (e.g., from shake-off)
+    shake_off_data : pd.DataFrame
+        Shake-off probabilities with 'shell' and 'Q1s' columns.
+        Get from atomkit.analysis.get_shake_off_data()
     hole_shell : str
         Primary hole shell (default: "1s1")
         
     Returns
     -------
     pd.DataFrame
-        Satellite transitions with 'intensity' column
+        Satellite transitions with 'intensity', 'intensity_final' columns
     """
     # Label hole states first
     levels = label_hole_states(levels, hole_shell)
@@ -306,6 +322,49 @@ def calculate_satellite_intensities(
         transitions['upper_level'].isin(satellite_levels)
     ].copy()
     
+    if satellite_transitions.empty:
+        return satellite_transitions
+    
+    # Add level configurations to transitions
+    satellite_transitions = satellite_transitions.merge(
+        levels[['level_index', 'configuration']],
+        left_on='upper_level',
+        right_on='level_index',
+        how='left',
+        suffixes=('', '_upper')
+    ).drop(columns=['level_index'])
+    
+    # Extract spectator hole from configuration
+    # For FAC: "1s+1(1)1.4d+5(5)6" means 1s and 4d holes
+    # The spectator is the additional hole beyond the primary
+    def extract_spectator_shell(config, primary_shell):
+        """Extract spectator hole from multi-hole configuration."""
+        if pd.isna(config) or '.' not in config:
+            return None
+        # Split by dot and find non-primary shells
+        parts = config.split('.')
+        for part in parts:
+            if primary_shell not in part:
+                # Extract shell notation (e.g., "4d+5" -> "4d5/2", "4d-3" -> "4d3/2")
+                # Simplified: just get the shell letter and number
+                import re
+                match = re.match(r'(\d+)([spdf])[+-]?', part)
+                if match:
+                    n, l = match.groups()
+                    # For shake-off data, use simplified notation
+                    # Map to shake-off table format (e.g., "4d3/2", "4d5/2")
+                    if '+' in part:
+                        return f"{n}{l}5/2" if l in ['p', 'd', 'f'] else f"{n}{l}"
+                    elif '-' in part:
+                        return f"{n}{l}3/2" if l in ['p', 'd', 'f'] else f"{n}{l}"
+                    else:
+                        return f"{n}{l}"
+        return None
+    
+    satellite_transitions['spectator_shell'] = satellite_transitions['configuration'].apply(
+        lambda c: extract_spectator_shell(c, hole_shell)
+    )
+    
     # Calculate fluorescence yield for satellite states
     w_sat, _, _ = calculate_fluorescence_yield(
         satellite_transitions, auger_transitions
@@ -313,13 +372,27 @@ def calculate_satellite_intensities(
     
     # Calculate branching ratios
     total_rates = satellite_transitions.groupby('upper_level')['rate'].transform('sum')
-    satellite_transitions['branching_ratio'] = satellite_transitions['rate'] / total_rates
+    satellite_transitions['branching_ratio'] = satellite_transitions['rate'] / total_rates.replace(0, 1)
     
-    # Intensity = creation_rate * w * branching_ratio
-    satellite_transitions['intensity'] = (
-        creation_rate * w_sat * satellite_transitions['branching_ratio']
-    )
     satellite_transitions['fluorescence_yield'] = w_sat
+    
+    # Merge with shake-off data to get shell-specific probabilities
+    satellite_transitions = satellite_transitions.merge(
+        shake_off_data[['shell', 'Q1s']],
+        left_on='spectator_shell',
+        right_on='shell',
+        how='left'
+    )
+    
+    # Calculate raw intensity
+    satellite_transitions['intensity'] = (
+        w_sat * satellite_transitions['branching_ratio']
+    )
+    
+    # Final intensity weighted by shake-off probability
+    satellite_transitions['intensity_final'] = (
+        satellite_transitions['intensity'] * satellite_transitions['Q1s'].fillna(0)
+    )
     
     return satellite_transitions
 
@@ -329,7 +402,8 @@ def calculate_spectrum(
     satellite_transitions: pd.DataFrame | None = None,
     energy_min: float | None = None,
     energy_max: float | None = None,
-    bin_width: float = 0.1
+    bin_width: float = 0.1,
+    use_final_intensity: bool = True
 ) -> pd.DataFrame:
     """
     Combine diagram and satellite lines into a binned spectrum.
@@ -337,25 +411,43 @@ def calculate_spectrum(
     Parameters
     ----------
     diagram_transitions : pd.DataFrame
-        Diagram lines with 'energy' and 'intensity'
+        Diagram lines with 'energy' and 'intensity' or 'intensity_final'
     satellite_transitions : pd.DataFrame, optional
-        Satellite lines with 'energy' and 'intensity'
+        Satellite lines with 'energy' and 'intensity' or 'intensity_final'
     energy_min : float, optional
         Minimum energy for spectrum (default: auto from data)
     energy_max : float, optional
         Maximum energy for spectrum (default: auto from data)
     bin_width : float
         Energy bin width in eV
+    use_final_intensity : bool
+        If True, use 'intensity_final' (with shake-off correction).
+        If False, use 'intensity' (raw). Default: True
         
     Returns
     -------
     pd.DataFrame
         DataFrame with 'energy' and 'intensity' columns representing the spectrum
     """
+    # Determine which intensity column to use
+    intensity_col = 'intensity_final' if use_final_intensity else 'intensity'
+    
     # Combine all transitions
-    all_transitions = [diagram_transitions]
-    if satellite_transitions is not None:
-        all_transitions.append(satellite_transitions)
+    all_transitions = []
+    for df in [diagram_transitions, satellite_transitions]:
+        if df is not None and not df.empty:
+            # Check if the intensity column exists, fallback to 'intensity'
+            if intensity_col not in df.columns and 'intensity' in df.columns:
+                df_copy = df.copy()
+                df_copy[intensity_col] = df_copy['intensity']
+                all_transitions.append(df_copy[['energy', intensity_col]])
+            elif intensity_col in df.columns:
+                all_transitions.append(df[['energy', intensity_col]])
+    
+    if not all_transitions:
+        # Return empty spectrum
+        return pd.DataFrame({'energy': [], 'intensity': []})
+    
     combined = pd.concat(all_transitions, ignore_index=True)
     
     # Determine energy range
@@ -370,7 +462,7 @@ def calculate_spectrum(
     binned_intensity, _ = np.histogram(
         combined['energy'],
         bins=bins,
-        weights=combined['intensity']
+        weights=combined[intensity_col]
     )
     
     spectrum = pd.DataFrame({
