@@ -3,6 +3,9 @@ AtomKit analysis module.
 
 Functions for processing and analyzing atomic spectral data, including
 diagram and satellite line intensities, shake-off corrections, and plotting.
+
+Universal analysis functions work with data from any atomic code.
+Legacy FAC-specific functions are also available for backward compatibility.
 """
 
 import math
@@ -12,6 +15,53 @@ from typing import Dict, List, Optional, Tuple
 
 import matplotlib.pyplot as plt
 import pandas as pd
+
+# Export universal analysis functions
+from .spectral import (
+    add_transition_energies,
+    calculate_diagram_intensities,
+    calculate_fluorescence_yield,
+    calculate_satellite_intensities,
+    calculate_spectrum,
+    filter_transitions_by_shell,
+    label_hole_states,
+    load_data,
+)
+
+__all__ = [
+    # Universal analysis functions (recommended)
+    'load_data',
+    'add_transition_energies',
+    'calculate_fluorescence_yield',
+    'label_hole_states',
+    'filter_transitions_by_shell',
+    'calculate_diagram_intensities',
+    'calculate_satellite_intensities',
+    'calculate_spectrum',
+    # Legacy FAC-specific functions (for backward compatibility)
+    'calculate_g',
+    'get_spectator_hole',
+    'load_spectral_data',
+    'get_shake_off_data',
+    'clean_spectral_data',
+    'process_diagram_intensities',
+    'process_satellite_intensities',
+    'filter_satellite_data',
+    'plot_k_alpha_spectrum',
+    'parse_config_occupations',
+    'get_full_occupation',
+    'identify_fac_holes',
+    'get_fac_hole_to_shell_map',
+    'map_fac_holes_to_shell',
+    'calculate_g_fac',
+    'load_fac_data',
+    'process_fac_diagram_intensities',
+    'process_fac_satellite_intensities',
+    'add_fac_transition_energies_and_holes',
+    'filter_fac_k_alpha_transitions',
+    'calculate_fac_wk',
+    'plot_fac_k_alpha_spectrum',
+]
 
 # Maximum electrons for each shell type
 MAX_ELECTRONS = {'s': 2, 'p': 6, 'd': 10, 'f': 14}
