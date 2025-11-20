@@ -1,0 +1,117 @@
+# =================================================================
+# General
+# =================================================================
+
+# Local work, outputs, and data
+# All untracked files should go in here.
+local/
+work/
+tools/
+outputs/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# IDE settings
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.markdownlint.json
+
+# =================================================================
+# Python
+# =================================================================
+
+# Byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+.ruff_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# =================================================================
+# Project Specific
+# =================================================================
+# FAC/AUTOSTRUCTURE generated files (for local testing)
+*.sf
+*.lev.asc
+*.tr.asc
+*.ai.asc
+*.ham.asc
+*.en.asc
+*.wav.asc
+*.lev.b
+*.tr.b
+*.ai.b
+*.ci.b
+*.rr.b
+*.ce.b
+*.lev
+*.tr
+*.ai
+*.ci
+*.rr
+*.ce
+*.ham
+*.en
+*.wav
+
+# Other temporary files
+*.tmp
+*.bak
+*.log
+*.csv
+*.png
