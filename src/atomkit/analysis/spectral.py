@@ -5,8 +5,9 @@ Works with data in universal schema from any atomic code.
 """
 
 from typing import Tuple
-import pandas as pd
+
 import numpy as np
+import pandas as pd
 
 
 def load_data(base_filename: str) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
@@ -30,7 +31,7 @@ def load_data(base_filename: str) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFr
     >>> levels, trans, auger = load_data('/path/to/Pd')
     >>> print(levels[['level_index', 'energy', 'J']].head())
     """
-    from ..readers import read_levels, read_transitions, read_autoionization
+    from ..readers import read_autoionization, read_levels, read_transitions
     
     levels = read_levels(base_filename)
     transitions = read_transitions(base_filename)
@@ -194,6 +195,8 @@ def calculate_diagram_intensities(
     """
     Calculate diagram line intensities: I = w * rate * branching_ratio
     
+    Diagram lines come from SINGLE-HOLE states (e.g., just "1s+1(1)1").
+    
     Parameters
     ----------
     transitions : pd.DataFrame
@@ -213,13 +216,27 @@ def calculate_diagram_intensities(
     # Label hole states
     levels = label_hole_states(levels, hole_shell)
     
-    # Add level info to transitions
-    trans_with_levels = add_transition_energies(transitions, levels)
+    # Identify SINGLE-hole states (no dot in configuration means single hole)
+    # e.g., "1s+1(1)1" is single, "1s+1(1)1.4d+5(5)6" is multi
+    levels = levels.copy()
+    levels['is_single_hole'] = (
+        levels['is_hole_state'] & 
+        ~levels['configuration'].str.contains(r'\.', regex=True, na=False)
+    )
     
-    # Filter transitions from hole states
-    hole_levels = levels[levels['is_hole_state']]['level_index'].values
+    # Add level info to transitions
+    trans_with_levels = transitions.merge(
+        levels[['level_index', 'is_single_hole']],
+        left_on='upper_level',
+        right_on='level_index',
+        how='left'
+    ).drop(columns=['level_index'])
+    
+    trans_with_levels = add_transition_energies(trans_with_levels, levels)
+    
+    # Filter transitions from SINGLE-HOLE states only
     diagram_transitions = trans_with_levels[
-        trans_with_levels['upper_level'].isin(hole_levels)
+        trans_with_levels['is_single_hole'] == True
     ].copy()
     
     # Calculate fluorescence yield
@@ -252,6 +269,8 @@ def calculate_satellite_intensities(
     """
     Calculate satellite line intensities from spectator-hole states.
     
+    Satellite lines come from MULTI-HOLE states (e.g., "1s+1(1)1.4d+5(5)6").
+    
     Parameters
     ----------
     transitions : pd.DataFrame
@@ -270,11 +289,15 @@ def calculate_satellite_intensities(
     pd.DataFrame
         Satellite transitions with 'intensity' column
     """
-    # Identify satellite states (configurations with spectator holes beyond primary hole)
+    # Label hole states first
+    levels = label_hole_states(levels, hole_shell)
+    
+    # Identify satellite states (MULTI-hole: has primary hole AND other holes)
+    # Presence of dot indicates multiple subshells, e.g., "1s+1(1)1.4d+5(5)6"
     levels = levels.copy()
     levels['is_satellite'] = (
-        levels['configuration'].str.contains(hole_shell, na=False) &
-        levels['configuration'].str.count(r'\d+[spdf]\d+') > 1  # Multiple hole notation
+        levels['is_hole_state'] &
+        levels['configuration'].str.contains(r'\.', regex=True, na=False)
     )
     
     # Filter transitions from satellite states

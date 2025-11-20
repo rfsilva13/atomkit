@@ -7,13 +7,10 @@ from pathlib import Path
 # Add parent dir to path for imports
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
-from atomkit.analysis import (
-    load_data,
-    calculate_fluorescence_yield,
-    label_hole_states,
-    calculate_diagram_intensities,
-    calculate_spectrum,
-)
+from atomkit.analysis import (calculate_diagram_intensities,
+                              calculate_fluorescence_yield, calculate_spectrum,
+                              label_hole_states, load_data)
+
 
 def test_universal_analysis():
     """Test universal analysis functions with Pd FAC data."""

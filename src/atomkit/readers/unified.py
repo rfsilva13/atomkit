@@ -10,12 +10,12 @@ from typing import Optional, Tuple
 
 import pandas as pd
 
-from .autostructure import detect_file_format
-from .levels import read_fac as _read_fac_levels
-from .transitions import read_fac_transitions as _read_fac_transitions
 from .autoionization import read_fac_autoionization as _read_fac_autoionization
+from .autostructure import detect_file_format
 from .autostructure import read_as_levels as _read_as_levels
 from .autostructure import read_as_transitions as _read_as_transitions
+from .levels import read_fac as _read_fac_levels
+from .transitions import read_fac_transitions as _read_fac_transitions
 
 logger = logging.getLogger(__name__)
 

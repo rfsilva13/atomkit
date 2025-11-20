@@ -17,16 +17,11 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # Export universal analysis functions
-from .spectral import (
-    add_transition_energies,
-    calculate_diagram_intensities,
-    calculate_fluorescence_yield,
-    calculate_satellite_intensities,
-    calculate_spectrum,
-    filter_transitions_by_shell,
-    label_hole_states,
-    load_data,
-)
+from .spectral import (add_transition_energies, calculate_diagram_intensities,
+                       calculate_fluorescence_yield,
+                       calculate_satellite_intensities, calculate_spectrum,
+                       filter_transitions_by_shell, label_hole_states,
+                       load_data)
 
 __all__ = [
     # Universal analysis functions (recommended)
