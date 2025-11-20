@@ -256,9 +256,9 @@ def calculate_diagram_intensities(
     diagram_transitions['branching_ratio'] = diagram_transitions['rate'] / total_rates
     
     # Calculate raw intensity (before shake-off correction)
+    # I = w * Branching_Ratio (NOT w * rate * BR, since BR = rate/sum_rates!)
     diagram_transitions['intensity'] = (
         diagram_transitions['fluorescence_yield'] *
-        diagram_transitions['rate'] *
         diagram_transitions['branching_ratio']
     )
     
