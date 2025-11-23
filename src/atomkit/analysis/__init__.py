@@ -16,10 +16,14 @@ from typing import Dict, List, Optional, Tuple
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from .plotting import create_interactive_energy_shifter
 # Export universal analysis functions
-from .spectral import (add_transition_energies, calculate_diagram_intensities,
+from .spectral import (add_transition_energies,
+                       apply_linewidths_to_transitions,
+                       calculate_diagram_intensities,
                        calculate_fluorescence_yield,
                        calculate_satellite_intensities, calculate_spectrum,
+                       calculate_widths, create_lorentzian_spectrum,
                        filter_transitions_by_shell, label_hole_states,
                        load_data)
 
@@ -33,6 +37,10 @@ __all__ = [
     'calculate_diagram_intensities',
     'calculate_satellite_intensities',
     'calculate_spectrum',
+    'calculate_widths',
+    'apply_linewidths_to_transitions',
+    'create_lorentzian_spectrum',
+    'create_interactive_energy_shifter',
     # Legacy FAC-specific functions (for backward compatibility)
     'calculate_g',
     'get_spectator_hole',
@@ -174,23 +182,273 @@ def load_spectral_data(file_paths: Dict[str, str]) -> Tuple[pd.DataFrame, ...]:
     return diagram_data, satellite_data, satellite_data_complete, auger_data, holes_data
 
 
-def get_shake_off_data() -> pd.DataFrame:
+def get_shake_off_data(element: str | int | None = None, use_carlson_for_pd: bool = False) -> pd.DataFrame:
     """
     Get shake-off probabilities DataFrame.
+
+    Parameters
+    ----------
+    element : str, int, or None, optional
+        Element symbol (str), atomic number (int), or None for Pd (default).
+        If None, returns the original Pd data for backward compatibility.
+    use_carlson_for_pd : bool, optional
+        If True, use Carlson data for Pd instead of original photoionization data.
+        Default is False (use original Pd data).
 
     Returns
     -------
     pd.DataFrame
-        Shake-off data.
+        Shake-off data with columns 'shell' and 'Q1s'.
     """
-    shake_off_data = {
-        'shell': ['1s', '2s', '3s', '4s', '2p1/2', '2p3/2', '3p1/2', '3p3/2', '3d3/2', '3d5/2', '4p1/2', '4p3/2', '4d3/2', '4d5/2'],
-        'Q1s': [6.069821E-05, 3.090648E-04, 1.243763E-03, 4.907061E-03, 5.219590E-04, 9.372514E-04, 3.200017E-03, 3.991437E-03, 4.447591E-03, 6.591329E-03, 8.118569E-03, 1.580881E-02, 6.859390E-02, 1.098453E-01]
+    import csv
+    import os
+
+    # Define conversion function
+    def estimate_k_shakeoff(Z, shell_name, carlson_prob_pct):
+        """Convert Carlson beta decay % to photoionization %"""
+        import re
+        match = re.match(r'(\d+)[spdf]', shell_name)
+        if not match:
+            raise ValueError(f'Invalid shell format: {shell_name}')
+        
+        n_target = int(match.group(1))
+        
+        if Z <= 2: n_max = 1
+        elif Z <= 10: n_max = 2
+        elif Z <= 18: n_max = 3
+        elif Z <= 36: n_max = 4
+        elif Z <= 54: n_max = 5
+        elif Z <= 86: n_max = 6
+        else: n_max = 7
+
+        # Empirically-derived correction factors from Carlson-to-photoionization validation
+        if shell_name.startswith('1s'):
+            factor = 0.15
+        elif n_target == n_max:
+            factor = 1.1  # valence
+        elif n_target == n_max - 1:
+            factor = 0.9  # sub-valence
+        else:
+            factor = 0.3  # inner
+
+        return carlson_prob_pct * factor / 100  # Convert % to fractional
+
+    # Basic element symbol to atomic number mapping
+    element_symbols = {
+        'H': 1, 'He': 2, 'Li': 3, 'Be': 4, 'B': 5, 'C': 6, 'N': 7, 'O': 8, 'F': 9, 'Ne': 10,
+        'Na': 11, 'Mg': 12, 'Al': 13, 'Si': 14, 'P': 15, 'S': 16, 'Cl': 17, 'Ar': 18,
+        'K': 19, 'Ca': 20, 'Sc': 21, 'Ti': 22, 'V': 23, 'Cr': 24, 'Mn': 25, 'Fe': 26, 'Co': 27, 'Ni': 28, 'Cu': 29, 'Zn': 30,
+        'Ga': 31, 'Ge': 32, 'As': 33, 'Se': 34, 'Br': 35, 'Kr': 36,
+        'Rb': 37, 'Sr': 38, 'Y': 39, 'Zr': 40, 'Nb': 41, 'Mo': 42, 'Tc': 43, 'Ru': 44, 'Rh': 45, 'Pd': 46, 'Ag': 47, 'Cd': 48,
+        'In': 49, 'Sn': 50, 'Sb': 51, 'Te': 52, 'I': 53, 'Xe': 54,
+        'Cs': 55, 'Ba': 56, 'La': 57, 'Ce': 58, 'Pr': 59, 'Nd': 60, 'Pm': 61, 'Sm': 62, 'Eu': 63, 'Gd': 64, 'Tb': 65, 'Dy': 66, 'Ho': 67, 'Er': 68, 'Tm': 69, 'Yb': 70,
+        'Lu': 71, 'Hf': 72, 'Ta': 73, 'W': 74, 'Re': 75, 'Os': 76, 'Ir': 77, 'Pt': 78, 'Au': 79, 'Hg': 80,
+        'Tl': 81, 'Pb': 82, 'Bi': 83, 'Po': 84, 'At': 85, 'Rn': 86,
+        'Fr': 87, 'Ra': 88, 'Ac': 89, 'Th': 90, 'Pa': 91, 'U': 92, 'Np': 93, 'Pu': 94, 'Am': 95, 'Cm': 96, 'Bk': 97, 'Cf': 98, 'Es': 99, 'Fm': 100
     }
-    shake_off_df = pd.DataFrame(shake_off_data)
-    hole = ['1s', '2s', '3s', '4s', '2p1/2', '2p3/2', '3p1/2', '3p3/2', '3d3/2', '3d5/2', '4p1/2', '4p3/2', '4d3/2', '4d5/2']
-    shake_off_df['shell'] = hole
-    return shake_off_df
+
+    # If no element specified, use original Pd data for backward compatibility
+    if element is None:
+        shake_off_data = {
+            'shell': ['1s', '2s', '3s', '4s', '2p1/2', '2p3/2', '3p1/2', '3p3/2', '3d3/2', '3d5/2', '4p1/2', '4p3/2', '4d3/2', '4d5/2'],
+            'Q1s': [6.069821E-05, 3.090648E-04, 1.243763E-03, 4.907061E-03, 5.219590E-04, 9.372514E-04, 3.200017E-03, 3.991437E-03, 4.447591E-03, 6.591329E-03, 8.118569E-03, 1.580881E-02, 6.859390E-02, 1.098453E-01]
+        }
+        shake_off_df = pd.DataFrame(shake_off_data)
+        return shake_off_df
+
+    # Try to load the comprehensive shake-off table
+    shake_table_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'shake_table.csv')
+
+    if not os.path.exists(shake_table_path):
+        # Fallback to Pd data if table not found
+        print(f"Warning: shake_table.csv not found at {shake_table_path}, using Pd data")
+        return get_shake_off_data(None)
+
+    try:
+        # Load the shake-off table using csv reader (pandas has parsing issues)
+        data = []
+        with open(shake_table_path, 'r') as f:
+            reader = csv.reader(f)
+            headers = next(reader)
+            for row in reader:
+                data.append(row)
+
+        # Find the element row
+        element_row = None
+        target_z = None
+        
+        if isinstance(element, str):
+            # Convert element symbol to atomic number if needed
+            if element in element_symbols:
+                target_z = element_symbols[element]
+                # Special handling for Pd - use original data by default, Carlson if requested
+                if target_z == 46 and not use_carlson_for_pd:
+                    print("Using original photoionization data for Pd")
+                    return get_shake_off_data(None)
+                # Find by atomic number
+                for row in data:
+                    if len(row) > 0 and row[0] == str(target_z):
+                        element_row = row
+                        break
+            else:
+                # Try to find by element symbol directly
+                for row in data:
+                    if len(row) > 1 and row[1].strip() == element:
+                        element_row = row
+                        target_z = int(row[0])
+                        break
+        elif isinstance(element, int):
+            target_z = element  # Set target_z regardless of whether found in table
+            # Special handling for Pd - use original data by default, Carlson if requested
+            if target_z == 46 and not use_carlson_for_pd:
+                print("Using original photoionization data for Pd")
+                return get_shake_off_data(None)
+            # Find by atomic number
+            for row in data:
+                if len(row) > 0 and row[0] == str(element):
+                    element_row = row
+                    break
+        
+        if element_row is None:
+            # Try local interpolation for missing elements (nearest neighbors)
+            print(f"Warning: Element '{element}' not found in shake_table.csv, trying local interpolation")
+            
+            # Get all available Z values
+            available_z = []
+            for row in data:
+                if len(row) > 0 and row[0].isdigit():
+                    available_z.append(int(row[0]))
+            
+            available_z.sort()
+            
+            if len(available_z) < 2:
+                print(f"Warning: Not enough data for interpolation, using Pd data")
+                return get_shake_off_data(None)
+            
+            # Find nearest elements for local interpolation
+            # target_z should already be set from symbol conversion above
+            if target_z is None:
+                if isinstance(element, str) and element not in element_symbols:
+                    print(f"Warning: Unknown element symbol '{element}', using Pd data")
+                    return get_shake_off_data(None)
+                else:
+                    print(f"Warning: Cannot interpolate for element '{element}', using Pd data")
+                    return get_shake_off_data(None)
+            
+            # Find lower and upper bounds (nearest neighbors)
+            lower_z = None
+            upper_z = None
+            
+            for z in available_z:
+                if z < target_z:
+                    lower_z = z
+                elif z > target_z and upper_z is None:
+                    upper_z = z
+                    break
+            
+            if lower_z is None or upper_z is None:
+                # Extrapolate using nearest element
+                nearest_z = min(available_z, key=lambda x: abs(x - target_z))
+                print(f"Warning: Cannot interpolate Z={target_z}, extrapolating from Z={nearest_z}")
+                return get_shake_off_data(nearest_z)
+            
+            # Get data for lower and upper elements
+            lower_row = None
+            upper_row = None
+            
+            for row in data:
+                if len(row) > 0 and row[0] == str(lower_z):
+                    lower_row = row
+                elif len(row) > 0 and row[0] == str(upper_z):
+                    upper_row = row
+            
+            if lower_row is None or upper_row is None:
+                print(f"Warning: Could not find data for interpolation bounds, using Pd data")
+                return get_shake_off_data(None)
+            
+            # Interpolate shake-off values for each shell using local linear interpolation
+            interpolated_data = {}
+            
+            for i, col_name in enumerate(headers):
+                if i >= 2 and i < len(headers) - 1:  # Skip Z, Element, and Total Shake-off columns
+                    lower_val = lower_row[i] if i < len(lower_row) and lower_row[i] and lower_row[i].strip() else 0
+                    upper_val = upper_row[i] if i < len(upper_row) and upper_row[i] and upper_row[i].strip() else 0
+                    
+                    try:
+                        lower_pct = float(lower_val) if lower_val else 0.0
+                        upper_pct = float(upper_val) if upper_val else 0.0
+                        
+                        if lower_pct > 0 or upper_pct > 0:
+                            # Local linear interpolation between nearest neighbors
+                            if lower_pct > 0 and upper_pct > 0:
+                                # Both values available - interpolate
+                                ratio = (target_z - lower_z) / (upper_z - lower_z)
+                                interpolated_pct = lower_pct + ratio * (upper_pct - lower_pct)
+                            elif lower_pct > 0:
+                                # Only lower value - use it
+                                interpolated_pct = lower_pct
+                            else:
+                                # Only upper value - use it
+                                interpolated_pct = upper_pct
+                            
+                            interpolated_data[col_name] = interpolated_pct
+                    except (ValueError, IndexError):
+                        continue
+            
+            if not interpolated_data:
+                print(f"Warning: No valid interpolated data found for Z={target_z}, using Pd data")
+                return get_shake_off_data(None)
+            
+            # Convert interpolated Carlson data to photoionization probabilities
+            shells = []
+            q1s_values = []
+            
+            for shell_name, carlson_pct in interpolated_data.items():
+                photoionization_fractional = estimate_k_shakeoff(target_z, shell_name, carlson_pct)
+                shells.append(shell_name)
+                q1s_values.append(photoionization_fractional)
+            
+            print(f"Successfully interpolated shake-off data for Z={target_z} using local interpolation between Z={lower_z} and Z={upper_z}")
+            
+            shake_off_data = {
+                'shell': shells,
+                'Q1s': q1s_values
+            }
+            shake_off_df = pd.DataFrame(shake_off_data)
+            return shake_off_df
+
+        # Extract Carlson shake-off data (in %)
+        carlson_data = {}
+        for i, col_name in enumerate(headers):
+            if i >= 2 and i < len(headers) - 1:  # Skip Z, Element, and Total Shake-off columns
+                value = element_row[i]
+                if value and value.strip() and float(value) > 0:
+                    shell_name = col_name
+                    carlson_data[shell_name] = float(value)
+
+        if not carlson_data:
+            print(f"Warning: No valid shake-off data found for {element}, using Pd data")
+            return get_shake_off_data(None)
+
+        # Convert Carlson beta decay % to photoionization fractional probabilities
+        shells = []
+        q1s_values = []
+        
+        for shell_name, carlson_pct in carlson_data.items():
+            photoionization_fractional = estimate_k_shakeoff(target_z, shell_name, carlson_pct)
+            shells.append(shell_name)
+            q1s_values.append(photoionization_fractional)
+
+        shake_off_data = {
+            'shell': shells,
+            'Q1s': q1s_values
+        }
+        shake_off_df = pd.DataFrame(shake_off_data)
+        return shake_off_df
+
+    except Exception as e:
+        print(f"Warning: Error loading shake_table.csv: {e}, using Pd data")
+        return get_shake_off_data(None)
 
 
 def clean_spectral_data(diagram_data: pd.DataFrame, satellite_data: pd.DataFrame,
@@ -565,23 +823,41 @@ def load_fac_data(base_filename: str) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Da
     transitions_df = read_fac_transitions(base_filename)
     autoionization_df = read_fac_autoionization(base_filename)
     
-    # Compute ground occupations from neutral ion
-    neutral_levels = levels_df[levels_df['ion_charge'] == 0].copy()
-    if not neutral_levels.empty:
-        ground_idx = neutral_levels['energy'].idxmin()
-        ground_config = str(neutral_levels.loc[ground_idx, 'label'])
-        ground_occupations = parse_config_occupations(ground_config)
-        
-        # Get all subshells
-        all_configs = levels_df['label'].tolist()
-        all_subshells = set()
-        for config in all_configs:
-            occ = parse_config_occupations(config)
-            all_subshells.update(occ.keys())
-        
-        for subshell in all_subshells:
-            if subshell not in ground_occupations:
-                ground_occupations[subshell] = get_full_occupation(subshell)
+    # Build reference configuration from the CLOSED-SHELL CORE
+    # FAC uses compact notation: only shows valence/excited electrons, not the closed core.
+    # Strategy: 
+    # 1. Identify ALL subshells that appear in ANY neutral ground state level
+    #    These are the valence shells (partially filled) -> IGNORE them
+    # 2. All other subshells that appear in excited states are either:
+    #    a) Fully occupied core shells (not shown in ground) -> count holes relative to full
+    #    b) Excited electrons beyond ground -> handled automatically
+    
+    # Get ALL neutral ground state configurations (ion_charge == 0)
+    neutral_levels = levels_df[levels_df['ion_charge'] == 0]
+    
+    # Collect all subshells that appear in ANY neutral ground state
+    # These are the VALENCE subshells (partially filled in ground state)
+    valence_subshells = set()
+    for label in neutral_levels['label']:
+        occ = parse_config_occupations(label)
+        valence_subshells.update(occ.keys())
+    
+    # Collect all subshells present in ANY configuration
+    all_subshells = set()
+    for label in levels_df['label']:
+        all_subshells.update(parse_config_occupations(label).keys())
+    
+    # Build reference: 
+    # - Subshells that appear in ground state (valence) -> IGNORE
+    # - Subshells that DON'T appear in ground state (core) -> fully occupied
+    ground_occupations = {}
+    for subshell in all_subshells:
+        if subshell not in valence_subshells:
+            # This is a core subshell (doesn't appear in any ground state level)
+            # It's implicitly fully occupied in ground state
+            ground_occupations[subshell] = get_full_occupation(subshell)
+    
+    if len(ground_occupations) > 0:
         
         # Add hole labels
         levels_df['hole_labels'] = levels_df['label'].apply(

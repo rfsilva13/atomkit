@@ -471,3 +471,125 @@ def calculate_spectrum(
     })
     
     return spectrum
+
+
+def calculate_widths(levels: pd.DataFrame, transitions: pd.DataFrame, auger: pd.DataFrame) -> pd.DataFrame:
+    """
+    Calculate natural linewidths for atomic levels based on radiative and Auger decay rates.
+    
+    Uses the formula: Width = ħ * Σ(Rates) where ħ is the reduced Planck constant.
+    
+    Parameters
+    ----------
+    levels : pd.DataFrame
+        Level data with 'level_index' column
+    transitions : pd.DataFrame
+        Radiative transitions with 'upper_level', 'rate' columns
+    auger : pd.DataFrame
+        Auger transitions with 'upper_level', 'rate' columns
+        
+    Returns
+    -------
+    pd.DataFrame
+        Levels DataFrame with added 'width_radiative', 'width_auger', 'width_total' columns
+        
+    Notes
+    -----
+    Based on "Line Intensity and Width2024.pdf" reference.
+    """
+    # Physical constant: Planck constant in eV*s
+    HBAR_EV = 6.582119569e-16
+
+    # Calculate radiative widths (sum of A_r for transitions starting from each level)
+    rad_widths = transitions.groupby("upper_level")["rate"].sum() * HBAR_EV
+
+    # Calculate Auger widths (sum of A_nr for Auger transitions starting from each level)
+    auger_widths = auger.groupby("upper_level")["rate"].sum() * HBAR_EV
+
+    # Map back to levels DataFrame
+    levels = levels.copy()
+    levels["width_radiative"] = levels["level_index"].map(rad_widths).fillna(0.0)
+    levels["width_auger"] = levels["level_index"].map(auger_widths).fillna(0.0)
+    levels["width_total"] = levels["width_radiative"] + levels["width_auger"]
+
+    return levels
+
+
+def apply_linewidths_to_transitions(transitions: pd.DataFrame, levels: pd.DataFrame) -> pd.DataFrame:
+    """
+    Apply natural linewidths to transitions.
+    
+    The linewidth for each transition is Gamma_ij = Gamma_i + Gamma_j,
+    where Gamma_i and Gamma_j are the total widths of the upper and lower levels.
+    
+    Parameters
+    ----------
+    transitions : pd.DataFrame
+        Transitions with 'upper_level', 'lower_level' columns
+    levels : pd.DataFrame
+        Levels with 'level_index', 'width_total' columns
+        
+    Returns
+    -------
+    pd.DataFrame
+        Transitions with added 'width_upper', 'width_lower', 'line_width' columns
+    """
+    # Create mapping for fast lookup
+    width_map = levels.set_index("level_index")["width_total"].to_dict()
+
+    transitions = transitions.copy()
+    transitions["width_upper"] = transitions["upper_level"].map(width_map).fillna(0.0)
+    transitions["width_lower"] = transitions["lower_level"].map(width_map).fillna(0.0)
+    transitions["line_width"] = transitions["width_upper"] + transitions["width_lower"]
+
+    return transitions
+
+
+def create_lorentzian_spectrum(
+    transitions_df: pd.DataFrame, 
+    energy_grid: np.ndarray, 
+    intensity_col: str = 'intensity_final'
+) -> np.ndarray:
+    """
+    Create a Lorentzian-broadened spectrum from transition lines.
+    
+    Each line is broadened with a Lorentzian profile: 
+    I(ω) = (I_0 * Γ/2) / ((ω - ω_0)^2 + (Γ/2)^2) * (2/π) / (Γ/2)
+    where Γ is the natural linewidth.
+    
+    Parameters
+    ----------
+    transitions_df : pd.DataFrame
+        DataFrame with 'energy', intensity_col, and 'line_width' columns
+    energy_grid : np.ndarray
+        Energy values for the spectrum in eV
+    intensity_col : str
+        Column name for intensity values (default: 'intensity_final')
+        
+    Returns
+    -------
+    np.ndarray
+        Lorentzian-broadened intensity values at each energy grid point
+        
+    Notes
+    -----
+    For lines with zero width, adds intensity as a delta function at the nearest grid point.
+    """
+    spectrum = np.zeros_like(energy_grid)
+    
+    for _, line in transitions_df.iterrows():
+        energy = line['energy']
+        intensity = line[intensity_col]
+        width = line['line_width']
+        
+        if width > 0:
+            # Lorentzian profile normalized so integral = intensity
+            # I(ω) = I_0 * (Γ/2)^2 / ((ω - ω_0)^2 + (Γ/2)^2) / π / (Γ/2)
+            lorentzian = intensity * (width/2)**2 / ((energy_grid - energy)**2 + (width/2)**2) / np.pi / (width/2)
+            spectrum += lorentzian
+        else:
+            # Delta function for zero-width lines
+            idx = np.argmin(np.abs(energy_grid - energy))
+            spectrum[idx] += intensity
+    
+    return spectrum
